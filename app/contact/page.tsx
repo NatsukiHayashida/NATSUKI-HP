@@ -3,15 +3,16 @@ import { Button } from '@/components/ui/button'; // 独自のButtonコンポー�
 
 export default function Contact() {
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-16 py-4">{/* パディングをレスポンシブに調整 */}
+    <div className="container mx-auto  px-4 sm:px-6 lg:px-16 py-4">{/* パディングをレスポンシブに調整 */}
       <div className='py-4'>
         <h1 className="text-2xl text-center my-4">Contact Us</h1>
         <p className='mb-4 text-center text-muted-foreground'>
           Please fill this form in a decent manner.
         </p>
       </div>
-      <form method="post" action="https://natsuki-hp.form.newt.so/v1/jAuz6cZim" className="w-full max-w-lg m-auto my-4"> {/* 最大幅を調整 */}
-        <div className="mb-4">
+      <form method="post" action="https://natsuki-hp.form.newt.so/v1/jAuz6cZim" className="w-full max-w-lg m-auto my-4">
+ {/* 最大幅を調整 */}
+        <div className="mb-4 ">
           <label htmlFor="name" className="block text-sm font-medium ">Name</label>
           <input
             type="text"
