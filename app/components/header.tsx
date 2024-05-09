@@ -15,7 +15,7 @@ export default function Header() {
         <div className='container flex h-24 items-center  justify-between '>
             <Logo />
             <div className='flex gap-2'>
-            <div className='block :md:hidden'>
+            <div className='block sm:hidden'>
                  <ModeToggle />
             </div>
             <div className="block md:hidden">
@@ -24,7 +24,7 @@ export default function Header() {
             <div className="hidden md:block">
                 <Nav />
                 </div>
-            <div className='hidden md:block'>
+            <div className='hidden sm:block'>
                  <ModeToggle />
             </div>
             </div>
