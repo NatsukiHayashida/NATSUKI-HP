@@ -13,7 +13,7 @@ export default function Works() {
     "/image/mask.jpg",
     "/image/mir.jpg",
     "/image/laptop-toilet.png",
-    "/image/mir.jpg",
+    "/image/CAMP.png",
     "/image/mask.jpg",
     "/image/laptop-toilet.png",
   ];
@@ -24,7 +24,7 @@ export default function Works() {
       <a
         {...props}
         target="_blank"
-        className="inline-flex items-center rounded border border-neutral-200 bg-neutral-50 p-1 text-sm leading-4 text-neutral-900 no-underline dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
+        className="inline-flex items-center rounded border border-neutral-300 bg-neutral-100 p-1 text-sm leading-4 text-neutral-900 no-underline dark:border-neutral-400 dark:bg-neutral-600 dark:text-neutral-100"
       />
     );
   }
@@ -45,7 +45,7 @@ export default function Works() {
           <h1 className=" my-8 px-2 text-2xl text-foreground tracking-wider ">Hey, I&apos;m Natsuki Hayashida😄</h1>
           <p className='px-2'>{`Lorem ipsum dolor sit amet consectetur adipisicing elit.`}
           <span className=" m-1 ">
-            <Badge className='mr-2  text-purple-800' href="https://www.hanaseisakusyo.com/">
+            <Badge className='mr-2 ' href="https://www.hanaseisakusyo.com/">
           {/* <Image
             alt="花製作所"
             src="/image/HANA.svg"
@@ -53,9 +53,9 @@ export default function Works() {
             width="14"
             height="14"
           /> */}
-                <p className=' text-pink-300'>
+                {/* <p className=' text-pink-300'> */}
                 花製作所
-                </p>
+                {/* </p> */}
               </Badge>
               </span>
             {`Consequatur, commodi.Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?`}</p>
