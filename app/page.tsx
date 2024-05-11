@@ -18,6 +18,17 @@ export default function Works() {
     "/image/laptop-toilet.png",
   ];
 
+ 
+  function Badge(props: React.HTMLProps<HTMLAnchorElement>) {
+    return (
+      <a
+        {...props}
+        target="_blank"
+        className="inline-flex items-center rounded border border-neutral-200 bg-neutral-50 p-1 text-sm leading-4 text-neutral-900 no-underline dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
+      />
+    );
+  }
+
   const openModal = (imagePath: string) => {
     setModalImage(imagePath);
     setShowModal(true);
@@ -31,8 +42,23 @@ export default function Works() {
     <main>
       <section>
         <div className="container">
-          <h1 className=" my-8 text-2xl text-foreground tracking-wider ">Hey, I&apos;m Natsuki Hayashida😄</h1>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, commodi. Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?</p>
+          <h1 className=" my-8 px-2 text-2xl text-foreground tracking-wider ">Hey, I&apos;m Natsuki Hayashida😄</h1>
+          <p className='px-2'>{`Lorem ipsum dolor sit amet consectetur adipisicing elit.`}
+          <span className=" m-1 ">
+            <Badge className='mr-2  text-purple-800' href="https://www.hanaseisakusyo.com/">
+          {/* <Image
+            alt="花製作所"
+            src="/image/HANA.svg"
+            className="m-1"
+            width="14"
+            height="14"
+          /> */}
+                <p className=' text-pink-300'>
+                花製作所
+                </p>
+              </Badge>
+              </span>
+            {`Consequatur, commodi.Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?`}</p>
         </div>
       </section>
 
@@ -65,14 +91,14 @@ export default function Works() {
 
       <section className='pb-8'>
       <div className="container">
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, commodi. Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?</p>
+          <p className='px-2'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, commodi. Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?</p>
         </div>
       </section>
 
       <section>
         <div className='container my-4 '>
           <Link href="https://www.hanaseisakusyo.com/" target="_blank" rel="noopener noreferrer">
-          <div className="group gap-6 flex transion duration-500 hover:shadow-xl items-center rounded-xl shadow-sm bg-muted border mx-2 p-6">
+          <div className="group gap-6 flex transion duration-500 hover:shadow-xl items-center rounded-xl shadow-sm bg-muted border mx-2 p-4">
           <div className="aspect-square  rounded-full overflow-hidden border-1 border-primary-foreground w-20 relative
         group-hover:scale-125 group-hover:shadow-lg
         transition duration-500">
@@ -87,25 +113,30 @@ export default function Works() {
         </div>
         
         <div className='container my-4'>
-          <div className="group gap-6 flex transion duration-500 hover:shadow-2xl items-center rounded-xl shadow-sm bg-muted border mx-2 p-6">
+        <Link href="https://liff.line.me/1645278921-kWRPP32q/?accountId=savvybot" target="_blank" rel="noopener noreferrer">
+          <div className="group gap-6 flex transion duration-500 hover:shadow-2xl items-center rounded-xl shadow-sm bg-muted border mx-2 p-4">
           <div className="aspect-square  bg-white rounded-full overflow-hidden border-2 border-primary-foreground w-20 relative
         group-hover:scale-125 group-hover:shadow-lg
         transition duration-500">
-          <Image src="/image/SavvyBot.svg" alt="" width={100} height={100}/>
-        </div>
+          <Image src="/image/SavvyBot.svg" alt="SavvyBot" width={100} height={100}/>
+            </div>
         <div className="flex-1">
           <h2 className="font-bold text-xl mb-1">SavvyBot</h2>
-          <p className="text-muted-foreground">Lorem ipsum dolor sit amet.</p>
+        <div className='flex items-end'>
+          <Image src="/image/LINE.png" alt="LINE" width={24} height={24}/>
+          <p className="text-muted-foreground mx-4">LINEをで動くAIチャットボット</p>
         </div>
-          </div>
-          </div>
-</section>
+        </div>
+            </div>
+            </Link>
+        </div>
+      </section>
 
       <section>
         <div className='container my-8'>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, commodi. Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?</p>
+        <p className='px-2'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, commodi. Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?</p>
         </div>
-</section>
+        </section>
     </main>
   );
 }
