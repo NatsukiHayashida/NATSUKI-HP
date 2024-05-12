@@ -11,11 +11,11 @@ export default function Works() {
 
   const images = [
     "/image/mask.jpg",
-    "/image/mir.jpg",
+    "/image/CyberFrog.png",
     "/image/laptop-toilet.png",
-    "/image/CAMP.png",
+    "/image/CyberFrog.png",
     "/image/mask.jpg",
-    "/image/laptop-toilet.png",
+    "/image/CyberFrog.png",
   ];
 
  
@@ -63,19 +63,70 @@ export default function Works() {
       </section>
 
       <section className='my-8 container'>
-        <div className="mx-1 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols3 2xl:grid-cols-3">
-          {images.map((img, index) => (
-            <div key={index} onClick={() => openModal(img)}>
-              <Image
-                className="cursor-pointer transition-all  border border-muted rounded-lg"
-                src={img}
-                width={320}
-                height={240}
-                alt="Eyecatch Image"
-              />
-            </div>
-          ))}
-        </div>
+      <div className="grid grid-cols-2 grid-rows-4 sm:grid-rows-3 sm:grid-cols-3 gap-2  justify-center">
+      <div className="relative h-60">
+        <Image
+          alt="Me speaking on stage at React Summit about the future of Next.js"
+          src= "/image/laptop-toilet.png"
+          fill
+          sizes="(max-width: 768px) 213px, 33vw"
+          // priority
+          className="rounded-lg object-cover object-top sm:object-center"
+        />
+      </div>
+      <div className="relative sm:row-span-2 row-span-1">
+        <Image
+          alt="Me standing on stage at Reactathon delivering the keynote"
+          src="/image/CyberFrog.png"
+          fill
+          sizes="(max-width: 768px) 213px, 33vw"
+          priority
+          className="rounded-lg object-cover object-top sm:object-center"
+        />
+      </div>
+      <div className="relative">
+        <Image
+          alt="Me and Guillermo Rauch on stage for Vercel Ship, answering questions from the Next.js community"
+          src="/image/Monster.png"
+          fill
+          sizes="(max-width: 768px) 213px, 33vw"
+          priority
+          className="rounded-lg object-cover"
+        />
+      </div>
+      <div className="relative row-span-2">
+        <Image
+          alt="Me, Lydia, and Delba filming the Next.js Conf keynote"
+          src="/image/eat-taco.png"
+          fill
+          sizes="(max-width: 768px) 213px, 33vw"
+          priority
+          className="rounded-lg object-cover sm:object-center"
+        />
+      </div>
+      <div className="relative row-span-2">
+        <Image
+          alt="My badge on top of a pile of badges from a Vercel meetup we held"
+          src="/image/Man-bg-yellow.png"
+          fill
+          sizes="(max-width: 768px) 213px, 33vw"
+          priority
+          className="rounded-lg object-cover"
+        />
+      </div>
+      <div className="relative h-30">
+        <Image
+          alt="Me standing on stage at SmashingConf giving a talk about my optimism for the web"
+              src="/image/TACOS.png"
+          fill
+          sizes="(max-width: 768px) 213px, 40vw"
+          priority
+          className="rounded-lg object-cover"
+        />
+      </div>
+  
+ </div>
+  
       </section>
 
       {showModal && (
