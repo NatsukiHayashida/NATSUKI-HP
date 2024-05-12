@@ -53,9 +53,7 @@ export default function Home() {
             width="14"
             height="14"
           /> */}
-               
                 花製作所
-          
               </Badge>
               </span>
             {`Consequatur, commodi.Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?`}</p>
@@ -94,7 +92,7 @@ export default function Home() {
           className="rounded-lg object-cover"
         />
       </div>
-      <div className="relative row-span-2">
+      <div className="relative md:row-span-2 row-span-1">
         <Image
           alt="Man standing, eating taco, cap hoodie, jeans, sneakers, beige background."
           src="/image/eat-taco.png"
@@ -104,7 +102,7 @@ export default function Home() {
           className="rounded-lg object-cover sm:object-center"
         />
           </div>
-      <div className="relative row-span-2">
+      <div className="relative  md:row-span-2 row-span-1">
         <Image
           alt="My badge on top of a pile of badges from a Vercel meetup we held"
           src="/image/Man-bg-yellow.png"
