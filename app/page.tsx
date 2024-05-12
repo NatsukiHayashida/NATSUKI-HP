@@ -53,9 +53,9 @@ export default function Works() {
             width="14"
             height="14"
           /> */}
-                {/* <p className=' text-pink-300'> */}
+               
                 花製作所
-                {/* </p> */}
+          
               </Badge>
               </span>
             {`Consequatur, commodi.Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?`}</p>
@@ -63,8 +63,8 @@ export default function Works() {
       </section>
 
       <section className='my-8 container'>
-      <div className="grid grid-cols-2 grid-rows-4 sm:grid-rows-3 sm:grid-cols-3 gap-2  justify-center">
-      <div className="relative h-60">
+      <div className="grid grid-cols-2 grid-rows-2 sm:grid-rows-3 sm:grid-cols-3 gap-2  justify-center">
+      <div className="relative h-48 ">
         <Image
           alt="Me speaking on stage at React Summit about the future of Next.js"
           src= "/image/laptop-toilet.png"
@@ -114,7 +114,7 @@ export default function Works() {
           className="rounded-lg object-cover"
         />
       </div>
-      <div className="relative h-30">
+      <div className="relative">
         <Image
           alt="Me standing on stage at SmashingConf giving a talk about my optimism for the web"
               src="/image/TACOS.png"
