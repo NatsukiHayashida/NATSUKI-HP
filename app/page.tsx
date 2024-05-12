@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import Link from 'next/link'
 
 
-export default function Works() {
+export default function Home() {
   const [showModal, setShowModal] = useState(false);
   const [modalImage, setModalImage] = useState("");
 
@@ -63,20 +63,20 @@ export default function Works() {
       </section>
 
       <section className='my-8 container'>
-      <div className="grid grid-cols-2 grid-rows-2 sm:grid-rows-3 sm:grid-cols-3 gap-2  mx-2 justify-center">
-      <div className="relative h-48 ">
+      <div className="grid grid-cols-3 grid-rows-2 sm:grid-rows-3 sm:grid-cols-3 gap-2  mx-2 justify-center">
+      <div className="relative row-span-1 ">
         <Image
-          alt="Me speaking on stage at React Summit about the future of Next.js"
+          alt="A man sitting on the open toilet seat, holding his laptop"
           src= "/image/laptop-toilet.png"
           fill
           sizes="(max-width: 768px) 213px, 33vw"
-          // priority
+          priority
           className="rounded-lg object-cover object-top sm:object-center"
         />
       </div>
-      <div className="relative sm:row-span-2 row-span-1">
+      <div className="relative sm:row-span-2 ">
         <Image
-          alt="Me standing on stage at Reactathon delivering the keynote"
+          alt="a Cyber Frog walks with his camera"
           src="/image/CyberFrog.png"
           fill
           sizes="(max-width: 768px) 213px, 33vw"
@@ -84,9 +84,9 @@ export default function Works() {
           className="rounded-lg object-cover object-top sm:object-center"
         />
       </div>
-      <div className="relative">
+      <div className="relative row-span-1">
         <Image
-          alt="Me and Guillermo Rauch on stage for Vercel Ship, answering questions from the Next.js community"
+          alt="monster by alec monopoly, black on white"
           src="/image/Monster.png"
           fill
           sizes="(max-width: 768px) 213px, 33vw"
@@ -96,14 +96,14 @@ export default function Works() {
       </div>
       <div className="relative row-span-2">
         <Image
-          alt="Me, Lydia, and Delba filming the Next.js Conf keynote"
+          alt="Man standing, eating taco, cap hoodie, jeans, sneakers, beige background."
           src="/image/eat-taco.png"
           fill
           sizes="(max-width: 768px) 213px, 33vw"
           priority
           className="rounded-lg object-cover sm:object-center"
         />
-      </div>
+          </div>
       <div className="relative row-span-2">
         <Image
           alt="My badge on top of a pile of badges from a Vercel meetup we held"
@@ -114,17 +114,17 @@ export default function Works() {
           className="rounded-lg object-cover"
         />
       </div>
-      <div className="relative">
+  
+      <div className="relative h-48">
         <Image
-          alt="Me standing on stage at SmashingConf giving a talk about my optimism for the web"
-              src="/image/TACOS.png"
+          alt="art sketch, simple vector outline drawing, sketch images, hand drawn, white background,prompt: A restaurant serving Spanish tacos in a huge plate simple color"
+          src="/image/TACOS.png"
           fill
-          sizes="(max-width: 768px) 213px, 40vw"
+          sizes="(max-width: 768px) 213px, 33vw"
           priority
-          className="rounded-lg object-cover"
+          className="rounded-lg object-cover sm:object-center"
         />
       </div>
-  
  </div>
   
       </section>
