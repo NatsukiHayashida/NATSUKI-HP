@@ -63,7 +63,7 @@ export default function Works() {
       </section>
 
       <section className='my-8 container'>
-      <div className="grid grid-cols-2 grid-rows-2 sm:grid-rows-3 sm:grid-cols-3 gap-2  justify-center">
+      <div className="grid grid-cols-2 grid-rows-2 sm:grid-rows-3 sm:grid-cols-3 gap-2  mx-2 justify-center">
       <div className="relative h-48 ">
         <Image
           alt="Me speaking on stage at React Summit about the future of Next.js"
