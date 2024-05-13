@@ -42,8 +42,8 @@ export default function Home() {
     <main>
       <section>
         <div className="container">
-          <h1 className=" my-8 px-2 text-2xl text-foreground tracking-wider ">Hey, I&apos;m Natsuki Hayashida😄</h1>
-          <p className='px-2'>{`Lorem ipsum dolor sit amet consectetur adipisicing elit.`}
+          <h1 className=" my-8 px-2 md:text-2xl text-lg text-foreground tracking-wider ">Hey, I&apos;m Natsuki Hayashida😄</h1>
+          <p className='px-2 '>{`Lorem ipsum dolor sit amet consectetur adipisicing elit.`}
           <span className=" m-1 ">
             <Badge className='mr-2 ' href="https://www.hanaseisakusyo.com/">
           {/* <Image
