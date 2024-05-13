@@ -131,7 +131,7 @@ export default function Home() {
         </div>
       )}
 
-      <section className='pb-8'>
+      <section className='pb-4'>
         <div className="container">
           {/* また、私はMidjourneyを活用してイラストを生成することにも興味を持っています。クリエイティブな表現の一環として、AIを使ってビジュアルコンテンツを生み出すことに魅力を感じています。
           このサイトはNext.jsとTypeScriptを使用し、Vercelで高速にホスティングしています。これにより、効率的かつ安定した開発が可能です。 */}
