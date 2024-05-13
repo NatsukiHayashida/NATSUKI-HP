@@ -133,8 +133,11 @@ export default function Home() {
       )}
 
       <section className='pb-8'>
-      <div className="container">
-          <p className='px-2'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, commodi. Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?</p>
+        <div className="container">
+          {/* また、私はMidjourneyを活用してイラストを生成することにも興味を持っています。クリエイティブな表現の一環として、AIを使ってビジュアルコンテンツを生み出すことに魅力を感じています。
+          このサイトはNext.jsとTypeScriptを使用し、Vercelで高速にホスティングしています。これにより、効率的かつ安定した開発が可能です。 */}
+          <p className='px-2 mb-2 tracking-wider '>{`Additionally, I'm fascinated by using Midjourney to generate illustrations. As a part of my creative expression, I find it appealing to create visual content with AI.`}</p>
+          <p className='px-2'>{`This site is built using Next.js and TypeScript, and is hosted on Vercel for optimal performance. This setup enables efficient and stable development.`}</p>
         </div>
       </section>
 
