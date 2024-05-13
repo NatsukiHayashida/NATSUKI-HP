@@ -47,9 +47,9 @@ export default function Home() {
           このサイトは私のテクノロジーの遊び場で、旅を共有し、志を同じくする仲間と繋がる場所です。私がインスピレーションを受けるように、皆さんにも何かの刺激を与えられたら嬉しいです。
           訪問してくださってありがとう。一緒にこの旅を楽しみましょう！ */}
           <div className='mx-2 '>
-          <p className='mb-2'>{`Usually  I work with CAD and CAM in a factory, but personally, I'm really into studying front-end development and AI.`}</p>
-          <p className='mb-2'>{`This site is my tech playground, where I share my journey and connect with like-minded folks. I hope it inspires you as much as it inspires me.`}</p>
-          <p>{`Thanks for stopping by, and let's enjoy this ride togethere`}✌️</p>
+          <p className=' font-light mb-2'>{`Usually  I work with CAD and CAM in a factory, but personally, I'm really into studying front-end development and AI.`}</p>
+          <p className='font-light mb-2'>{`This site is my tech playground, where I share my journey and connect with like-minded folks. I hope it inspires you as much as it inspires me.`}</p>
+          <p className='font-light'>{`Thanks for stopping by, and let's enjoy this ride togethere`}✌️</p>
           </div>
         </div>
       </section>
@@ -136,8 +136,8 @@ export default function Home() {
         <div className="container">
           {/* また、私はMidjourneyを活用してイラストを生成することにも興味を持っています。クリエイティブな表現の一環として、AIを使ってビジュアルコンテンツを生み出すことに魅力を感じています。
           このサイトはNext.jsとTypeScriptを使用し、Vercelで高速にホスティングしています。これにより、効率的かつ安定した開発が可能です。 */}
-          <p className='px-2 mb-2 tracking-wider '>{`Additionally, I'm fascinated by using Midjourney to generate illustrations. As a part of my creative expression, I find it appealing to create visual content with AI.`}</p>
-          <p className='px-2'>{`This site is built using Next.js and TypeScript, and is hosted on Vercel for optimal performance. This setup enables efficient and stable development.`}</p>
+          <p className='font-light px-2 mb-2 tracking-wider '>{`Additionally, I'm fascinated by using Midjourney to generate illustrations. As a part of my creative expression, I find it appealing to create visual content with AI.`}</p>
+          <p className='font-light px-2'>{`This site is built using Next.js and TypeScript, and is hosted on Vercel for optimal performance. This setup enables efficient and stable development.`}</p>
         </div>
       </section>
 
@@ -179,7 +179,7 @@ export default function Home() {
 
       <section>
         <div className='container my-8'>
-        <p className='px-2'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, commodi. Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?</p>
+        <p className='font-light px-2'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, commodi. Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?</p>
         </div>
         </section>
     </main>
