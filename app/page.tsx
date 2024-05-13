@@ -43,20 +43,14 @@ export default function Home() {
       <section>
         <div className="container">
           <h1 className=" my-8 px-2 md:text-2xl text-lg text-foreground tracking-wider ">Hey, I&apos;m Natsuki Hayashida😄</h1>
-          <p className='px-2 '>{`Lorem ipsum dolor sit amet consectetur adipisicing elit.`}
-          <span className=" m-1 ">
-            <Badge className='mr-2 ' href="https://www.hanaseisakusyo.com/">
-          {/* <Image
-            alt="花製作所"
-            src="/image/HANA.svg"
-            className="m-1"
-            width="14"
-            height="14"
-          /> */}
-                花製作所
-              </Badge>
-              </span>
-            {`Consequatur, commodi.Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?`}</p>
+          {/* 普段は工場でCADとCAMを扱っていますが、夜はフロントエンド開発やAIに没頭しています。
+          このサイトは私のテクノロジーの遊び場で、旅を共有し、志を同じくする仲間と繋がる場所です。私がインスピレーションを受けるように、皆さんにも何かの刺激を与えられたら嬉しいです。
+          訪問してくださってありがとう。一緒にこの旅を楽しみましょう！ */}
+          <div className='mx-2 '>
+          <p className='mb-2'>{`Usually  I work with CAD and CAM in a factory, but personally, I'm really into studying front-end development and AI.`}</p>
+          <p className='mb-2'>{`This site is my tech playground, where I share my journey and connect with like-minded folks. I hope it inspires you as much as it inspires me.`}</p>
+          <p>{`Thanks for stopping by, and let's enjoy this ride togethere`}✌️</p>
+          </div>
         </div>
       </section>
 
@@ -188,3 +182,9 @@ export default function Home() {
     </main>
   );
 }
+
+          // <span className=" m-1 ">
+          //   <Badge className='mr-2 ' href="https://www.hanaseisakusyo.com/">
+          //       花製作所
+          //     </Badge>
+          //     </span>
