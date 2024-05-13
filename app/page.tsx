@@ -179,35 +179,14 @@ export default function Home() {
 
       <section className='mb-8'>
         <div className='container my-4'>
-          {/* 1. 花製作所=このサイトは私が初めて作成したもので、現在も運営中です。「花製作所」は、妻が手作りするフラワーリースやスワッグを販売するオンラインショップです。製品は月に2回更新し、各アイテムの魅力を丁寧に紹介しています。このサイトは、オープンソースのEC-CUBEを使用して構築されました。
+          {/* 1. 花製作所=このサイトは私が初めて作成したもので、現在も運営中です。「花製作所」は、妻が手作りするフラワーリースやスワッグを販売するオンラインショップです。製品は月に2回更新し、各アイテムの魅力を丁寧に紹介しています。
           2. SavvyBot=「SavvyBot」は、コミュニケーションアプリ「LINE」で使用できるAIボットです。GPT-3.5を採用しており、ユーザーとの対話を通じて質問に答えたり、情報を提供したりすることができます。このボットは、効率的なコミュニケーションをサポートし、日常のやり取りをスムーズにします。 */}
-          <p className='font-light px-2 mb-4 tracking-wider'>{`This is the first site I ever created and it's still active. `}
-          <span className=" m-1 ">
-              <Badge className='mr-2 ' href="https://www.hanaseisakusyo.com/">
-                花製作所
-              </Badge>
-            </span>
-            {`is an online shop selling handmade flower wreaths and swags crafted by my wife. We update the products bi-monthly, carefully showcasing the charm of each item. The site was built using the open-source platform `}
-            <span className="m-1">
-              <Badge className='mr-2' href="https://www.ec-cube.net/">
-                EC-CUBE
-              </Badge>
-            </span>
-         . </p>
+          <p className='font-light px-2 mb-4 tracking-wider'>{`This is the first site I ever created and it's still active. `}&nbsp;
+          <Link className=' font-semibold dark:font-medium text-pink-900  dark:text-pink-500 ' href="https://www.hanaseisakusyo.com/" target="_blank" rel="noopener noreferrer">花製作所</Link>
+           {` is an online shop selling handmade flower wreaths and swags crafted by my wife. We update the products bi-monthly, carefully showcasing the charm of each item.`}</p>
           <p className='font-light px-2 tracking-wider'>
-            <span className="mr-1">
-              <Badge className='mr-2' href="https://liff.line.me/1645278921-kWRPP32q/?accountId=savvybot">
-                SavvyBot
-              </Badge>
-            </span>
-            {`is an AI bot that operates within the communication app `}
-            <span className=" mr-1 ">
-              <Badge className='mr-1' href="https://line.me/ja/">
-                LINE
-              </Badge>
-            </span>
-            .&nbsp;
-            {`It utilizes GPT-3.5 to interact with users, answering questions and providing information. This bot facilitates efficient communication and smoothens daily interactions.`}</p>
+          <Link className='font-semibold dark:font-medium text-teal-700  dark:text-teal-500 '  href="https://liff.line.me/1645278921-kWRPP32q/?accountId=savvybot"target="_blank" rel="noopener noreferrer">SavvyBot</Link>
+            {` is an AI bot that operates within the communication app LINE It utilizes GPT-3.5 to interact with users, answering questions and providing information. This bot facilitates efficient communication and smoothens daily interactions.`}</p>
         </div>
       </section>
     </main>
