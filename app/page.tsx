@@ -43,7 +43,7 @@ export default function Home() {
     <main>
       <section>
         <div className="container">
-          <h1 className=" my-8 px-2 md:text-2xl text-lg text-foreground tracking-wider ">Hey, I&apos;m Natsuki Hayashida😄</h1>
+          <h1 className=" my-8 p-2 md:text-2xl text-lg text-foreground ">Hey, I&apos;m Natsuki Hayashida😄</h1>
           {/* 普段は工場でCADとCAMを扱っていますが、夜はフロントエンド開発やAIに没頭しています。
           このサイトは私のテクノロジーの遊び場で、旅を共有し、志を同じくする仲間と繋がる場所です。私がインスピレーションを受けるように、皆さんにも何かの刺激を与えられたら嬉しいです。
           訪問してくださってありがとう。一緒にこの旅を楽しみましょう！ */}
@@ -135,8 +135,8 @@ export default function Home() {
         <div className="container">
           {/* また、私はMidjourneyを活用してイラストを生成することにも興味を持っています。クリエイティブな表現の一環として、AIを使ってビジュアルコンテンツを生み出すことに魅力を感じています。
           このサイトはNext.jsとTypeScriptを使用し、Vercelで高速にホスティングしています。これにより、効率的かつ安定した開発が可能です。 */}
-          <p className='font-light px-2 mb-2 tracking-wider '>{`Additionally, I'm fascinated by using Midjourney to generate illustrations. As a part of my creative expression, I find it appealing to create visual content with AI.`}</p>
-          <p className='font-light px-2 tracking-wider '>{`This site is built using Next.js and TypeScript, and is hosted on Vercel for optimal performance. This setup enables efficient and stable development.`}</p>
+          <p className='font-light px-2 mb-2 '>{`Additionally, I'm fascinated by using Midjourney to generate illustrations. As a part of my creative expression, I find it appealing to create visual content with AI.`}</p>
+          <p className='font-light px-2 '>{`This site is built using Next.js and TypeScript, and is hosted on Vercel for optimal performance. This setup enables efficient and stable development.`}</p>
         </div>
       </section>
 
@@ -181,10 +181,10 @@ export default function Home() {
         <div className='container my-4'>
           {/* 1. 花製作所=このサイトは私が初めて作成したもので、現在も運営中です。「花製作所」は、妻が手作りするフラワーリースやスワッグを販売するオンラインショップです。製品は月に2回更新し、各アイテムの魅力を丁寧に紹介しています。
           2. SavvyBot=「SavvyBot」は、コミュニケーションアプリ「LINE」で使用できるAIボットです。GPT-3.5を採用しており、ユーザーとの対話を通じて質問に答えたり、情報を提供したりすることができます。このボットは、効率的なコミュニケーションをサポートし、日常のやり取りをスムーズにします。 */}
-          <p className='font-light px-2 mb-4 tracking-wider'>{`This is the first site I ever created and it's still active. `}&nbsp;
+          <p className='font-light px-2 mb-4'>{`This is the first site I ever created and it's still active. `}&nbsp;
           <Link className=' font-semibold dark:font-medium text-pink-900  dark:text-pink-500 ' href="https://www.hanaseisakusyo.com/" target="_blank" rel="noopener noreferrer">花製作所</Link>
            {` is an online shop selling handmade flower wreaths and swags crafted by my wife. We update the products bi-monthly, carefully showcasing the charm of each item.`}</p>
-          <p className='font-light px-2 tracking-wider'>
+          <p className='font-light px-2 '>
           <Link className='font-semibold dark:font-medium text-teal-700  dark:text-teal-500 '  href="https://liff.line.me/1645278921-kWRPP32q/?accountId=savvybot"target="_blank" rel="noopener noreferrer">SavvyBot</Link>
             {` is an AI bot that operates within the communication app LINE It utilizes GPT-3.5 to interact with users, answering questions and providing information. This bot facilitates efficient communication and smoothens daily interactions.`}</p>
         </div>
