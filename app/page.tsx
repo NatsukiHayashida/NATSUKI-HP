@@ -145,41 +145,40 @@ export default function Home() {
       </section>
 
       <section>
-        <div className='container my-4 '>
-          <Link href="https://www.hanaseisakusyo.com/" target="_blank" rel="noopener noreferrer">
-          <div className="group gap-6 flex transion duration-500 hover:shadow-xl items-center rounded-xl shadow-sm bg-muted border mx-2 p-4">
-          <div className="aspect-square  rounded-full overflow-hidden border-1 border-primary-foreground w-20 relative
-        group-hover:scale-125 group-hover:shadow-lg
-        transition duration-500">
-          <Image src="/image/HANA.svg" alt="はなせいさくしょ" width={100} height={100}/>
-        </div>
-        <div className="flex-1">
-          <h2 className="font-bold text-xl mb-1">花製作所</h2>
-          <p className="text-muted-foreground">Lorem ipsum dolor sit amet.</p>
-        </div>
+  <div className="container mx-auto">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-4">
+      <div className='my-2 '>
+        <Link href="https://www.hanaseisakusyo.com/" target="_blank" rel="noopener noreferrer">
+          <div className="group flex transition duration-500 hover:shadow-xl items-center rounded-xl shadow-sm bg-muted border p-2 md:p-4">
+            <div className="aspect-square rounded-full overflow-hidden border-1 border-primary-foreground w-20 relative group-hover:scale-125 group-hover:shadow-lg transition duration-500 mr-4">
+              <Image src="/image/HANA.svg" alt="はなせいさくしょ" width={100} height={100}/>
+            </div>
+            <div className="flex-1">
+              <h2 className="font-medium text-lg mb-1">花製作所</h2>
+              <p className="text-xs text-muted-foreground ml-1">💐 花オタク25年。<br/>WEBにて販売しております。</p>
+            </div>
           </div>
-            </Link>
-        </div>
-        
-        <div className='container my-4'>
+        </Link>
+      </div>
+      <div className='my-2'>
         <Link href="https://liff.line.me/1645278921-kWRPP32q/?accountId=savvybot" target="_blank" rel="noopener noreferrer">
-          <div className="group gap-6 flex transion duration-500 hover:shadow-2xl items-center rounded-xl shadow-sm bg-muted border mx-2 p-4">
-          <div className="aspect-square  bg-white rounded-full overflow-hidden border-2 border-primary-foreground w-20 relative
-        group-hover:scale-125 group-hover:shadow-lg
-        transition duration-500">
-          <Image src="/image/SavvyBot.svg" alt="SavvyBot" width={100} height={100}/>
+          <div className="group flex transition duration-500 hover:shadow-2xl items-center rounded-xl shadow-sm bg-muted border p-2 md:p-4">
+            <div className="aspect-square bg-white rounded-full overflow-hidden border-2 border-primary-foreground w-20 relative group-hover:scale-125 group-hover:shadow-lg transition duration-500 mr-4">
+              <Image src="/image/SavvyBot.svg" alt="SavvyBot" width={100} height={100} />
             </div>
-        <div className="flex-1">
-          <h2 className="font-bold text-xl mb-1">SavvyBot</h2>
-        <div className='flex items-end'>
-          <Image src="/image/LINE.png" alt="LINE" width={24} height={24}/>
-          <p className="text-muted-foreground mx-4">LINEをで動くAIチャットボット</p>
-        </div>
-        </div>
+            <div className="flex-1">
+              <h2 className="font-medium text-lg mb-2">SavvyBot</h2>
+              <div className='flex items-center'>
+                <Image src="/image/LINE.png" alt="LINE" width={24} height={24} />
+                <p className="text-xs text-muted-foreground ml-1">LINEで動くAIチャットボット</p>
+              </div>
             </div>
-            </Link>
-        </div>
-      </section>
+          </div>
+        </Link>
+      </div>
+    </div>
+  </div>
+</section>
 
       <section>
         <div className='container my-8'>
