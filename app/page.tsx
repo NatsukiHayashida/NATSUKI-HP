@@ -143,7 +143,7 @@ export default function Home() {
 
       <section>
   <div className="container mx-auto">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-4">
+    <div className="grid grid-cols-1 mx-1 md:grid-cols-2 gap-1 md:gap-4">
       <div className='my-2 '>
         <Link href="https://www.hanaseisakusyo.com/" target="_blank" rel="noopener noreferrer">
           <div className="group flex transition duration-500 hover:shadow-xl items-center rounded-xl shadow-sm bg-muted border p-2 md:p-4">
@@ -178,8 +178,11 @@ export default function Home() {
 </section>
 
       <section>
-        <div className='container my-8'>
-        <p className='font-light px-2'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, commodi. Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?</p>
+        <div className='container my-4'>
+          {/* 1. 花製作所=このサイトは私が初めて作成したもので、現在も運営中です。「花製作所」は、妻が手作りするフラワーリースやスワッグを販売するオンラインショップです。製品は月に2回更新し、各アイテムの魅力を丁寧に紹介しています。このサイトは、オープンソースのEC-CUBEを使用して構築されました。
+          2. SavvyBot=「SavvyBot」は、コミュニケーションアプリ「LINE」で使用できるAIボットです。GPT-3.5を採用しており、ユーザーとの対話を通じて質問に答えたり、情報を提供したりすることができます。このボットは、効率的なコミュニケーションをサポートし、日常のやり取りをスムーズにします。 */}
+          <p className='font-light px-2 mb-2'>{`This is the first site I ever created and it's still active. "Hana-Seisakusho" is an online shop selling handmade flower wreaths and swags crafted by my wife. We update the products bi-monthly, carefully showcasing the charm of each item. The site was built using the open-source platform EC-CUBE.`}</p>
+          <p className='font-light px-2'>{`"SavvyBot" is an AI bot that operates within the communication app "LINE." It utilizes GPT-3.5 to interact with users, answering questions and providing information. This bot facilitates efficient communication and smoothens daily interactions.`}</p>
         </div>
         </section>
     </main>
