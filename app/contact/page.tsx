@@ -3,11 +3,11 @@ import { Button } from '@/components/ui/button'; // 独自のButtonコンポー�
 
 export default function Contact() {
   return (
-    <div className="container mx-auto   py-4">{/* パディングをレスポンシブに調整 */}
-      <div className='py-4'>
-        <h1 className="text-2xl text-center my-4">Contact Us</h1>
-        <p className='mb-4 text-center text-muted-foreground'>
-          Please fill this form in a decent manner.
+    <div className="container mx-auto py-4">{/* パディングをレスポンシブに調整 */}
+      <div className='mx-4 md:mx-16  my-4'>
+        <h1 className="text-2xl text-center my-4">Contact Me</h1>
+        <p className='mb-4 md:text-center  leading-6 text-base  text-muted-foreground'>
+        For any questions, inquiries, or project and job requests, please feel free to contact me using the form below.
         </p>
       </div>
       <form method="post" action="https://natsuki-hp.form.newt.so/v1/jAuz6cZim" className="w-full max-w-lg m-auto my-4">
