@@ -6,9 +6,11 @@ export default function Contact() {
     <div className="container mx-auto py-4">{/* パディングをレスポンシブに調整 */}
       <div className='mx-4 md:mx-16  my-4'>
         <h1 className="text-2xl text-center my-4">Contact Me</h1>
-        <p className='mb-4 md:text-center  leading-6 text-base  text-muted-foreground'>
+        <div className='flex mx-12'>
+        <p className='mb-4 md:text-center p-1 leading-6 text-base  text-muted-foreground'>
         For any questions, inquiries, or project and job requests, please feel free to contact me using the form below.
         </p>
+        </div>
       </div>
       <form method="post" action="https://natsuki-hp.form.newt.so/v1/jAuz6cZim" className="w-full max-w-lg m-auto my-4">
  {/* 最大幅を調整 */}
