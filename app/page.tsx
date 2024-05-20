@@ -1,44 +1,9 @@
-'use client'
 
 import Image from 'next/image'
-import React, { useState } from "react";
 import Link from 'next/link'
 
 
 export default function Home() {
-  const [showModal, setShowModal] = useState(false);
-  const [modalImage, setModalImage] = useState("");
-
-  const images = [
-    "/image/mask.jpg",
-    "/image/CyberFrog.png",
-    "/image/laptop-toilet.png",
-    "/image/CyberFrog.png",
-    "/image/mask.jpg",
-    "/image/CyberFrog.png",
-  ];
-
- 
-  function Badge(props: React.HTMLProps<HTMLAnchorElement>) {
-    return (
-      <a
-        {...props}
-        target="_blank"
-        className="inline-flex items-center rounded border border-neutral-300 bg-neutral-100 p-1 text-sm leading-4 text-neutral-900 no-underline dark:border-neutral-400 dark:bg-slate-300 dark:text-slate-900"
-      />
-    );
-  }
-
-
-  const openModal = (imagePath: string) => {
-    setModalImage(imagePath);
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-  };
-
   return (
     <main>
       <section>
@@ -120,16 +85,6 @@ export default function Home() {
         </div>
       </section>
 
-      {showModal && (
-        <div
-          className="fixed top-0 left-0 z-50 w-screen h-screen bg-black bg-opacity-50 flex justify-center items-center"
-          onClick={closeModal}
-        >
-          <div className="relative">
-            <Image src={modalImage} width={320} height={240} alt="Eyecatch Image" />
-          </div>
-        </div>
-      )}
 
       <section className='pb-4'>
         <div className="container">
