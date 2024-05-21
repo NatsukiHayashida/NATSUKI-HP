@@ -12,14 +12,14 @@ export default function Contact() {
         </p>
         </div>
       </div>
-      <form method="post" action="https://natsuki-hp.form.newt.so/v1/jAuz6cZim" className="w-full max-w-lg m-auto my-4">
+      <form method="post" action="https://natsuki-hp.form.newt.so/v1/jcgeC4nfh" className="w-full max-w-lg m-auto my-4">
  {/* 最大幅を調整 */}
         <div className="mb-6 mx-4">
           <label htmlFor="name" className="block text-sm font-medium ">Name</label>
           <input
             type="text"
             id="name"
-            name="Full name"
+            name="name"
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm"
             required
           />

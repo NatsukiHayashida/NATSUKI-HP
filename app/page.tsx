@@ -141,7 +141,7 @@ export default function Home() {
            {` is an online shop selling handmade flower wreaths and swags crafted by my wife. We update the products bi-monthly, carefully showcasing the charm of each item.`}</p>
           <p className='font-light px-2 '>
           <Link className='font-semibold dark:font-medium text-teal-700  dark:text-teal-500 '  href="https://liff.line.me/1645278921-kWRPP32q/?accountId=savvybot"target="_blank" rel="noopener noreferrer">SavvyBot</Link>
-            {` is an AI bot that operates within the communication app LINE It utilizes GPT-3.5 to interact with users, answering questions and providing information. This bot facilitates efficient communication and smoothens daily interactions.`}</p>
+            {` is an AI bot that operates within the communication app LINE It utilizes GPT-4o to interact with users, answering questions and providing information. This bot facilitates efficient communication and smoothens daily interactions.`}</p>
         </div>
       </section>
     </main>
