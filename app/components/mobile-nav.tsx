@@ -31,10 +31,12 @@ export default function MobileNav() {
       <SheetContent>
       <div className='flex flex-col mt-4 gap-2'>
          {tags.map((tag) => (
-          <li className="list-none text-muted-foreground" key={tag.label}>
+           <li className="list-none text-muted-foreground" key={tag.label}>
+             <SheetClose asChild>
             <Button className=" justify-start text-lg" variant="ghost" asChild>
              <Link href={tag.href}>{tag.label}</Link>
-            </Button>
+               </Button>
+               </SheetClose>
           </li> 
         ))} 
     </div>
