@@ -1,6 +1,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import TypingText from './components/TypingText'
 
 
 export default function Home() {
@@ -8,15 +9,16 @@ export default function Home() {
     <main>
       <section>
         <div className="container">
-          <h1 className=" my-8 p-2 md:text-2xl text-lg text-foreground ">Hey, I&apos;m Natsuki Hayashida 😄</h1>
+          <h1 className=" my-8 mx-2 md:text-2xl text-lg text-foreground ">Hey, I&apos;m Natsuki Hayashida 😄</h1>
           {/* 普段は工場でCADとCAMを扱っていますが、夜はフロントエンド開発やAIに没頭しています。
           このサイトは私のテクノロジーの遊び場で、旅を共有し、志を同じくする仲間と繋がる場所です。私がインスピレーションを受けるように、皆さんにも何かの刺激を与えられたら嬉しいです。
           訪問してくださってありがとう。一緒にこの旅を楽しみましょう！ */}
-          <div className='mx-2 '>
+          <TypingText />
+          {/* <div className='mx-2 '>
             <p className=' font-light mb-2'>{`Usually  I work with CAD and CAM in a factory, but personally, I'm really into studying front-end development and AI.`}</p>
             <p className='font-light mb-2'>{`This site is my tech playground, where I share my journey and connect with like-minded folks. I hope it inspires you as much as it inspires me.`}</p>
-            <p className='font-light'>{`Thanks for stopping by, and let's enjoy this ride togethere`}✌️</p>
-          </div>
+            <p className='font-light'>{`Thanks for stopping by, and let's enjoy this ride togethere`}✌️</p> 
+           </div> */}
         </div>
       </section>
 
