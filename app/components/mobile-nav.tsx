@@ -6,17 +6,13 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+  SheetTrigger
 } from "@/components/ui/sheet"
 
 const tags = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-//   { label: "Work", href: "/work" },
+  { label: "Ai", href: "/ai" },
   { label: "Contact", href: "/contact" },
 ]
 

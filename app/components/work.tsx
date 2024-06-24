@@ -16,17 +16,17 @@ const workHistory = [
   },
   {
     company: '株式会社 ナベル',
-    duration: '2010 ~ 2021',
+    duration: '2008 ~ 2019',
     impression: 'lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, commodi. Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?'
   },
   {
     company: 'イナオ精工',
-    duration: '2007 ~ 2010',
+    duration: '2007 ~ 2008',
     impression: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic laboriosam ea repudiandae asperiores minus corrupti doloribus ad necessitatibus magnam aliquid!'
   },
   {
     company: '社会福祉法人 伊賀市社会福祉協議会',
-    duration: '1998 ~ 2007',
+    duration: '1998 ~ 2006',
     impression: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic laboriosam ea repudiandae asperiores minus corrupti doloribus ad necessitatibus magnam aliquid!'
   },
   // 他の勤務先の情報を追加します
