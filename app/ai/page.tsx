@@ -15,7 +15,7 @@ export default function AI() {
 
   return (
     <div className="flex flex-col w-full max-w-xl  mx-auto ">
-      <div className=" my-4 p-2 border bg-slate-900 rounded">
+      <div className=" my-4 p-2 border bg-slate-900 text-white rounded">
    <TypingTextAI />
       </div>
       <div className="flex flex-col space-y-4 pb-8">
