@@ -14,11 +14,11 @@ export default function AI() {
   }, [messages])
 
   return (
-    <div className="flex flex-col w-full max-w-xl  mx-auto ">
+    <div className="flex flex-col w-full max-w-xl  mx-auto  ">
       <div className=" my-4 p-2 border bg-slate-900 text-white rounded">
    <TypingTextAI />
       </div>
-      <div className="flex flex-col space-y-4 pb-8">
+      <div className="flex flex-col space-y-8 pb-8 my-8">
         {messages.map(m => (
           m.role === 'user' ? (
             <div
@@ -39,7 +39,7 @@ export default function AI() {
         ))}
         <div ref={messagesEndRef} />
       </div>
-      <form onSubmit={handleSubmit} className="fixed bottom-10 w-full max-w-xl mx-auto mb-4 left-0 right-0 px-4 flex">
+      <form onSubmit={handleSubmit} className="fixed bottom-10 w-full max-w-xl mx-auto m-4 left-0 right-0 px-4 flex">
         <input
           className="flex-grow p-2 mb-8 border rounded shadow-sm"
           value={input}
