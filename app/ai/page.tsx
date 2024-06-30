@@ -13,6 +13,7 @@ export default function AI() {
   const { messages, input, handleInputChange, handleSubmit } = useChat()
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
   const [textAreaInput, setTextAreaInput] = useState(input)
+  const [textAreaHeight, setTextAreaHeight] = useState('40px')
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -22,8 +23,18 @@ export default function AI() {
     const target = event.target as HTMLTextAreaElement
     setTextAreaInput(target.value)
     handleInputChange(event)
-    target.style.height = 'auto'
-    target.style.height = `${target.scrollHeight}px`
+
+    // 行数の計算
+    const lines = target.value.split('\n').length
+
+    // 行数が3行を超えた場合にのみ高さを調整
+    if (lines > 3) {
+      target.style.height = 'auto'
+      target.style.height = `${target.scrollHeight}px`
+      setTextAreaHeight(`${target.scrollHeight}px`)
+    } else {
+      setTextAreaHeight('40px')
+    }
   }
 
   return (
@@ -68,13 +79,17 @@ export default function AI() {
         ))}
         <div ref={messagesEndRef} />
       </div>
-      <form onSubmit={handleSubmit} className="fixed bottom-10 w-full max-w-xl mx-auto m-4 left-0 right-0 px-4 flex">
+      <form
+        onSubmit={handleSubmit}
+        className="fixed bottom-10 w-full max-w-xl mx-auto m-4 left-0 right-0 px-4 flex"
+        style={{ height: `calc(${textAreaHeight} + 16px)` }} // フォームの高さを入力フィールドの高さに基づいて設定
+      >
         <textarea
           className="flex-grow p-2 mb-8 border rounded shadow-sm resize-none"
           value={textAreaInput}
           placeholder="Say something..."
           onChange={handleTextAreaChange}
-          style={{ minHeight: '40px', maxHeight: '200px', height: '40px', overflowY: 'auto' }} // デフォルトの高さを40pxに設定
+          style={{ height: textAreaHeight }} // デフォルトの高さを40pxに設定
         />
         <Button
           type="submit"
