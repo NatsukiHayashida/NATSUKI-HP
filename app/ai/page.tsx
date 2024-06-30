@@ -1,41 +1,22 @@
 'use client'
 
 import { useChat } from 'ai/react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import TypingTextAI from '../components/TypingTextAI'
 import { Button } from '@/components/ui/button'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
+import 'katex/dist/katex.min.css'
 
 export default function AI() {
   const { messages, input, handleInputChange, handleSubmit } = useChat()
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
-  const [textAreaInput, setTextAreaInput] = useState(input)
-  const [textAreaHeight, setTextAreaHeight] = useState('40px')
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
-
-  const handleTextAreaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const target = event.target as HTMLTextAreaElement
-    setTextAreaInput(target.value)
-    handleInputChange(event)
-
-    // 行数の計算
-    const lines = target.value.split('\n').length
-
-    // 行数が3行を超えた場合にのみ高さを調整
-    if (lines > 3) {
-      target.style.height = 'auto'
-      target.style.height = `${target.scrollHeight}px`
-      setTextAreaHeight(`${target.scrollHeight}px`)
-    } else {
-      setTextAreaHeight('40px')
-    }
-  }
 
   return (
     <div className="flex flex-col w-full max-w-xl mx-auto">
@@ -79,17 +60,12 @@ export default function AI() {
         ))}
         <div ref={messagesEndRef} />
       </div>
-      <form
-        onSubmit={handleSubmit}
-        className="fixed bottom-10 w-full max-w-xl mx-auto m-4 left-0 right-0 px-4 flex"
-        style={{ height: `calc(${textAreaHeight} + 16px)` }} // フォームの高さを入力フィールドの高さに基づいて設定
-      >
-        <textarea
-          className="flex-grow p-2 mb-8 border rounded shadow-sm resize-none"
-          value={textAreaInput}
+      <form onSubmit={handleSubmit} className="fixed bottom-10 w-full max-w-xl mx-auto m-4 left-0 right-0 px-4 flex">
+        <input
+          className="flex-grow p-2 mb-8 border rounded shadow-sm"
+          value={input}
           placeholder="Say something..."
-          onChange={handleTextAreaChange}
-          style={{ height: textAreaHeight }} // デフォルトの高さを40pxに設定
+          onChange={handleInputChange}
         />
         <Button
           type="submit"
