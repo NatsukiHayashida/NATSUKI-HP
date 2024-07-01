@@ -11,23 +11,23 @@ import React from 'react'
 const workHistory = [
   {
     company: '株式会社 富士工業所',
-    duration: '2021 ~ 現在',
-    impression: 'lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, commodi. Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?'
+    duration: '2021 ~ ',
+    impression: 'CAD/CAM 及びレーザ加工機'
   },
   {
     company: '株式会社 ナベル',
     duration: '2008 ~ 2019',
-    impression: 'lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, commodi. Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?'
+    impression: '主に工作機械に使用される金属製カバー（テレスコカバー）の設計。 3D CAD（creo), 2D CAD（図脳RAPID）使用'
   },
   {
     company: 'イナオ精工',
     duration: '2007 ~ 2008',
-    impression: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic laboriosam ea repudiandae asperiores minus corrupti doloribus ad necessitatibus magnam aliquid!'
+    impression: ''
   },
   {
     company: '社会福祉法人 伊賀市社会福祉協議会',
     duration: '1998 ~ 2006',
-    impression: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic laboriosam ea repudiandae asperiores minus corrupti doloribus ad necessitatibus magnam aliquid!'
+    impression: ''
   },
   // 他の勤務先の情報を追加します
 ];
@@ -40,7 +40,7 @@ const workHistory = [
             <AccordionTrigger>
               <h1 className='text-4xl font-normal hover:no-underline'>Work history</h1>
             </AccordionTrigger>
-            <p className="mt-1 mb-4 text-muted-foreground border-border">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Animi vitae esse quam minima? Unde eligendi, veniam molestiae iste exercitationem eius blanditiis hic vel perspiciatis tempora temporibus aperiam numquam! Harum, magnam!</p>
+            <p className="mt-1 mb-4 text-muted-foreground border-border">Although brief, I would like to introduce my work experience.</p>
       <AccordionContent>
       <ul >
       {workHistory.map((work, index) => (

@@ -11,17 +11,17 @@ import {
     {
       school: '英知大学 文学部 スペイン語',
       duration: '1994 ~ 1998',
-      impression: 'lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, commodi. Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?'
+      impression: ''
     },
     {
       school: '南山国際高校 高等部',
       duration: '1991~ 1994',
-      impression: 'lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, commodi. Labore id cupiditate aliquam maiores explicabo dolore. Reiciendis similique nulla et, optio magni minus voluptatibus, accusantium, molestias vitae enim aspernatur?'
+      impression: ''
     },
     {
       school: '南山中学校 国際部',
       duration: '2007 ~ 2010',
-      impression: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic laboriosam ea repudiandae asperiores minus corrupti doloribus ad necessitatibus magnam aliquid!'
+      impression: ''
     },
     
   ];
@@ -35,7 +35,7 @@ import {
             <AccordionTrigger>
               <h1 className='text-4xl font-normal hover:no-underline'>Education</h1>
             </AccordionTrigger>
-            <p className="mt-1 mb-4 text-muted-foreground border-border">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Animi vitae esse quam minima? Unde eligendi, veniam molestiae iste exercitationem eius blanditiis hic vel perspiciatis tempora temporibus aperiam numquam! Harum, magnam!</p>
+            <p className="mt-1 mb-4 text-muted-foreground border-border">This is my educational background.</p>
       <AccordionContent>
       <ul >
       {educationHistory.map((education, index) => (
