@@ -19,11 +19,11 @@ const workHistory = [
     duration: '2008 ~ 2019',
     impression: '主に工作機械に使用される金属製カバー（テレスコカバー）の設計。 3D CAD（creo), 2D CAD（図脳RAPID）使用'
   },
-  {
-    company: 'イナオ精工',
-    duration: '2007 ~ 2008',
-    impression: ''
-  },
+  // {
+  //   company: 'イナオ精工',
+  //   duration: '2007 ~ 2008',
+  //   impression: ''
+  // },
   {
     company: '社会福祉法人 伊賀市社会福祉協議会',
     duration: '1998 ~ 2006',
