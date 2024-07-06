@@ -9,7 +9,7 @@ import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 
-export default function AI() {
+export default function Contact() {
   const { messages, input, handleInputChange, handleSubmit } = useChat()
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
   const [textAreaInput, setTextAreaInput] = useState(input)
