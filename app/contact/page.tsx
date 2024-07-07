@@ -45,7 +45,7 @@ export default function Contact() {
         </div>
         <div className="flex justify-center"> {/* ボタンをX方向の中央配置 */}
           <Button type="submit" variant="default" className="py-2 px-4 border rounded-md shadow-sm text-sm font-medium">
-            Send
+            Submit
           </Button>
         </div>
       </form>
