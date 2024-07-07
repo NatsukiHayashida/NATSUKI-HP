@@ -11,7 +11,8 @@ export default function Contact() {
         </p>
         </div>
       </div>
-      <form method="post" action="https://natsuki-hp.form.newt.so/v1/jcgeC4nfh" className="w-full max-w-lg m-auto my-4">
+      {/* <form action={process.env.NEXT_PUBLIC_NEWT_FORM_ENDPOINT} method="post" className="w-full max-w-lg m-auto my-4"> */}
+      <form method="post" action="https://natsuki-hp.form.newt.so/v1/jcgeC4nfh"className="w-full max-w-lg m-auto my-4">
  {/* 最大幅を調整 */}
         <div className="mb-6 mx-4">
           <label htmlFor="name" className="block text-sm font-medium ">Name</label>
