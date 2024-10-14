@@ -6,7 +6,7 @@ import Nav from './nav'
 
 const navItems = [
     {href: '/', label: 'Home'},
-    {href: '/about', label: 'About'},
+    // {href: '/about', label: 'About'},
     {href: '/contact', label: 'Contact'},
 ]
 
