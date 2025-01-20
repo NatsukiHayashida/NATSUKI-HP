@@ -11,7 +11,7 @@ import {
 
 const tags = [
   { label: "Home", href: "/" },
-  // { label: "About", href: "/about" },
+  { label: "Blog", href: "/blog" },
   { label: "Ai", href: "/ai" },
   { label: "Contact", href: "/contact" },
 ]
