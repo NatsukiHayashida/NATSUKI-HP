@@ -4,12 +4,17 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 function parseISO8601Date(dateString: string): Date | null {
-  const timestamp = Date.parse(dateString);
-  if (isNaN(timestamp)) {
+    try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return null;
+    }
+    return date;
+  } catch (error) {
     return null;
   }
-  return new Date(timestamp);
 }
+
 
 type Props = {
   params: {
@@ -54,7 +59,7 @@ export default async function Article({ params }: Props) {
         {date && (
            <div className="text-right mx-4">
           <span className='text-muted-foreground mx-4 '>
-            {date.toLocaleDateString()}
+            {date.toLocaleDateString('en-US', { timeZone: 'UTC' })}
           </span>
             </div>
         )}

@@ -1,16 +1,20 @@
-// /Users/hayashidanatsuki/MyProject/163/natsuki-hp/app/blog/page.tsx
 import React from 'react'
 import Link from 'next/link'
 import { getArticles } from '@/lib/newt'
 
 // ISO 8601形式の日付文字列をDateオブジェクトに変換する関数
 function parseISO8601Date(dateString: string): Date | null {
-  const timestamp = Date.parse(dateString);
-  if (isNaN(timestamp)) {
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return null;
+    }
+    return date;
+  } catch (error) {
     return null;
   }
-  return new Date(timestamp);
 }
+
 
 export default async function Blog() {
   const articles = await getArticles()
@@ -32,7 +36,7 @@ export default async function Blog() {
                     {article.title}
                     {date && (
                         <span className='text-sm text-muted-foreground ml-4'>
-                         {date.toLocaleDateString()}
+                        {date.toLocaleDateString('en-US', { timeZone: 'UTC' })}
                         </span>
                       )}
                   </Link>
