@@ -3,7 +3,13 @@ import { getArticleBySlug, getArticles } from '@/lib/newt'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
-
+function parseISO8601Date(dateString: string): Date | null {
+  const timestamp = Date.parse(dateString);
+  if (isNaN(timestamp)) {
+    return null;
+  }
+  return new Date(timestamp);
+}
 
 type Props = {
   params: {
@@ -40,11 +46,18 @@ export default async function Article({ params }: Props) {
   const currentIndex = articles.findIndex(a => a.slug === slug)
   const prevArticle = currentIndex > 0 ? articles[currentIndex - 1] : null
   const nextArticle = currentIndex < articles.length - 1 ? articles[currentIndex + 1] : null
-
+  const date = parseISO8601Date(article.date);
   return (
     <div className="container p-2 mx-auto">
       <article className="prose dark:prose-invert mx-auto">
         <h2 className="text-start mx-4 text-md md:text-2xl my-4">{article.title}</h2>
+        {date && (
+           <div className="text-right mx-4">
+          <span className='text-muted-foreground mx-4 '>
+            {date.toLocaleDateString()}
+          </span>
+            </div>
+        )}
         <div
           className="mx-4 font-sans article-body"
           dangerouslySetInnerHTML={{ __html: article.body }}
@@ -57,7 +70,7 @@ export default async function Article({ params }: Props) {
           </Button>
         )}
         <Button asChild>
-          <Link className='mx-2' href="/blog">記事一覧へ</Link>
+          <Link className='mx-2' href="/blog">Blog Post</Link>
         </Button>
         {nextArticle && (
           <Button asChild>
