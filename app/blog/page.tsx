@@ -15,18 +15,18 @@ function parseISO8601Date(dateString: string): Date | null {
   }
 }
 
-
 export default async function Blog() {
   const articles = await getArticles()
   return (
-    <div className='container my-4 '>
-      <p className='font-light leading-relaxed '>{`This blog is where I share the knowledge of AI and programming that I've gained through daily learning and trial and error. `}</p>
-      <p className='font-light leading-relaxed'>{`Including the times when things don't go as planned, I hope we can enjoy the journey of technology and grow step by step together`}</p>
-
-      <section className='my-8 mx-2'>
-        <p className="text-lg  ">Writing</p>
-        <div className='m-2'>
-          <ul className="my-6 ml-6 list-disc [&>li]:mt-2">
+    <div className='container my-8 '>
+      <article className="prose  dark:prose-invert  mx-8">
+        <p className=' font-light text-lg leading-relaxed  mb-2 '>{`This blog is where I share the knowledge of AI and programming that I've gained through daily learning and trial and error. `}</p>
+        <p className='font-light text-lg leading-relaxed '>{`Including the times when things don't go as planned, I hope we can enjoy the journey of technology and grow step by step together`}</p>
+      </article>
+      <section className='my-8 mx-4'>
+        <h3 className="text-lg mx-4 ">Writing</h3>
+        <div className='m-4'>
+          <ul className="my-6 ml-12 text-lg list-disc [&>li]:mt-2">
             {articles.map((article) => {
               // 日付文字列をパース
               const date = parseISO8601Date(article.date);
@@ -35,12 +35,16 @@ export default async function Blog() {
                   <Link href={`articles/${article.slug}`}>
                     {article.title}
                     {date && (
-                        <span className='text-sm text-muted-foreground ml-4'>
-                        {date.toLocaleDateString('en-US', { timeZone: 'UTC' })}
-                        </span>
-                      )}
+                      <span className='text-base text-muted-foreground ml-8'>
+                         {date.toLocaleDateString('en-US', {
+                           timeZone: 'Asia/Tokyo',
+                           month: 'short',
+                           day: 'numeric',
+                           year: 'numeric',
+                         })}
+                      </span>
+                    )}
                   </Link>
-                   
                 </li>
               )
             })}

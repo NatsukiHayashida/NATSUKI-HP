@@ -15,7 +15,6 @@ function parseISO8601Date(dateString: string): Date | null {
   }
 }
 
-
 type Props = {
   params: {
     slug: string
@@ -55,20 +54,25 @@ export default async function Article({ params }: Props) {
   return (
     <div className="container p-2 mx-auto">
       <article className="prose dark:prose-invert mx-auto">
-        <h2 className="text-start mx-4 text-md md:text-2xl my-4">{article.title}</h2>
+        <h2 className="text-start mx-8 text-md md:text-2xl my-4">{article.title}</h2>
         {date && (
-           <div className="text-right mx-4">
-          <span className='text-muted-foreground mx-4 '>
-            {date.toLocaleDateString('en-US', { timeZone: 'UTC' })}
-          </span>
-            </div>
+          <div className="text-right mx-4">
+            <span className="text-muted-foreground mx-4 ">
+              {date.toLocaleDateString('en-US', {
+                timeZone: 'Asia/Tokyo',
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+              })}
+            </span>
+          </div>
         )}
         <div
-          className="mx-4 font-sans article-body"
+          className="mx-8 font-sans article-body"
           dangerouslySetInnerHTML={{ __html: article.body }}
         />
       </article>
-      <div className='flex my-8 items-center justify-center pt-4'>
+      <div className='flex mb-8 items-center justify-center gap-2 mt-4'>
         {prevArticle && (
           <Button asChild>
             <Link className='mx-2' href={`/articles/${prevArticle.slug}`}>前へ</Link>
