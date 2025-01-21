@@ -75,7 +75,7 @@ export default async function Article({ params }: Props) {
       <div className='flex mb-8 items-center justify-center gap-2 mt-4'>
         {prevArticle && (
           <Button asChild>
-            <Link className='mx-2' href={`/articles/${prevArticle.slug}`}>前へ</Link>
+            <Link className='mx-2' href={`/articles/${prevArticle.slug}`}>Previous</Link>
           </Button>
         )}
         <Button asChild>
@@ -83,7 +83,7 @@ export default async function Article({ params }: Props) {
         </Button>
         {nextArticle && (
           <Button asChild>
-            <Link className='mx-2' href={`/articles/${nextArticle.slug}`}>次へ</Link>
+            <Link className='mx-2' href={`/articles/${nextArticle.slug}`}>Next</Link>
           </Button>
         )}
       </div>
