@@ -1,5 +1,5 @@
-import type { Config } from "tailwindcss"
-
+import type { Config } from "tailwindcss";
+import type { ThemeConfig } from "tailwindcss/types/config"; // ThemeConfig 型をインポート
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 const config = {
@@ -60,7 +60,7 @@ const config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-      typography: (theme) => ({
+      typography: (theme: ThemeConfig) => ({ // 引数の型を ThemeConfig に変更
         DEFAULT: {
           css: {
             color: 'hsl(var(--foreground))',
