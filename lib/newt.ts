@@ -1,6 +1,6 @@
 import 'server-only'
 // クライアントコンポーネントがこのモジュールをインポートしようとすると、ビルドエラーが発生します。
-// この機能は、機密コードや内部ビジネスロジックをクライアントに誤って漏洩させないようにするのに役立ちます。
+// この機能は、機密コードや内部ビジネスロジックをクライアントに誤って漏洩させないようにするのに役立ちます。 
 import { cache } from 'react'
 import { createClient } from 'newt-client-js'
 import type { Article } from '@/types/article'
