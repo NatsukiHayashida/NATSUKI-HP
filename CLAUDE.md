@@ -59,6 +59,63 @@ npm run lint
 ## Code Patterns
 
 - Server components are preferred; client components marked with 'use client'
-- CMS functions in `lib/newt.ts` use React cache() and 'server-only'
+- CMS functions in `lib/newt.ts` use React cache() and 'server-only' (being migrated to MDX)
 - UI components follow shadcn/ui patterns with cn() utility for class merging
 - Responsive design with mobile navigation component
+
+## Blog System (MDX Migration)
+
+**Migration from Newt CMS to MDX completed**
+
+### MDX Blog Structure
+- `content/blog/` - MDX blog post files
+- `lib/mdx.ts` - File-based blog functions (getAllPosts, getPostBySlug, getAllSlugs)
+- `types/blog.ts` - TypeScript interfaces for blog posts
+
+### Blog Post Format
+```markdown
+---
+title: "Post Title"
+date: "2025-01-15"
+slug: "post-slug"  
+excerpt: "Post summary"
+---
+
+# Content in Markdown format
+```
+
+### Features
+- Reading time calculation
+- Syntax highlighting with rehype-highlight
+- Math support with KaTeX
+- Static generation with Next.js
+
+## Contact Form (EmailJS Migration)
+
+**Migration from Newt Forms to EmailJS with spam protection**
+
+### Email System
+- `@emailjs/browser` for form submissions
+- `lib/spam-protection.ts` - Comprehensive spam filtering
+- Environment variables required for EmailJS configuration
+
+### Spam Protection Features
+- **Honeypot field** - Bot detection
+- **Japanese language requirement** - Blocks non-Japanese messages
+- **URL detection** - Prevents link spam
+- **Spam keyword filtering** - Common spam terms
+- **Rate limiting** - 1-minute cooldown between submissions
+- **Content validation** - Length limits and sanitization
+
+### Environment Variables Required (Additional)
+```bash
+NEXT_PUBLIC_EMAILJS_SERVICE_ID=service_xxx
+NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=template_xxx  
+NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=xxx
+NEXT_PUBLIC_CONTACT_EMAIL=your-email@domain.com
+```
+
+## Documentation Files
+
+- `BLOG_POSTING_GUIDE.md` - Instructions for creating MDX blog posts
+- `EMAILJS_SETUP_GUIDE.md` - EmailJS configuration and spam protection setup

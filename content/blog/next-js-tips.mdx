@@ -1,0 +1,56 @@
+---
+title: "Next.js 開発Tips集"
+date: "2025-01-10"
+slug: "next-js-tips"
+excerpt: "Next.js開発で役立つTipsをまとめました。パフォーマンス向上からデバッグまで。"
+---
+
+# Next.js 開発で覚えておきたいTips
+
+## 1. 画像最適化
+
+Next.jsの`Image`コンポーネントを使うことで、自動的に画像が最適化されます。
+
+```jsx
+import Image from 'next/image'
+
+<Image
+  src="/hero.jpg"
+  alt="Hero image"
+  width={800}
+  height={400}
+  priority // LCPの改善
+/>
+```
+
+## 2. 動的インポート
+
+ページの初期読み込み速度を向上させるために：
+
+```jsx
+import dynamic from 'next/dynamic'
+
+const Chart = dynamic(() => import('../components/Chart'), {
+  ssr: false // クライアントサイドのみで読み込み
+})
+```
+
+## 3. API Routesのベストプラクティス
+
+```javascript
+// pages/api/users.js
+export default async function handler(req, res) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ message: 'Method not allowed' })
+  }
+  
+  try {
+    const users = await getUsers()
+    res.status(200).json(users)
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' })
+  }
+}
+```
+
+参考になれば幸いです！

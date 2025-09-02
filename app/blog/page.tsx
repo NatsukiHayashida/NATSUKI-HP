@@ -1,10 +1,10 @@
 import React from 'react'
 import Link from 'next/link'
-import { getArticles } from '@/lib/newt'
+import { getAllPosts } from '@/lib/mdx'
 import { parseISO8601Date } from '@/lib/utils'
 
 export default async function Blog() {
-  const articles = await getArticles()
+  const posts = getAllPosts()
   return (
     <div className='container my-8 '>
       <article className="prose  dark:prose-invert  mx-8">
@@ -15,13 +15,13 @@ export default async function Blog() {
         <h3 className="text-lg mx-4 ">Writing</h3>
         <div className='m-4'>
           <ul className="my-6 ml-12 text-lg list-disc [&>li]:mt-2">
-            {articles.map((article) => {
+            {posts.map((post) => {
               // 日付文字列をパース
-              const date = parseISO8601Date(article.date);
+              const date = parseISO8601Date(post.date);
               return (
-                <li key={article._id}>
-                  <Link href={`articles/${article.slug}`}>
-                    {article.title}
+                <li key={post.slug}>
+                  <Link href={`articles/${post.slug}`}>
+                    {post.title}
                     {date && (
                       <span className='text-base text-muted-foreground ml-8'>
                          {date.toLocaleDateString('en-US', {
