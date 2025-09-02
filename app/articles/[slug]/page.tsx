@@ -1,19 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { getArticleBySlug, getArticles } from '@/lib/newt'
+import { parseISO8601Date } from '@/lib/utils'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-
-function parseISO8601Date(dateString: string): Date | null {
-    try {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) {
-      return null;
-    }
-    return date;
-  } catch (error) {
-    return null;
-  }
-}
 
 type Props = {
   params: {

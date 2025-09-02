@@ -1,13 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 import { Button } from '@/components/ui/button'
-
-const navItems = [
-    {href: '/', label: 'Home'},
-    {href: '/blog', label: 'Blog'},
-    {href: '/ai', label: 'AI'},
-    {href: '/contact', label: 'Contact'},
-]
+import { navItems } from '@/lib/navigation'
 
 export default function Nav() {
   return (

@@ -1,19 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { getArticles } from '@/lib/newt'
-
-// ISO 8601形式の日付文字列をDateオブジェクトに変換する関数
-function parseISO8601Date(dateString: string): Date | null {
-  try {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) {
-      return null;
-    }
-    return date;
-  } catch (error) {
-    return null;
-  }
-}
+import { parseISO8601Date } from '@/lib/utils'
 
 export default async function Blog() {
   const articles = await getArticles()

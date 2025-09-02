@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Menu } from "lucide-react"
 import Link from "next/link"
+import { navItems } from '@/lib/navigation'
 
 import {
   Sheet,
@@ -8,13 +9,6 @@ import {
   SheetContent,
   SheetTrigger
 } from "@/components/ui/sheet"
-
-const tags = [
-  { label: "Home", href: "/" },
-  { label: "Blog", href: "/blog" },
-  { label: "Ai", href: "/ai" },
-  { label: "Contact", href: "/contact" },
-]
 
 export default function MobileNav() {
   return (
@@ -26,14 +20,14 @@ export default function MobileNav() {
       </SheetTrigger>
       <SheetContent>
       <div className='flex flex-col mt-4 gap-2'>
-         {tags.map((tag) => (
-           <li className="list-none text-muted-foreground" key={tag.label}>
+         {navItems.map((item) => (
+           <div className="text-muted-foreground" key={item.label}>
              <SheetClose asChild>
             <Button className=" justify-start text-lg" variant="ghost" asChild>
-             <Link href={tag.href}>{tag.label}</Link>
+             <Link href={item.href}>{item.label}</Link>
                </Button>
                </SheetClose>
-          </li> 
+          </div> 
         ))} 
     </div>
       </SheetContent>
