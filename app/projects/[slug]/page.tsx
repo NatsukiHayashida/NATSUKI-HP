@@ -52,7 +52,7 @@ export default function ProjectPage({ params }: Props) {
   }
 
   return (
-    <main className="container py-12">
+    <main className="container py-12 pt-20">
       <article className="max-w-4xl mx-auto">
         {/* Breadcrumb */}
         <nav className="mb-8 text-sm text-muted-foreground">

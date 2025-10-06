@@ -19,7 +19,7 @@ export default function AI() {
   }, [messages])
 
   return (
-    <div className="flex flex-col w-full max-w-xl mx-auto">
+    <main className="flex flex-col w-full max-w-xl mx-auto pt-20">
       <div className="my-4 p-4 border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 text-slate-700 rounded-lg shadow-sm dark:from-slate-800 dark:to-slate-700 dark:border-slate-600 dark:text-slate-200">
         <TypingTextAI />
       </div>
@@ -75,6 +75,6 @@ export default function AI() {
           Send
         </Button>
       </form>
-    </div>
+    </main>
   )
 }

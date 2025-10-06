@@ -6,7 +6,7 @@ import Nav from './nav'
 
 export default function Header() {
     return (
-        <div className='container flex h-24 items-center  justify-between '>
+        <div className='container max-w-5xl flex h-24 items-center justify-between'>
             <Logo />
             <div className='flex gap-2'>
             <div className='block sm:hidden'>

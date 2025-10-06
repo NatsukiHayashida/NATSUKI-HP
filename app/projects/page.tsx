@@ -11,7 +11,7 @@ export default function ProjectsPage() {
   const projects = getAllProjects()
 
   return (
-    <main className="container py-12">
+    <main className="container py-12 pt-20">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold mb-4">Projects</h1>
         <p className="text-muted-foreground mb-12">

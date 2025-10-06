@@ -47,7 +47,7 @@ export default async function Article({ params }: Props) {
   const date = parseISO8601Date(post.date);
   
   return (
-    <div className="container p-2 mx-auto">
+    <main className="container p-2 mx-auto pt-20">
       <article className="prose dark:prose-invert mx-auto">
         <h2 className="text-start mx-8 text-md md:text-2xl my-4">{post.title}</h2>
         {date && (
@@ -104,6 +104,6 @@ export default async function Article({ params }: Props) {
           </Button>
         )}
       </div>
-    </div>
+    </main>
   )
 }
