@@ -2,120 +2,107 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
+## プロジェクト概要
 
-This is Natsuki's personal portfolio website built with Next.js 14.2.1, featuring:
-- Portfolio pages (about, work, education, contact)
-- Blog functionality powered by Newt CMS
-- AI chat feature using OpenAI GPT-4o
-- Dark/light theme support
-- Google Analytics integration
+Natsukiの個人ポートフォリオサイト（Next.js 14.2.1）：
+- ポートフォリオページ（About、Work、Education、Contact）
+- MDXファイルベースのブログ機能
+- OpenAI GPT-4oを使用したAIチャット機能
+- ダーク/ライトテーマ対応
+- Google Analytics統合
 
-## Development Commands
+## 開発コマンド
 
 ```bash
-# Start development server
+# 開発サーバー起動
 npm run dev
 
-# Build for production
+# 本番ビルド
 npm run build
 
-# Start production server
+# 本番サーバー起動
 npm start
 
-# Run linting
+# リント実行
 npm run lint
 ```
 
-## Architecture
+## アーキテクチャ
 
-### Key Stack
-- **Framework**: Next.js 14 with App Router
-- **Styling**: Tailwind CSS + shadcn/ui components
-- **CMS**: Newt CMS for blog content
-- **AI Integration**: Vercel AI SDK with OpenAI
-- **Theme**: next-themes for dark/light mode
-- **Markdown**: react-markdown with syntax highlighting and KaTeX math support
+### 技術スタック
+- **フレームワーク**: Next.js 14（App Router）
+- **スタイリング**: Tailwind CSS + shadcn/uiコンポーネント
+- **ブログ**: `content/blog/`内のMDXファイルシステム
+- **AI統合**: Vercel AI SDK + OpenAI
+- **メール**: EmailJS（スパム対策機能付き）
+- **テーマ**: next-themesによるダーク/ライトモード
+- **Markdown**: react-markdown（シンタックスハイライト、KaTeX数式対応）
 
-### Directory Structure
-- `app/` - Next.js App Router pages and components
-  - `api/chat/` - AI chat endpoint
-  - `components/` - Page-specific components (header, footer, nav, etc.)
-  - `articles/[slug]/` - Dynamic blog article pages
-- `components/ui/` - Reusable shadcn/ui components
-- `lib/` - Utilities and external service clients
-- `types/` - TypeScript type definitions
+### ディレクトリ構造
+- `app/` - Next.js App Routerのページとコンポーネント
+  - `api/chat/` - AIチャットエンドポイント
+  - `components/` - ページ固有のコンポーネント（header、footer、nav等）
+  - `articles/[slug]/` - 動的ブログ記事ページ
+- `components/ui/` - 再利用可能なshadcn/uiコンポーネント
+- `lib/` - ユーティリティと外部サービスクライアント
+  - `mdx.ts` - ブログ記事のパースとユーティリティ
+  - `spam-protection.ts` - お問合せフォームのスパムフィルタリング
+- `types/` - TypeScript型定義
+- `content/blog/` - MDXブログ記事ファイル
 
-### Key Integrations
-- **Newt CMS**: Blog content managed via `lib/newt.ts` with caching
-- **OpenAI Chat**: Streaming chat API at `/api/chat/route.ts`
-- **Google Analytics**: Configured with tracking ID G-8D9W92XLJY
-
-### Environment Variables Required
-- `NEWT_SPACE_UID` - Newt CMS space identifier
-- `NEWT_CDN_API_TOKEN` - Newt CMS API token
-- `OPENAI_API_KEY` - OpenAI API key for chat feature
-
-## Code Patterns
-
-- Server components are preferred; client components marked with 'use client'
-- CMS functions in `lib/newt.ts` use React cache() and 'server-only' (being migrated to MDX)
-- UI components follow shadcn/ui patterns with cn() utility for class merging
-- Responsive design with mobile navigation component
-
-## Blog System (MDX Migration)
-
-**Migration from Newt CMS to MDX completed**
-
-### MDX Blog Structure
-- `content/blog/` - MDX blog post files
-- `lib/mdx.ts` - File-based blog functions (getAllPosts, getPostBySlug, getAllSlugs)
-- `types/blog.ts` - TypeScript interfaces for blog posts
-
-### Blog Post Format
-```markdown
----
-title: "Post Title"
-date: "2025-01-15"
-slug: "post-slug"  
-excerpt: "Post summary"
----
-
-# Content in Markdown format
-```
-
-### Features
-- Reading time calculation
-- Syntax highlighting with rehype-highlight
-- Math support with KaTeX
-- Static generation with Next.js
-
-## Contact Form (EmailJS Migration)
-
-**Migration from Newt Forms to EmailJS with spam protection**
-
-### Email System
-- `@emailjs/browser` for form submissions
-- `lib/spam-protection.ts` - Comprehensive spam filtering
-- Environment variables required for EmailJS configuration
-
-### Spam Protection Features
-- **Honeypot field** - Bot detection
-- **Japanese language requirement** - Blocks non-Japanese messages
-- **URL detection** - Prevents link spam
-- **Spam keyword filtering** - Common spam terms
-- **Rate limiting** - 1-minute cooldown between submissions
-- **Content validation** - Length limits and sanitization
-
-### Environment Variables Required (Additional)
+### 必要な環境変数
 ```bash
+# OpenAI APIキー（チャット機能用）
+OPENAI_API_KEY=sk-proj-...
+
+# EmailJS設定（お問合せフォーム用）
 NEXT_PUBLIC_EMAILJS_SERVICE_ID=service_xxx
-NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=template_xxx  
+NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=template_xxx
 NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=xxx
 NEXT_PUBLIC_CONTACT_EMAIL=your-email@domain.com
+
+# レガシーNewt CMS（使用されていないため削除可能）
+NEWT_SPACE_UID=natsuki-hp
+NEWT_CDN_API_TOKEN=...
 ```
 
-## Documentation Files
+## コードパターン
 
-- `BLOG_POSTING_GUIDE.md` - Instructions for creating MDX blog posts
-- `EMAILJS_SETUP_GUIDE.md` - EmailJS configuration and spam protection setup
+- サーバーコンポーネントを優先、クライアントコンポーネントは'use client'で明示
+- UIコンポーネントはshadcn/uiパターンに従い、cn()ユーティリティでクラス結合
+- ブログ記事はフロントマター付きMDX（title、date、slug、excerpt）
+- 包括的スパム対策：日本語必須、ハニーポット、レート制限
+- Next.jsによるブログコンテンツの静的生成
+- next.config.mjsでContent Security Policy設定
+
+## ブログシステム
+
+### MDXブログ記事フォーマット
+`content/blog/[slug].mdx`に新規記事を作成：
+
+```markdown
+---
+title: "記事タイトル"
+date: "2025-01-15"
+slug: "post-slug"
+excerpt: "記事の要約"
+---
+
+# Markdown形式のコンテンツ
+```
+
+機能：読了時間計算、シンタックスハイライト、KaTeX数式サポート
+
+## お問合せフォーム
+
+EmailJS統合と多層スパム対策：
+- ボット検出用ハニーポットフィールド
+- 日本語必須（ひらがな/カタカナ/漢字）
+- URL検出とスパムキーワードフィルタリング
+- レート制限（1分間のクールダウン）
+- コンテンツ検証とサニタイゼーション
+
+## ドキュメント参照
+
+- `BLOG_POSTING_GUIDE.md` - MDXブログ記事作成手順
+- `EMAILJS_SETUP_GUIDE.md` - EmailJS設定とスパム対策セットアップ

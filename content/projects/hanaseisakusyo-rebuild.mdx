@@ -1,0 +1,200 @@
+---
+title: "花製作所リニューアル - ECcube → Next.js完全自作への道"
+date: "2025-01-15"
+excerpt: "ECcube + Xserverで運用していた花製作所を、Next.js完全自作に移行するプロジェクト。ECサイトをゼロから作り直す過程を記録していきます。"
+category: "Web Development"
+tags: ["Next.js", "E-commerce", "Refactoring", "Full-Stack", "Migration"]
+demoUrl: "https://www.hanaseisakusyo.com/"
+technologies: ["Next.js 14", "TypeScript", "Tailwind CSS", "Stripe", "PostgreSQL", "Vercel"]
+role: "Full Stack Developer"
+duration: "進行中（2025/01〜）"
+outcomes:
+  - "要件定義完了（ECサイト基本機能の洗い出し）"
+  - "技術スタック選定（Next.js + Stripe + PostgreSQL）"
+challenges:
+  - "ECcubeからのデータ移行戦略"
+  - "既存ユーザーへの影響を最小限にする移行計画"
+  - "決済システムの安全な実装"
+learnings:
+  - "ECサイト構築に必要な機能要件の理解"
+  - "段階的なシステム移行の計画手法"
+---
+
+## プロジェクト背景
+
+妻が運営する「花製作所」は、現在**ECcube**を使用したECサイトとして運営されています。
+
+### 現状の課題
+
+1. **拡張性の限界**
+   - ECcubeのプラグインでは実現できない独自機能の追加が困難
+   - カスタマイズのたびにPHPコードを直接編集する必要がある
+
+2. **運用コスト**
+   - Xserverの月額費用
+   - ECcubeのバージョンアップ対応の手間
+
+3. **パフォーマンス**
+   - ページ読み込みが遅い（特にモバイル）
+   - Lighthouse Performance Score: 40-50点台
+
+### 目標
+
+**完全自作のNext.js ECサイト**に移行し、以下を実現：
+- ⚡ Lighthouse Performance Score 90+
+- 🎨 完全カスタマイズ可能なデザイン
+- 💰 運用コスト削減（Vercel Hobby Planで無料運用）
+- 🚀 モダンな技術スタックで保守性向上
+
+---
+
+## 技術設計
+
+### アーキテクチャ
+
+```
+フロントエンド (Next.js)
+├── 商品一覧・詳細ページ
+├── カート機能
+├── ユーザー認証
+└── 注文管理ダッシュボード
+
+バックエンド (Next.js API Routes)
+├── 商品API
+├── 注文API
+└── Stripe決済API
+
+データベース (PostgreSQL)
+├── 商品テーブル
+├── ユーザーテーブル
+├── 注文テーブル
+└── 在庫テーブル
+```
+
+### 選定理由
+
+**Next.js 14**
+- App RouterによるSEO最適化
+- ISRで在庫更新とパフォーマンスの両立
+- Vercel Analyticsで簡単にCore Web Vitals監視
+
+**Stripe**
+- 安全な決済処理
+- サブスクリプションにも将来対応可能
+- 豊富なドキュメントとサポート
+
+**PostgreSQL**
+- リレーショナルデータベースとしての安定性
+- VercelのPostgres統合で簡単セットアップ
+
+---
+
+## 移行計画（フェーズ別）
+
+### Phase 1: 設計・準備（1ヶ月）✅ 完了
+
+- [x] 現行システムの機能洗い出し
+- [x] データベース設計
+- [x] 技術スタック選定
+- [x] プロトタイプ作成
+
+### Phase 2: 基本機能実装（2ヶ月）🔄 進行中
+
+- [ ] 商品管理機能
+  - [ ] 商品CRUD API
+  - [ ] 画像アップロード機能
+  - [ ] 在庫管理システム
+- [ ] フロントエンド実装
+  - [ ] 商品一覧ページ
+  - [ ] 商品詳細ページ
+  - [ ] カート機能
+
+### Phase 3: 決済・認証（1ヶ月）
+
+- [ ] Stripe決済統合
+- [ ] ユーザー認証（NextAuth.js）
+- [ ] 注文管理ダッシュボード
+
+### Phase 4: データ移行（2週間）
+
+- [ ] ECcubeからのデータエクスポート
+- [ ] PostgreSQLへのデータインポート
+- [ ] 画像ファイルの移行
+
+### Phase 5: テスト・リリース（1ヶ月）
+
+- [ ] E2Eテスト（Playwright）
+- [ ] パフォーマンステスト
+- [ ] セキュリティ監査
+- [ ] 段階的リリース
+
+---
+
+## 開発ログ
+
+### 2025-01-15: プロジェクト開始
+
+データベース設計を完了。主要テーブル：
+
+```sql
+-- 商品テーブル
+CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  price INTEGER NOT NULL,
+  stock INTEGER DEFAULT 0,
+  images JSONB,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- 注文テーブル
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  total_amount INTEGER NOT NULL,
+  status VARCHAR(50) DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+### 2025-01-20: Stripeテストモード統合
+
+Stripeのテスト環境で決済フローのプロトタイプを実装。
+
+```typescript
+// app/api/checkout/route.ts
+import Stripe from 'stripe'
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+
+export async function POST(request: Request) {
+  const { items } = await request.json()
+
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    line_items: items,
+    mode: 'payment',
+    success_url: `${process.env.NEXT_PUBLIC_URL}/success`,
+    cancel_url: `${process.env.NEXT_PUBLIC_URL}/cancel`,
+  })
+
+  return Response.json({ sessionId: session.id })
+}
+```
+
+---
+
+## 次のステップ
+
+- [ ] 商品管理ダッシュボードのUI実装
+- [ ] 在庫管理ロジックの実装
+- [ ] カート機能の状態管理（Zustand）
+
+---
+
+## 参考リソース
+
+- [Next.js Commerce](https://github.com/vercel/commerce)
+- [Stripe Checkout Integration](https://stripe.com/docs/checkout/quickstart)
+- [PostgreSQL Best Practices](https://wiki.postgresql.org/wiki/Don't_Do_This)

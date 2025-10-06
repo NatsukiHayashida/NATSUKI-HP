@@ -1,0 +1,212 @@
+import { notFound } from 'next/navigation'
+import Link from 'next/link'
+import ReactMarkdown from 'react-markdown'
+import { getProjectBySlug, getProjectSlugs } from '@/lib/projects'
+import { Metadata } from 'next'
+import { ExternalLink, Github } from 'lucide-react'
+import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
+import rehypeHighlight from 'rehype-highlight'
+import 'katex/dist/katex.min.css'
+import 'highlight.js/styles/github-dark.css'
+
+type Props = {
+  params: { slug: string }
+}
+
+export async function generateStaticParams() {
+  const slugs = getProjectSlugs()
+  return slugs.map((slug) => ({
+    slug,
+  }))
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const project = getProjectBySlug(params.slug)
+
+  if (!project) {
+    return {
+      title: 'Project Not Found',
+    }
+  }
+
+  return {
+    title: `${project.title} | Projects`,
+    description: project.excerpt,
+    openGraph: {
+      title: project.title,
+      description: project.excerpt,
+      type: 'article',
+      publishedTime: project.date,
+      tags: project.tags,
+    },
+  }
+}
+
+export default function ProjectPage({ params }: Props) {
+  const project = getProjectBySlug(params.slug)
+
+  if (!project) {
+    notFound()
+  }
+
+  return (
+    <main className="container py-12">
+      <article className="max-w-4xl mx-auto">
+        {/* Breadcrumb */}
+        <nav className="mb-8 text-sm text-muted-foreground">
+          <Link href="/" className="hover:text-foreground">
+            Home
+          </Link>
+          {' / '}
+          <Link href="/projects" className="hover:text-foreground">
+            Projects
+          </Link>
+          {' / '}
+          <span className="text-foreground">{project.title}</span>
+        </nav>
+
+        {/* Header */}
+        <header className="mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">{project.title}</h1>
+
+          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6">
+            <span className="px-3 py-1 bg-primary text-primary-foreground rounded-md font-medium">
+              {project.category}
+            </span>
+            <span>{project.role}</span>
+            <span>{project.duration}</span>
+            <span>{project.date}</span>
+          </div>
+
+          <p className="text-lg text-muted-foreground mb-6">{project.excerpt}</p>
+
+          {/* External Links */}
+          {(project.demoUrl || project.githubUrl) && (
+            <div className="flex gap-4">
+              {project.demoUrl && (
+                <Link
+                  href={project.demoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  View Demo
+                </Link>
+              )}
+              {project.githubUrl && (
+                <Link
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors"
+                >
+                  <Github className="w-4 h-4" />
+                  View Code
+                </Link>
+              )}
+            </div>
+          )}
+        </header>
+
+        {/* Technologies */}
+        {project.technologies.length > 0 && (
+          <section className="mb-12 p-6 bg-muted rounded-xl">
+            <h2 className="text-xl font-semibold mb-4">Technologies Used</h2>
+            <div className="flex flex-wrap gap-2">
+              {project.technologies.map((tech) => (
+                <span
+                  key={tech}
+                  className="px-3 py-1 bg-background border border-border rounded-md text-sm"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Main Content */}
+        <div className="prose prose-lg dark:prose-invert max-w-none mb-12">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm, remarkMath]}
+            rehypePlugins={[rehypeKatex, rehypeHighlight]}
+          >
+            {project.content}
+          </ReactMarkdown>
+        </div>
+
+        {/* Outcomes */}
+        {project.outcomes && project.outcomes.length > 0 && (
+          <section className="mb-12 p-6 bg-muted rounded-xl">
+            <h2 className="text-2xl font-semibold mb-4">Outcomes & Results</h2>
+            <ul className="space-y-2">
+              {project.outcomes.map((outcome, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <span className="text-primary mt-1">✓</span>
+                  <span>{outcome}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* Challenges */}
+        {project.challenges && project.challenges.length > 0 && (
+          <section className="mb-12 p-6 bg-muted rounded-xl">
+            <h2 className="text-2xl font-semibold mb-4">Challenges Overcome</h2>
+            <ul className="space-y-3">
+              {project.challenges.map((challenge, index) => (
+                <li key={index} className="pl-4 border-l-2 border-primary">
+                  {challenge}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* Learnings */}
+        {project.learnings && project.learnings.length > 0 && (
+          <section className="mb-12 p-6 bg-muted rounded-xl">
+            <h2 className="text-2xl font-semibold mb-4">Key Learnings</h2>
+            <ul className="space-y-3">
+              {project.learnings.map((learning, index) => (
+                <li key={index} className="pl-4 border-l-2 border-accent">
+                  {learning}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* Tags */}
+        {project.tags.length > 0 && (
+          <footer className="pt-8 border-t border-border">
+            <div className="flex flex-wrap gap-2">
+              {project.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm"
+                >
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          </footer>
+        )}
+
+        {/* Back to Projects */}
+        <div className="mt-12">
+          <Link
+            href="/projects"
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            ← Back to Projects
+          </Link>
+        </div>
+      </article>
+    </main>
+  )
+}

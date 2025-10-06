@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-import type { ThemeConfig } from "tailwindcss/types/config"; // ThemeConfig 型をインポート
+import type { ThemeConfig } from "tailwindcss/types/config";
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 const config = {
@@ -14,12 +14,22 @@ const config = {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: {
+        DEFAULT: '1rem',
+        sm: '1.5rem',
+        md: '2rem',
+        lg: '3rem',
+        xl: '4rem',
+      },
       screens: {
-        "md": "768px",
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
       },
     },
     extend: {
+      // Design Tokens: Colors
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -54,11 +64,47 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Brand accent color (indigo)
+        brand: {
+          50: '#eef2ff',
+          100: '#e0e7ff',
+          200: '#c7d2fe',
+          300: '#a5b4fc',
+          400: '#818cf8',
+          500: '#6366f1',
+          600: '#4f46e5',
+          700: '#4338ca',
+          800: '#3730a3',
+          900: '#312e81',
+        },
       },
+      // Design Tokens: Spacing Scale (4px base)
+      spacing: {
+        '18': '4.5rem',
+        '88': '22rem',
+        '128': '32rem',
+      },
+      // Design Tokens: Border Radius
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        'xs': '0.125rem',  // 2px
+        'sm': '0.25rem',   // 4px
+        'DEFAULT': '0.375rem', // 6px
+        'md': '0.5rem',    // 8px
+        'lg': '0.75rem',   // 12px
+        'xl': '1rem',      // 16px
+        '2xl': '1.5rem',   // 24px
+        '3xl': '2rem',     // 32px
+      },
+      // Design Tokens: Box Shadows
+      boxShadow: {
+        'sm': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+        'DEFAULT': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+        'md': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+        'xl': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+        '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        'inner': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
+        'none': 'none',
       },
       typography: (theme: ThemeConfig) => ({ // 引数の型を ThemeConfig に変更
         DEFAULT: {
@@ -141,6 +187,7 @@ const config = {
           },
         },
       }),
+      // Design Tokens: Animations
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -150,13 +197,54 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "fade-in": {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+        "fade-out": {
+          from: { opacity: "1" },
+          to: { opacity: "0" },
+        },
+        "slide-in-from-top": {
+          from: { transform: "translateY(-10px)", opacity: "0" },
+          to: { transform: "translateY(0)", opacity: "1" },
+        },
+        "slide-in-from-bottom": {
+          from: { transform: "translateY(10px)", opacity: "0" },
+          to: { transform: "translateY(0)", opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-in": "fade-in 0.3s ease-in-out",
+        "fade-out": "fade-out 0.3s ease-in-out",
+        "slide-in-from-top": "slide-in-from-top 0.3s ease-out",
+        "slide-in-from-bottom": "slide-in-from-bottom 0.3s ease-out",
       },
+      // Design Tokens: Typography
       fontFamily: {
         sans: ['var(--font-noto-sans-jp)', ...defaultTheme.fontFamily.sans],
+      },
+      fontSize: {
+        'xs': ['0.75rem', { lineHeight: '1rem' }],
+        'sm': ['0.875rem', { lineHeight: '1.25rem' }],
+        'base': ['1rem', { lineHeight: '1.5rem' }],
+        'lg': ['1.125rem', { lineHeight: '1.75rem' }],
+        'xl': ['1.25rem', { lineHeight: '1.75rem' }],
+        '2xl': ['1.5rem', { lineHeight: '2rem' }],
+        '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
+        '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
+        '5xl': ['3rem', { lineHeight: '1' }],
+        '6xl': ['3.75rem', { lineHeight: '1' }],
+      },
+      letterSpacing: {
+        tighter: '-0.05em',
+        tight: '-0.025em',
+        normal: '0',
+        wide: '0.025em',
+        wider: '0.05em',
+        widest: '0.1em',
       },
     },
   },
