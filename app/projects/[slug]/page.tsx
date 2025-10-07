@@ -1,11 +1,13 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import ReactMarkdown from 'react-markdown'
 import { getProjectBySlug, getProjectSlugs } from '@/lib/projects'
 import { Metadata } from 'next'
 import { ExternalLink, Github } from 'lucide-react'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
+import rehypeRaw from 'rehype-raw'
 import rehypeKatex from 'rehype-katex'
 import rehypeHighlight from 'rehype-highlight'
 import 'katex/dist/katex.min.css'
@@ -132,7 +134,28 @@ export default function ProjectPage({ params }: Props) {
         <div className="prose prose-lg dark:prose-invert max-w-none mb-12">
           <ReactMarkdown
             remarkPlugins={[remarkGfm, remarkMath]}
-            rehypePlugins={[rehypeKatex, rehypeHighlight]}
+            rehypePlugins={[rehypeRaw, rehypeKatex, rehypeHighlight]}
+            components={{
+              img: ({ node, ...props }) => {
+                const src = props.src || ''
+                const alt = props.alt || ''
+
+                // 画像サイズの推定（4:3アスペクト比）
+                const width = 1200
+                const height = 900
+
+                return (
+                  <Image
+                    src={src}
+                    alt={alt}
+                    width={width}
+                    height={height}
+                    className={props.className}
+                    style={{ width: '100%', height: 'auto' }}
+                  />
+                )
+              }
+            }}
           >
             {project.content}
           </ReactMarkdown>
