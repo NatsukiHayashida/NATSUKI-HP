@@ -47,7 +47,7 @@ export default async function Article({ params }: Props) {
   const date = parseISO8601Date(post.date);
   
   return (
-    <main className="container p-2 mx-auto pt-20">
+    <main className="container px-4 py-8 pt-8 mx-auto md:py-12 md:pt-12">
       <article className="prose dark:prose-invert mx-auto">
         <h2 className="text-start mx-8 text-md md:text-2xl my-4">{post.title}</h2>
         {date && (

@@ -30,7 +30,7 @@ export default function AI() {
   }
 
   return (
-    <main className="flex flex-col w-full max-w-3xl mx-auto pt-20 px-4">
+    <main className="flex flex-col w-full max-w-3xl mx-auto pt-8 md:pt-12 px-6">
       <Card className="p-6 mb-6 bg-gradient-to-r from-primary/5 to-primary/10">
         <TypingTextAI />
       </Card>

@@ -83,7 +83,7 @@ export default function Contact() {
   }
 
   return (
-    <main className="container mx-auto py-4 pt-20">
+    <main className="container mx-auto py-8 pt-8 md:py-12 md:pt-12">
       <div className='mx-4 md:mx-16 my-4'>
         <h1 className="text-2xl text-center my-4">Contact Me</h1>
         <div className='flex md:mx-12'>

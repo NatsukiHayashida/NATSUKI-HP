@@ -9,7 +9,7 @@ import { FileText } from 'lucide-react'
 export default async function Blog() {
   const posts = getAllPosts()
   return (
-    <main className='container py-12 pt-20'>
+    <main className='container py-8 pt-8 md:py-12 md:pt-12'>
       <div className='max-w-4xl mx-auto'>
         <h1 className="text-4xl font-bold mb-4">Blog</h1>
         <article className="prose dark:prose-invert mb-12">

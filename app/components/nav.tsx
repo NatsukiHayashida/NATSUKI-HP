@@ -9,7 +9,7 @@ export default function Nav() {
           <ul className='flex gap-4'>
                 {navItems.map((item) => (
                     <li key={item.label} >
-                        <Button variant="ghost" asChild>
+                        <Button variant="ghost" asChild className="text-base">
                             <Link href={item.href}>{item.label}</Link>
                         </Button>
                     </li>

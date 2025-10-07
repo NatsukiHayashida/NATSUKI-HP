@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function About() {
   return (
-    <main className="container py-12 pt-20">
+    <main className="container py-8 pt-8 md:py-12 md:pt-12">
       <div className="max-w-4xl mx-auto space-y-16">
         {/* Hero Section */}
         <section className="text-center space-y-6">

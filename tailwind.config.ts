@@ -15,9 +15,9 @@ const config = {
     container: {
       center: true,
       padding: {
-        DEFAULT: '1rem',
-        sm: '1.5rem',
-        md: '2rem',
+        DEFAULT: '1.5rem',  // モバイル余白を増加: 16px → 24px
+        sm: '2rem',
+        md: '2.5rem',
         lg: '3rem',
         xl: '4rem',
       },

@@ -3,14 +3,15 @@ import Link from 'next/link'
 import { getAllPosts } from '@/lib/mdx'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Mountain } from 'lucide-react'
 
 export default function Home() {
   const recentPosts = getAllPosts().slice(0, 3)
   return (
-    <main className="pt-8">
-      <section className="py-12">
+    <main className="pt-4">
+      <section className="py-8 md:py-12">
         <div className="container max-w-5xl">
-          <h1 className="text-3xl md:text-4xl font-bold mb-6">Hey, I&apos;m Natsuki Hayashida 😄</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-6">Hey, I&apos;m Natsuki Hayashida</h1>
           <div className="space-y-4 text-lg text-muted-foreground">
             <p>
               Usually I work with CAD and CAM in a factory, but personally, I&apos;m really into studying front-end development and AI.
@@ -19,7 +20,7 @@ export default function Home() {
               This site is my tech playground, where I share my journey and connect with like-minded folks. I hope it inspires you as much as it inspires me.
             </p>
             <p>
-              Thanks for stopping by, and let&apos;s enjoy this ride together ✌️
+              Thanks for stopping by, and let&apos;s enjoy this ride together.
             </p>
           </div>
         </div>
@@ -104,36 +105,36 @@ export default function Home() {
         <div className="container max-w-5xl">
           <h2 className="text-2xl font-bold mb-6">Projects</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Link href="/projects/hanaseisakusyo-rebuild" className="group block">
-              <div className="flex flex-col gap-4 p-6 rounded-xl border bg-card hover:border-primary transition-all hover:shadow-lg">
+            <Link href="/projects/hanaseisakusyo-rebuild" className="group block h-full">
+              <div className="flex flex-col gap-4 p-6 rounded-xl border bg-card hover:border-primary transition-all hover:shadow-lg h-full">
                 <div className="aspect-square rounded-full overflow-hidden w-16 h-16">
                   <Image src="/image/HANA.svg" alt="花製作所" width={64} height={64} />
                 </div>
-                <div>
+                <div className="flex-1">
                   <h3 className="font-semibold text-lg mb-1 group-hover:text-primary transition-colors">花製作所サイト移行</h3>
                   <p className="text-sm text-muted-foreground">EC-CUBE → Next.js + Supabase</p>
                 </div>
               </div>
             </Link>
 
-            <Link href="/projects/savvybot" className="group block">
-              <div className="flex flex-col gap-4 p-6 rounded-xl border bg-card hover:border-primary transition-all hover:shadow-lg">
+            <Link href="/projects/savvybot" className="group block h-full">
+              <div className="flex flex-col gap-4 p-6 rounded-xl border bg-card hover:border-primary transition-all hover:shadow-lg h-full">
                 <div className="aspect-square bg-white rounded-full overflow-hidden w-16 h-16">
                   <Image src="/image/SavvyBot.svg" alt="Savybot" width={64} height={64} />
                 </div>
-                <div>
+                <div className="flex-1">
                   <h3 className="font-semibold text-lg mb-1 group-hover:text-primary transition-colors">Savybot バージョンアップ</h3>
                   <p className="text-sm text-muted-foreground">AI チャットアプリの進化記録</p>
                 </div>
               </div>
             </Link>
 
-            <Link href="/projects/hobby" className="group block">
-              <div className="flex flex-col gap-4 p-6 rounded-xl border bg-card hover:border-primary transition-all hover:shadow-lg">
-                <div className="aspect-square rounded-full overflow-hidden w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white text-2xl font-bold">
-                  🏔️
+            <Link href="/projects/hobby" className="group block h-full">
+              <div className="flex flex-col gap-4 p-6 rounded-xl border bg-card hover:border-primary transition-all hover:shadow-lg h-full">
+                <div className="aspect-square rounded-full overflow-hidden w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                  <Mountain className="w-8 h-8 text-white" strokeWidth={2.5} />
                 </div>
-                <div>
+                <div className="flex-1">
                   <h3 className="font-semibold text-lg mb-1 group-hover:text-primary transition-colors">Hobby</h3>
                   <p className="text-sm text-muted-foreground">山登り・キャンピングカー・サーフィン</p>
                 </div>
