@@ -2,6 +2,9 @@ import React from 'react'
 import Link from 'next/link'
 import { getAllPosts } from '@/lib/mdx'
 import { parseISO8601Date } from '@/lib/utils'
+import { Card } from '@/components/ui/card'
+import { EmptyState } from '@/components/ui/empty-state'
+import { FileText } from 'lucide-react'
 
 export default async function Blog() {
   const posts = getAllPosts()
@@ -15,34 +18,47 @@ export default async function Blog() {
         </article>
         <section>
           <h2 className="text-2xl font-semibold mb-6">Writing</h2>
-          <ul className="space-y-2">
-            {posts.map((post) => {
-              // 日付文字列をパース
-              const date = parseISO8601Date(post.date);
-              return (
-                <li key={post.slug} className="list-none">
-                  <Link
-                    href={`articles/${post.slug}`}
-                    className="block hover:bg-muted/50 p-3 rounded-lg transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                      <span className="font-medium">{post.title}</span>
-                      {date && (
-                        <span className='text-sm text-muted-foreground whitespace-nowrap'>
-                          {date.toLocaleDateString('ja-JP', {
-                            timeZone: 'Asia/Tokyo',
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                          })}
-                        </span>
+          {posts.length === 0 ? (
+            <EmptyState
+              icon={FileText}
+              title="No articles yet"
+              description="Blog posts are coming soon. Stay tuned for insights on AI, programming, and development!"
+              action={{
+                label: "View Projects",
+                href: "/projects"
+              }}
+            />
+          ) : (
+            <div className="space-y-4">
+              {posts.map((post) => {
+                const date = parseISO8601Date(post.date);
+                return (
+                  <Link key={post.slug} href={`articles/${post.slug}`}>
+                    <Card variant="interactive" className="p-6">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                        <h3 className="font-semibold text-lg">{post.title}</h3>
+                        {date && (
+                          <span className='text-sm text-muted-foreground whitespace-nowrap'>
+                            {date.toLocaleDateString('ja-JP', {
+                              timeZone: 'Asia/Tokyo',
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                            })}
+                          </span>
+                        )}
+                      </div>
+                      {post.excerpt && (
+                        <p className="text-muted-foreground mt-2 text-sm line-clamp-2">
+                          {post.excerpt}
+                        </p>
                       )}
-                    </div>
+                    </Card>
                   </Link>
-                </li>
-              )
-            })}
-          </ul>
+                )
+              })}
+            </div>
+          )}
         </section>
       </div>
     </main>

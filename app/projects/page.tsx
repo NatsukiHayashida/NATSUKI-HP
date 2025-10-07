@@ -1,6 +1,10 @@
 import Link from 'next/link'
 import { getAllProjects } from '@/lib/projects'
 import { Metadata } from 'next'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { EmptyState } from '@/components/ui/empty-state'
+import { FolderOpen } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Projects | Natsuki Portfolio',
@@ -19,53 +23,49 @@ export default function ProjectsPage() {
         </p>
 
         {projects.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">No projects available yet. Check back soon!</p>
-          </div>
+          <EmptyState
+            icon={FolderOpen}
+            title="No projects yet"
+            description="Projects are currently being prepared. Check back soon to see my latest work!"
+            action={{
+              label: "View Blog",
+              href: "/blog"
+            }}
+          />
         ) : (
           <div className="grid gap-8">
             {projects.map((project) => (
               <Link
                 key={project.slug}
                 href={`/projects/${project.slug}`}
-                className="group block"
               >
-                <article className="border rounded-xl p-6 hover:border-primary transition-all hover:shadow-lg">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h2 className="text-2xl font-semibold mb-2 group-hover:text-primary transition-colors">
-                        {project.title}
-                      </h2>
-                      <div className="flex items-center gap-3 text-sm text-muted-foreground mb-3">
-                        <span className="px-2 py-1 bg-muted rounded-md text-xs font-medium">
-                          {project.category}
-                        </span>
-                        <span>{project.duration}</span>
-                        <span>{project.date}</span>
-                      </div>
+                <Card variant="interactive">
+                  <CardHeader>
+                    <div className="flex items-center gap-3 mb-2">
+                      <Badge variant="tag">{project.category}</Badge>
+                      <span className="text-sm text-muted-foreground">{project.duration}</span>
+                      <span className="text-sm text-muted-foreground">{project.date}</span>
                     </div>
-                  </div>
-
-                  <p className="text-muted-foreground mb-4 line-clamp-2">
-                    {project.excerpt}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2">
-                    {project.technologies.slice(0, 5).map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-2 py-1 bg-secondary text-secondary-foreground rounded-md text-xs"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                    {project.technologies.length > 5 && (
-                      <span className="px-2 py-1 text-muted-foreground text-xs">
-                        +{project.technologies.length - 5} more
-                      </span>
-                    )}
-                  </div>
-                </article>
+                    <CardTitle className="text-2xl">{project.title}</CardTitle>
+                    <CardDescription className="line-clamp-2">
+                      {project.excerpt}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      {project.technologies.slice(0, 5).map((tech) => (
+                        <Badge key={tech} variant="secondary">
+                          {tech}
+                        </Badge>
+                      ))}
+                      {project.technologies.length > 5 && (
+                        <span className="text-muted-foreground text-xs self-center">
+                          +{project.technologies.length - 5} more
+                        </span>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
               </Link>
             ))}
           </div>
