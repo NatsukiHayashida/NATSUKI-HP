@@ -1,12 +1,15 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { getAllPosts } from '@/lib/mdx'
+import { getAllProjects } from '@/lib/projects'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Mountain } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Mountain, ArrowRight } from 'lucide-react'
 
 export default function Home() {
   const recentPosts = getAllPosts().slice(0, 3)
+  const recentProjects = getAllProjects().slice(0, 3)
   return (
     <main className="pt-4">
       <section className="py-8 md:py-12">
@@ -34,6 +37,7 @@ export default function Home() {
                 alt="A man sitting on the open toilet seat, holding his laptop"
                 src="/image/laptop-toilet.png"
                 fill
+                priority
                 sizes="(max-width: 768px) 50vw, 33vw"
                 className="rounded-xl object-cover"
               />
@@ -43,6 +47,7 @@ export default function Home() {
                 alt="a Cyber Frog walks with his camera"
                 src="/image/CyberFrog.png"
                 fill
+                priority
                 sizes="(max-width: 768px) 50vw, 33vw"
                 className="rounded-xl object-cover"
               />
@@ -87,102 +92,87 @@ export default function Home() {
         </div>
       </section>
 
-
-      <section className="py-8">
+      <section className="py-12">
         <div className="container max-w-5xl">
-          <div className="space-y-4 text-muted-foreground">
-            <p>
-              Additionally, I&apos;m fascinated by using Midjourney to generate illustrations. As a part of my creative expression, I find it appealing to create visual content with AI.
-            </p>
-            <p>
-              This site is built using Next.js and TypeScript, and is hosted on Vercel for optimal performance. This setup enables efficient and stable development.
-            </p>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold">Projects</h2>
+            <Button variant="ghost" asChild>
+              <Link href="/projects" className="gap-2">
+                View all
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </Button>
           </div>
-        </div>
-      </section>
-
-      <section className="py-8">
-        <div className="container max-w-5xl">
-          <h2 className="text-2xl font-bold mb-6">Projects</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Link href="/projects/hanaseisakusyo-rebuild" className="group block h-full">
-              <div className="flex flex-col gap-4 p-6 rounded-xl border bg-card hover:border-primary transition-all hover:shadow-lg h-full">
-                <div className="aspect-square rounded-full overflow-hidden w-16 h-16">
-                  <Image src="/image/HANA.svg" alt="花製作所" width={64} height={64} />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-lg mb-1 group-hover:text-primary transition-colors">花製作所サイト移行</h3>
-                  <p className="text-sm text-muted-foreground">EC-CUBE → Next.js + Supabase</p>
-                </div>
-              </div>
-            </Link>
-
-            <Link href="/projects/savvybot" className="group block h-full">
-              <div className="flex flex-col gap-4 p-6 rounded-xl border bg-card hover:border-primary transition-all hover:shadow-lg h-full">
-                <div className="aspect-square bg-white rounded-full overflow-hidden w-16 h-16">
-                  <Image src="/image/SavvyBot.svg" alt="Savybot" width={64} height={64} />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-lg mb-1 group-hover:text-primary transition-colors">Savybot バージョンアップ</h3>
-                  <p className="text-sm text-muted-foreground">AI チャットアプリの進化記録</p>
-                </div>
-              </div>
-            </Link>
-
-            <Link href="/projects/hobby" className="group block h-full">
-              <div className="flex flex-col gap-4 p-6 rounded-xl border bg-card hover:border-primary transition-all hover:shadow-lg h-full">
-                <div className="aspect-square rounded-full overflow-hidden w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
-                  <Mountain className="w-8 h-8 text-white" strokeWidth={2.5} />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-lg mb-1 group-hover:text-primary transition-colors">Hobby</h3>
-                  <p className="text-sm text-muted-foreground">山登り・キャンピングカー・サーフィン</p>
-                </div>
-              </div>
-            </Link>
-          </div>
-
-          <div className="mt-8 text-center">
-            <Link href="/projects" className="inline-flex items-center gap-2 text-primary hover:underline">
-              View all projects →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-8">
-        <div className="container max-w-5xl">
-          <h2 className="text-2xl font-bold mb-6">Recent Blog Posts</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {recentPosts.map((post) => (
-              <Link key={post.slug} href={`/articles/${post.slug}`}>
-                <Card className="h-full hover:border-primary transition-all hover:shadow-lg">
+            {recentProjects.map((project) => (
+              <Link key={project.slug} href={`/projects/${project.slug}`}>
+                <Card variant="interactive" className="h-full">
                   <CardHeader>
-                    <CardTitle className="line-clamp-2">{post.title}</CardTitle>
-                    <CardDescription>
-                      {new Date(post.date).toLocaleDateString('ja-JP', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                        timeZone: 'Asia/Tokyo'
-                      })}
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="tag">{project.category}</Badge>
+                    </div>
+                    <CardTitle className="text-xl line-clamp-2">{project.title}</CardTitle>
+                    <CardDescription className="line-clamp-2">
+                      {project.excerpt}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground line-clamp-3">{post.excerpt}</p>
-                    <div className="mt-4">
-                      <Badge variant="secondary">{post.readingTime}</Badge>
+                    <div className="flex flex-wrap gap-2">
+                      {project.technologies.slice(0, 3).map((tech) => (
+                        <Badge key={tech} variant="secondary" className="text-xs">
+                          {tech}
+                        </Badge>
+                      ))}
+                      {project.technologies.length > 3 && (
+                        <span className="text-muted-foreground text-xs self-center">
+                          +{project.technologies.length - 3}
+                        </span>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
               </Link>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="mt-8 text-center">
-            <Link href="/blog" className="inline-flex items-center gap-2 text-primary hover:underline">
-              View all blog posts →
-            </Link>
+      <section className="py-12">
+        <div className="container max-w-5xl">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold">Recent Blog Posts</h2>
+            <Button variant="ghost" asChild>
+              <Link href="/blog" className="gap-2">
+                View all
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {recentPosts.map((post) => (
+              <Link key={post.slug} href={`/articles/${post.slug}`}>
+                <Card variant="interactive" className="h-full">
+                  <CardHeader>
+                    <div className="flex items-center gap-2 mb-2 text-sm text-muted-foreground">
+                      <time>
+                        {new Date(post.date).toLocaleDateString('ja-JP', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          timeZone: 'Asia/Tokyo'
+                        })}
+                      </time>
+                      <span>•</span>
+                      <span>{post.readingTime}</span>
+                    </div>
+                    <CardTitle className="text-xl line-clamp-2">{post.title}</CardTitle>
+                    <CardDescription className="line-clamp-2">
+                      {post.excerpt}
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
