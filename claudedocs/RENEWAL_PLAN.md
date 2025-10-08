@@ -152,23 +152,30 @@ Home / Projects / Blog / About / Contact
 
 ---
 
-### Phase 2: UI/UX ⏳
+### Phase 2: UI/UX ✅
 **目標**: モダンで洗練されたUI、軽量化されたUX
 
 #### タスク
-- [ ] shadcn/uiコンポーネントの再設計
-  - [ ] Card（Projects/Blog用）
-  - [ ] Badge（タグ表示用）
-  - [ ] Button（統一スタイル）
-  - [ ] EmptyState
-- [ ] Homeページのヒーロー軽量化
-  - [ ] グリッドギャラリーの最適化
-  - [ ] 直近Projects/Blogの抜粋ブロック追加
-- [ ] AIチャットページ（/ai）のUI改善
-  - [ ] 入出力の読みやすさ向上
-  - [ ] プリセットプロンプト機能
+- [x] shadcn/uiコンポーネントの再設計
+  - [x] Card（Projects/Blog用）
+  - [x] Badge（タグ表示用）
+  - [x] Button（統一スタイル）
+  - [x] EmptyState
+- [x] Homeページのヒーロー軽量化
+  - [x] Hero画像に priority を指定 → LCP改善
+  - [x] 説明セクションを削除 → ページサイズ削減
+  - [x] Projects/Blog の抜粋は Card (interactive variant) で統一
+  - [x] 「View all」ボタンもアイコン付きに揃えた
+  - [x] セクション間隔を py-12 で統一
+- [x] AIチャットページ（/ai）の削除
+  - [x] /ai ページ削除
+  - [x] /api/chat エンドポイント削除
+  - [x] TypingTextAI コンポーネント削除
+  - [x] AI関連依存パッケージ削除（@ai-sdk/openai, ai, @nanostores/react）
+  - [x] CLAUDE.md から AI関連記述削除
+  - [x] next.config.mjs から OpenAI API CSP削除
 
-**完了日**:
+**完了日**: 2025-10-08
 
 ---
 
@@ -273,7 +280,20 @@ Home / Projects / Blog / About / Contact
   - 開発哲学（アプローチ）
   - 現在の興味（最新の学び）
   - コンタクト（CTA）
-- [ ] Phase 2開始予定（UI/UX改善）
+
+### 2025-10-08
+- [x] Phase 2完了（UI/UX改善）
+  - shadcn/uiコンポーネント再設計完了（Card/Badge/Button/EmptyState）
+  - Homeページヒーロー軽量化完了
+    - Hero画像に priority 指定（LCP改善）
+    - 説明セクション削除（ページサイズ削減）
+    - Projects/Blog抜粋をCard統一
+    - セクション間隔統一（py-12）
+  - AIチャットページ削除
+    - /ai、/api/chat、TypingTextAI削除
+    - AI関連依存パッケージ削除
+    - ドキュメントからAI関連記述削除
+- [ ] Phase 3開始予定（コンテンツ拡充）
 
 ---
 

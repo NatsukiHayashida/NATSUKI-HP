@@ -7,7 +7,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Natsukiの個人ポートフォリオサイト（Next.js 14.2.1 App Router）：
 - ポートフォリオページ（About、Projects、Blog、Contact）
 - MDXファイルベースのブログ・プロジェクト管理
-- OpenAI GPT-4oを使用したAIチャット機能
 - EmailJS統合のお問合せフォーム（多層スパム対策）
 - ダーク/ライトテーマ対応（next-themes）
 - Google Analytics統合
@@ -35,7 +34,6 @@ npm run lint
 - **言語**: TypeScript（strict mode）
 - **スタイリング**: Tailwind CSS + shadcn/uiコンポーネント
 - **コンテンツ管理**: MDXファイルシステム（`content/blog/`, `content/projects/`）
-- **AI統合**: Vercel AI SDK + OpenAI API
 - **フォーム**: EmailJS（スパム対策：ハニーポット、日本語必須、レート制限）
 - **テーマ**: next-themes（ダーク/ライトモード）
 - **Markdown**: react-markdown + rehype/remark（シンタックスハイライト、KaTeX数式）
@@ -85,7 +83,6 @@ excerpt: "記事の要約"
 
 ```
 app/
-├── api/chat/route.ts          # OpenAI APIエンドポイント
 ├── components/                # ページ固有コンポーネント
 │   ├── header.tsx             # ヘッダー（max-w-5xl）
 │   ├── nav.tsx                # デスクトップナビゲーション
@@ -98,7 +95,6 @@ app/
 ├── projects/page.tsx          # プロジェクト一覧
 ├── projects/[slug]/page.tsx   # プロジェクト詳細（MDX）
 ├── contact/page.tsx           # お問合せフォーム（EmailJS + スパム対策）
-├── ai/page.tsx                # AIチャット
 └── layout.tsx                 # ルートレイアウト（テーマプロバイダー）
 
 components/ui/                 # shadcn/ui再利用コンポーネント
@@ -133,9 +129,6 @@ claudedocs/                    # プロジェクトドキュメント
 ### 必要な環境変数
 
 ```bash
-# OpenAI APIキー（AIチャット機能用）
-OPENAI_API_KEY=sk-proj-...
-
 # EmailJS設定（お問合せフォーム用）
 NEXT_PUBLIC_EMAILJS_SERVICE_ID=service_xxx
 NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=template_xxx

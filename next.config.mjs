@@ -24,7 +24,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
               "img-src 'self' data: blob: https:",
               "font-src 'self' data:",
-              "connect-src 'self' https://api.openai.com https://api.emailjs.com https://www.google-analytics.com https://vitals.vercel-analytics.com",
+              "connect-src 'self' https://api.emailjs.com https://www.google-analytics.com https://vitals.vercel-analytics.com",
               "frame-src 'self'",
               "object-src 'none'",
               "base-uri 'self'",
