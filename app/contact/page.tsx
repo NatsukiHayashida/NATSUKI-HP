@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button'
 import { useState, useEffect } from 'react'
 import emailjs from '@emailjs/browser'
 import { calculateSpamScore, checkRateLimit, sanitizeFormData } from '@/lib/spam-protection'
+import { ScrollToTop } from '@/components/scroll-to-top'
+import { Mail, Send, CheckCircle, XCircle, AlertTriangle } from 'lucide-react'
 
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -83,125 +85,179 @@ export default function Contact() {
   }
 
   return (
-    <main className="container mx-auto py-8 pt-8 md:py-12 md:pt-12">
-      <div className='mx-4 md:mx-16 my-4'>
-        <h1 className="text-2xl text-center my-4">Contact Me</h1>
-        <div className='flex md:mx-12'>
-          <p className='font-light mb-4 md:p-1 leading-6 text-sm md:text-base'>
-            For any questions, inquiries, or project and job requests, please feel free to contact me using the form below.
-          </p>
-        </div>
-        
-        {/* 日本語での注意書き */}
-        <div className='mx-4 md:mx-16 mb-6'>
-          <div className='bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4'>
-            <p className='text-sm text-blue-800 dark:text-blue-200'>
-              📧 <strong>日本語でのお問合せをお願いします</strong><br/>
-              スパム対策のため、日本語を含むメッセージのみ受け付けております。
+    <>
+      <ScrollToTop />
+      <main className="container mx-auto py-8 pt-20 md:py-12 md:pt-24">
+        <div className="max-w-4xl mx-auto px-4">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+              <Mail className="w-8 h-8 text-primary" />
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Get in Touch</h1>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              For any questions, inquiries, or project and job requests, please feel free to contact me using the form below.
             </p>
           </div>
+
+          {/* 日本語での注意書き */}
+          <div className="mb-8">
+            <div className="bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
+              <div className="flex items-start gap-3">
+                <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+                <div>
+                  <h3 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-1">
+                    日本語でのお問合せをお願いします
+                  </h3>
+                  <p className="text-sm text-blue-700 dark:text-blue-300">
+                    スパム対策のため、日本語を含むメッセージのみ受け付けております。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <form onSubmit={handleSubmit} className="w-full max-w-lg m-auto my-4">
-        {/* Honeypot field (hidden) */}
-        <input
-          type="text"
-          name="honeypot"
-          value={formData.honeypot}
-          onChange={handleInputChange}
-          style={{ display: 'none' }}
-          tabIndex={-1}
-          autoComplete="off"
-        />
-
-        <div className="mb-6 mx-4">
-          <label htmlFor="name" className="block text-sm font-medium mb-2">
-            Name <span className="text-red-500">*</span>
-          </label>
+        <form onSubmit={handleSubmit} className="max-w-2xl mx-auto px-4">
+          {/* Honeypot field (hidden) */}
           <input
             type="text"
-            id="name"
-            name="name"
-            value={formData.name}
+            name="honeypot"
+            value={formData.honeypot}
             onChange={handleInputChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white sm:text-sm"
-            required
-            maxLength={50}
+            style={{ display: 'none' }}
+            tabIndex={-1}
+            autoComplete="off"
           />
-        </div>
 
-        <div className="mb-6 mx-4">
-          <label htmlFor="email" className="block text-sm font-medium mb-2">
-            Email <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white sm:text-sm"
-            required
-            maxLength={100}
-          />
-        </div>
+          <div className="space-y-6">
+            <div>
+              <label htmlFor="name" className="block text-sm font-semibold mb-2">
+                お名前 <span className="text-destructive">*</span>
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 border border-input bg-background rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-colors"
+                required
+                maxLength={50}
+                placeholder="山田太郎"
+              />
+            </div>
 
-        <div className="mb-6 mx-4">
-          <label htmlFor="message" className="block text-sm font-medium mb-2">
-            Message <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            id="message"
-            name="message"
-            value={formData.message}
-            onChange={handleInputChange}
-            rows={6}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white sm:text-sm"
-            required
-            minLength={10}
-            maxLength={1000}
-            placeholder="日本語でメッセージをご記入ください..."
-          />
-          <p className="text-xs text-gray-500 mt-1">
-            {formData.message.length}/1000 文字（最低10文字必要）
-          </p>
-        </div>
+            <div>
+              <label htmlFor="email" className="block text-sm font-semibold mb-2">
+                メールアドレス <span className="text-destructive">*</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 border border-input bg-background rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-colors"
+                required
+                maxLength={100}
+                placeholder="example@email.com"
+              />
+            </div>
 
-        {submitStatus === 'success' && (
-          <div className="mb-4 mx-4 p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-md">
-            <p className="text-green-800 dark:text-green-200">
-              ✅ メッセージが正常に送信されました。ありがとうございます！
-            </p>
+            <div>
+              <label htmlFor="message" className="block text-sm font-semibold mb-2">
+                メッセージ <span className="text-destructive">*</span>
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleInputChange}
+                rows={8}
+                className="w-full px-4 py-3 border border-input bg-background rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-colors resize-none"
+                required
+                minLength={10}
+                maxLength={1000}
+                placeholder="お問い合わせ内容を日本語でご記入ください..."
+              />
+              <p className="text-xs text-muted-foreground mt-2">
+                {formData.message.length}/1000 文字（最低10文字必要）
+              </p>
+            </div>
           </div>
-        )}
 
-        {submitStatus === 'error' && (
-          <div className="mb-4 mx-4 p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-md">
-            <p className="text-red-800 dark:text-red-200">
-              ❌ 送信中にエラーが発生しました。しばらく時間をおいて再試行してください。
-            </p>
+          {/* Status Messages */}
+          {submitStatus === 'success' && (
+            <div className="mt-6 p-4 bg-green-50 dark:bg-green-950/50 border border-green-200 dark:border-green-800 rounded-xl">
+              <div className="flex items-start gap-3">
+                <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5" />
+                <div>
+                  <h3 className="text-sm font-semibold text-green-800 dark:text-green-200 mb-1">
+                    送信完了
+                  </h3>
+                  <p className="text-sm text-green-700 dark:text-green-300">
+                    メッセージが正常に送信されました。ご連絡ありがとうございます！
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {submitStatus === 'error' && (
+            <div className="mt-6 p-4 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 rounded-xl">
+              <div className="flex items-start gap-3">
+                <XCircle className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5" />
+                <div>
+                  <h3 className="text-sm font-semibold text-red-800 dark:text-red-200 mb-1">
+                    送信エラー
+                  </h3>
+                  <p className="text-sm text-red-700 dark:text-red-300">
+                    送信中にエラーが発生しました。しばらく時間をおいて再試行してください。
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {submitStatus === 'spam' && (
+            <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-950/50 border border-yellow-200 dark:border-yellow-800 rounded-xl">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5" />
+                <div>
+                  <h3 className="text-sm font-semibold text-yellow-800 dark:text-yellow-200 mb-1">
+                    スパム検出
+                  </h3>
+                  <p className="text-sm text-yellow-700 dark:text-yellow-300">
+                    スパム対策により送信をブロックしました。日本語を含むメッセージでご記入ください。
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Submit Button */}
+          <div className="mt-8 flex justify-center">
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="px-8 py-6 text-base font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                  送信中...
+                </>
+              ) : (
+                <>
+                  <Send className="mr-2 h-4 w-4" />
+                  Send Message
+                </>
+              )}
+            </Button>
           </div>
-        )}
-
-        {submitStatus === 'spam' && (
-          <div className="mb-4 mx-4 p-4 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-md">
-            <p className="text-yellow-800 dark:text-yellow-200">
-              ⚠️ スパム対策により送信をブロックしました。日本語を含むメッセージでご記入ください。
-            </p>
-          </div>
-        )}
-
-        <div className="flex justify-center">
-          <Button 
-            type="submit" 
-            disabled={isSubmitting}
-            className="py-2 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-md shadow-sm text-sm font-medium transition-colors"
-          >
-            {isSubmitting ? '送信中...' : 'Send Message'}
-          </Button>
-        </div>
-      </form>
-    </main>
+        </form>
+      </main>
+    </>
   )
 }
