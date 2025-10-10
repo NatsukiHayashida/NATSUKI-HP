@@ -4,12 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## プロジェクト概要
 
-Natsukiの個人ポートフォリオサイト（Next.js 14.2.1 App Router）：
+Natsukiの個人ポートフォリオサイト（Next.js 15.5.4 App Router）：
 - ポートフォリオページ（About、Projects、Blog、Contact）
 - MDXファイルベースのブログ・プロジェクト管理
 - EmailJS統合のお問合せフォーム（多層スパム対策）
 - ダーク/ライトテーマ対応（next-themes）
-- Google Analytics統合
+- トップに戻るボタン（ScrollToTop）実装済み
 
 ## 開発コマンド
 
@@ -30,13 +30,18 @@ npm run lint
 ## アーキテクチャ
 
 ### 技術スタック
-- **フレームワーク**: Next.js 14.2.1（App Router、React Server Components）
+- **フレームワーク**: Next.js 15.5.4（App Router、React Server Components）
 - **言語**: TypeScript（strict mode）
 - **スタイリング**: Tailwind CSS + shadcn/uiコンポーネント
 - **コンテンツ管理**: MDXファイルシステム（`content/blog/`, `content/projects/`）
 - **フォーム**: EmailJS（スパム対策：ハニーポット、日本語必須、レート制限）
 - **テーマ**: next-themes（ダーク/ライトモード）
 - **Markdown**: react-markdown + rehype/remark（シンタックスハイライト、KaTeX数式）
+
+### Next.js 15対応の重要な変更
+- **params型**: Next.js 15では`params`が`Promise`型になりました
+- **使用方法**: `generateMetadata`, page componentで`await params`を使用
+- **例**: `const { slug } = await params`
 
 ### 重要なアーキテクチャパターン
 
@@ -97,10 +102,12 @@ app/
 ├── contact/page.tsx           # お問合せフォーム（EmailJS + スパム対策）
 └── layout.tsx                 # ルートレイアウト（テーマプロバイダー）
 
-components/ui/                 # shadcn/ui再利用コンポーネント
-├── button.tsx
-├── sheet.tsx
-└── ...
+components/
+├── ui/                        # shadcn/ui再利用コンポーネント
+│   ├── button.tsx
+│   ├── sheet.tsx
+│   └── ...
+└── scroll-to-top.tsx          # トップに戻るボタン（Client Component）
 
 lib/
 ├── mdx.ts                     # ブログMDXパース（gray-matter、reading-time）
@@ -120,10 +127,14 @@ content/
 types/
 └── project.ts                 # Project型定義
 
-claudedocs/                    # プロジェクトドキュメント
-├── CODE_ANALYSIS_REPORT.md    # コード品質分析レポート
-├── RENEWAL_PLAN.md            # リニューアル計画
-└── ABOUT_PAGE_PROPOSAL.md     # Aboutページ提案
+claudedocs/                          # プロジェクトドキュメント
+├── CODE_ANALYSIS_REPORT.md          # コード品質分析レポート
+├── RENEWAL_PLAN.md                  # リニューアル計画
+├── ABOUT_PAGE_PROPOSAL.md           # Aboutページ設計提案
+├── BLOG_POSTING_GUIDE.md            # MDXブログ記事作成ガイド
+├── EMAILJS_SETUP_GUIDE.md           # EmailJS設定とスパム対策セットアップ
+├── HANASEISAKUSYO_INTERVIEW.md      # 花製作所プロジェクトインタビュー記録
+└── HANASEISAKUSYO_UPDATE_LOG.md     # 花製作所記事更新履歴
 ```
 
 ### 必要な環境変数
@@ -224,71 +235,28 @@ if (spamCheck.isSpam) {
 - `ABOUT_PAGE_PROPOSAL.md` - Aboutページ設計提案
 - `BLOG_POSTING_GUIDE.md` - MDXブログ記事作成ガイド
 - `EMAILJS_SETUP_GUIDE.md` - EmailJS設定とスパム対策セットアップ
-- `HANASEISAKUSYO_INTERVIEW.md` - 花製作所プロジェクトインタビュー記録（2025-10-09完了）
+- `HANASEISAKUSYO_INTERVIEW.md` - 花製作所プロジェクトインタビュー記録
+- `HANASEISAKUSYO_UPDATE_LOG.md` - 花製作所記事更新履歴
 
 ---
 
-## 📅 開発進捗記録
+## 📅 最新の開発進捗
 
-### 2025-10-09: 花製作所プロジェクトインタビュー完了
+### 2025-10-11: 花製作所記事完成 & 脆弱性修正
 
-**実施内容**:
-- 花製作所サイト移行プロジェクト（EC-CUBE → Next.js + Supabase）の詳細インタビュー完了
-- 全13問の質問に対する回答を収集
-- `claudedocs/HANASEISAKUSYO_INTERVIEW.md`に詳細記録
+**実装内容**:
+- 花製作所プロジェクト記事完成（`content/projects/hanaseisakusyo-rebuild.mdx`）
+- トップに戻るボタン実装（`components/scroll-to-top.tsx`）
+- Next.js 15.5.4へのアップグレード & 脆弱性修正（12件中9件解決）
 
-**収集した重要情報**:
+**花製作所記事の特徴**:
+- EC-CUBE（Xserverサービス）からNext.js + Supabaseへの移行
+- 会員2,658名、商品4,306点の実データ規模
+- AI協働開発手法の詳述
+- 段階的ロック、リアルタイム在庫同期の技術詳細
+- バランスの取れた共感的トーン
 
-#### 🚨 プロジェクトの核心
-- **致命的な在庫バグ**: EC-CUBEで重複購入が3件発生、合計20,430円の返金対応
-- **EC-CUBEの設計問題**: 在庫確保タイミングが遅い、トランザクション制御の欠如
-- **移行の決断**: 「自分で作成してもいいかな」→ モダンスタックでのフルリビルド
-
-#### 📊 ビジネス特性
-- **データ規模**: 会員2,658名、取扱商品4,306点（すべて一点もの）
-- **販売フロー**: 月2回、Instagram告知 → メンテナンス（8:00-9:00） → 一斉販売（9:00）
-- **集中アクセス**: 30商品を200名が1時間で取り合う
-- **顧客層**: 40-60代、PC・スマホ操作が苦手な方が多い
-
-#### 🎯 ビジネス目標
-1. 購入トラブル削減（在庫バグの完全防止）
-2. 高齢者向けUX（シンプルで使いやすい操作）
-3. 運用効率化（奥様の作業負担軽減、手書きお礼状は継続）
-4. コスト目標: 年間10万円以内
-
-#### 🔧 技術要件
-- **最優先機能**: 管理ダッシュボード（日次・月次・年次レポート、EC-CUBEと遜色ない）
-- **在庫管理**: 段階的ロック（カート2分 → 購入手続き5分 → トランザクション）
-- **パフォーマンス**: 同時200アクセス対応
-- **会員移行**: 2,658名のデータ移行（パスワードハッシュ移行が課題）
-
-#### 💡 核心的メッセージ
-> 「ClaudeやChatGPTに手伝ってもらいながら、モダンで堅牢なシステムを自分が作成するアプローチ」
-
-- AI時代のエンジニアリング手法の実践
-- 実際のビジネス課題の解決
-- フルスタック開発力の証明
-
-**次のアクション**:
-- [ ] `content/projects/hanaseisakusyo-rebuild.mdx`の全面更新
-- [ ] 記事タイトル: 「AIと協働で作る堅牢なECサイト：EC-CUBEからNext.js+Supabaseへの移行物語」
-- [ ] データ規模、販売フロー、在庫バグの詳細を追加
-- [ ] AI活用手法の詳述
-
-**技術選定の未決定事項**:
-- tRPC vs REST API vs Server Actions
-- Drizzle vs Prisma vs Supabase Client のみ
-
----
-
-### 2025-10-08: プロジェクトページ改善
-
-**実施内容**:
-- お問い合わせフォーム実装（EmailJS統合 + 多層スパム対策）
-- Aboutページ設計提案作成（プロポーザルC採用）
-- コード品質分析実施（総合評価85/100）
-
-**今後の予定**:
-- 他プロジェクト（Savybot等）のインタビュー実施
-- 全プロジェクト記事の更新
-- ブログ記事の追加投稿
+**技術的改善**:
+- Next.js 15対応（params型のPromise化）
+- ScrollToTopコンポーネント（スクロール300px以上で表示）
+- セキュリティアップデート完了
