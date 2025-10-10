@@ -10,6 +10,7 @@ import remarkMath from 'remark-math'
 import rehypeRaw from 'rehype-raw'
 import rehypeKatex from 'rehype-katex'
 import rehypeHighlight from 'rehype-highlight'
+import { ScrollToTop } from '@/components/scroll-to-top'
 import 'katex/dist/katex.min.css'
 import 'highlight.js/styles/github-dark.css'
 
@@ -54,8 +55,10 @@ export default function ProjectPage({ params }: Props) {
   }
 
   return (
-    <main className="container py-8 pt-8 md:py-12 md:pt-12">
-      <article className="max-w-4xl mx-auto">
+    <>
+      <ScrollToTop />
+      <main className="container py-8 pt-8 md:py-12 md:pt-12">
+        <article className="max-w-4xl mx-auto">
         {/* Breadcrumb */}
         <nav className="mb-8 text-sm text-muted-foreground">
           <Link href="/" className="hover:text-foreground">
@@ -231,5 +234,6 @@ export default function ProjectPage({ params }: Props) {
         </div>
       </article>
     </main>
+    </>
   )
 }

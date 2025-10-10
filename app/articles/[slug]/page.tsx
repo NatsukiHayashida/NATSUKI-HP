@@ -8,6 +8,7 @@ import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import rehypeHighlight from 'rehype-highlight'
+import { ScrollToTop } from '@/components/scroll-to-top'
 
 type Props = {
   params: {
@@ -47,7 +48,9 @@ export default async function Article({ params }: Props) {
   const date = parseISO8601Date(post.date);
   
   return (
-    <main className="container px-4 py-8 pt-8 mx-auto md:py-12 md:pt-12">
+    <>
+      <ScrollToTop />
+      <main className="container px-4 py-8 pt-8 mx-auto md:py-12 md:pt-12">
       <article className="prose dark:prose-invert mx-auto">
         <h2 className="text-start mx-8 text-md md:text-2xl my-4">{post.title}</h2>
         {date && (
@@ -105,5 +108,6 @@ export default async function Article({ params }: Props) {
         )}
       </div>
     </main>
+    </>
   )
 }
