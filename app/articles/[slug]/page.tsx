@@ -11,9 +11,9 @@ import rehypeHighlight from 'rehype-highlight'
 import { ScrollToTop } from '@/components/scroll-to-top'
 
 type Props = {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export async function generateStaticParams() {
@@ -26,7 +26,7 @@ export async function generateStaticParams() {
 export const dynamicParams = false
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = params
+  const { slug } = await params
   const post = getPostBySlug(slug)
 
   return {
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Article({ params }: Props) {
-  const { slug } = params
+  const { slug } = await params
   const post = getPostBySlug(slug)
   const posts = getAllPosts()
 
