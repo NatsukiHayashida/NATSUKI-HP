@@ -19,8 +19,8 @@ export default function Contact() {
 
   // EmailJS初期化
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!)
+    if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY) {
+      emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY)
     }
   }, [])
 
@@ -62,15 +62,26 @@ export default function Contact() {
     }
 
     try {
-      // EmailJS で送信（public keyは初期化済み）
+      // EmailJS環境変数チェック
+      if (!process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID ||
+          !process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID ||
+          !process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY ||
+          !process.env.NEXT_PUBLIC_CONTACT_EMAIL) {
+        console.error('EmailJS configuration is missing. Please check your environment variables.')
+        setSubmitStatus('error')
+        setIsSubmitting(false)
+        return
+      }
+
+      // EmailJS で送信
       await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
         {
           from_name: sanitizedData.name,
           from_email: sanitizedData.email,
           message: sanitizedData.message,
-          to_email: process.env.NEXT_PUBLIC_CONTACT_EMAIL!,
+          to_email: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
         }
       )
 
