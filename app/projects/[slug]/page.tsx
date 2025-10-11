@@ -176,6 +176,20 @@ export default async function ProjectPage({ params }: Props) {
                   </strong>
                 )
               },
+              ul: ({ children }) => {
+                return (
+                  <ul className="list-none space-y-2">
+                    {children}
+                  </ul>
+                )
+              },
+              li: ({ children }) => {
+                return (
+                  <li className="leading-relaxed">
+                    {children}
+                  </li>
+                )
+              },
               img: ({ node, ...props }) => {
                 const src = props.src || ''
                 const alt = props.alt || ''
