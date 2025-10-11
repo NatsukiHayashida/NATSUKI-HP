@@ -76,7 +76,19 @@ export default async function ProjectPage({ params }: Props) {
 
         {/* Header */}
         <header className="mb-8 md:mb-12">
-          <h1 className="text-2xl md:text-5xl font-bold mb-3 md:mb-4 leading-tight">{project.title}</h1>
+          <h1 className="text-2xl md:text-5xl font-bold mb-3 md:mb-4 leading-tight">
+            {project.title.includes('―') ? (
+              <>
+                <span>{project.title.split('―')[0]}</span>
+                <br />
+                <span className="text-lg md:text-2xl font-normal text-muted-foreground">
+                  {project.title.split('―')[1]}
+                </span>
+              </>
+            ) : (
+              project.title
+            )}
+          </h1>
 
           <div className="flex flex-wrap items-center gap-2 md:gap-4 text-xs md:text-sm text-muted-foreground mb-4 md:mb-6">
             <span className="px-2 py-0.5 md:px-3 md:py-1 bg-primary text-primary-foreground rounded-md font-medium text-xs md:text-sm">
