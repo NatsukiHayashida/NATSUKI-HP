@@ -214,6 +214,69 @@ if (spamCheck.isSpam) {
 }
 ```
 
+### ReactMarkdownカスタマイズパターン
+プロジェクト詳細ページ（`app/projects/[slug]/page.tsx`）では、ReactMarkdownのコンポーネントをカスタマイズしています：
+
+```typescript
+<ReactMarkdown
+  remarkPlugins={[remarkGfm, remarkMath]}
+  rehypePlugins={[rehypeRaw, rehypeKatex, rehypeHighlight]}
+  components={{
+    // サブタイトル自動スタイリング（「―」で分割）
+    h2: ({ node, children, ...props }) => {
+      const text = children?.toString() || ''
+      if (text.includes('―')) {
+        const [main, sub] = text.split('―')
+        return (
+          <h2 {...props}>
+            <span>{main}</span>
+            <br />
+            <span className="text-base md:text-lg font-normal text-muted-foreground">
+              {sub}
+            </span>
+          </h2>
+        )
+      }
+      return <h2 {...props}>{children}</h2>
+    },
+    // 太字強調の明示的スタイリング
+    strong: ({ children }) => (
+      <strong className="font-bold text-foreground">
+        {children}
+      </strong>
+    ),
+    // リスト記号の非表示化
+    ul: ({ children }) => (
+      <ul className="list-none space-y-2">
+        {children}
+      </ul>
+    ),
+    li: ({ children }) => (
+      <li className="leading-relaxed">
+        {children}
+      </li>
+    ),
+    // Next.js Imageコンポーネントの使用
+    img: ({ node, ...props }) => {
+      const src = props.src || ''
+      const alt = props.alt || ''
+      return (
+        <Image
+          src={src}
+          alt={alt}
+          width={1200}
+          height={900}
+          className={props.className}
+          style={{ width: '100%', height: 'auto' }}
+        />
+      )
+    }
+  }}
+>
+  {project.content}
+</ReactMarkdown>
+```
+
 ## 重要な制約と規約
 
 ### 日付フォーマット統一
@@ -239,6 +302,12 @@ if (spamCheck.isSpam) {
 - **サブタイトル記法**: 「―」でメインとサブを分離（例：`## はじめに ― 安心して使えるECへ`）
 - **強調記法**: `**テキスト**`で太字強調（自動的に`<strong>`タグに変換）
 
+**CommonMark仕様の重要な注意点**:
+- `**` の直前・直後に空白を入れない（❌ `** テキスト**`、✅ `**テキスト**`）
+- 強調記号の内側で改行しない（❌ `**テキスト`（改行）`続き**`）
+- blockquote記号 `>` の後には空白が必要（❌ `>**テキスト**`、✅ `> **テキスト**`）
+- 全角スペースやゼロ幅スペース（`\u200b`）は強調を壊す原因になる
+
 ### Git Workflow
 - **ブランチ**: `main`ブランチで開発
 - **コミットメッセージ**: 日本語、詳細な変更内容記載
@@ -259,6 +328,32 @@ if (spamCheck.isSpam) {
 ---
 
 ## 📅 最新の開発進捗
+
+### 2025-10-12: MDX太字表示修正 & リストスタイリング改善
+
+**実装内容**:
+1. **CommonMark仕様準拠の太字表示修正**
+   - MDXファイル内の `**` マーカー周辺の空白を削除
+   - blockquote内の `>` の後に空白を追加
+   - 200+箇所の修正をsedコマンドで一括処理
+   - 手動で細かい調整を実施
+
+2. **ReactMarkdownカスタマイズ強化**（`app/projects/[slug]/page.tsx`）
+   - `strong`コンポーネント: 太字の明示的スタイリング
+   - `ul`/`li`コンポーネント: リスト箇条書き記号を非表示化（`list-none`）
+   - `h2`コンポーネント: サブタイトル自動スタイリング（「―」分割）
+   - `img`コンポーネント: Next.js Imageコンポーネントの使用
+
+**技術的知見**:
+- CommonMark仕様では `**` の直前・直後の空白が強調を無効化する
+- ReactMarkdownの`components`プロップで柔軟なMarkdownレンダリングカスタマイズが可能
+- `list-none`でリストマーカーを削除し、クリーンな見た目を実現
+
+**修正箇所**:
+- `content/projects/hanaseisakusyo-rebuild.mdx` - 太字マークアップ修正
+- `app/projects/[slug]/page.tsx` - ReactMarkdownコンポーネントカスタマイズ
+
+---
 
 ### 2025-10-11（続）: トップページ日本語化 & サブタイトルスタイリング
 
