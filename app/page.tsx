@@ -14,16 +14,19 @@ export default function Home() {
     <main className="pt-4">
       <section className="py-8 md:py-12">
         <div className="container max-w-5xl">
-          <h1 className="text-3xl md:text-4xl font-bold mb-6">Hey, I&apos;m Natsuki Hayashida</h1>
-          <div className="space-y-4 text-lg text-muted-foreground">
+          <h1 className="text-3xl md:text-4xl font-bold mb-6">こんにちは、</h1>
+          <div className="space-y-4 text-base md:text-lg text-muted-foreground leading-relaxed">
             <p>
-              Usually I work with CAD and CAM in a factory, but personally, I&apos;m really into studying front-end development and AI.
+              普段は自動車の保安部品をつくる仕事に携わっていて、冷間鍛造の技術を中心に開発業務を行っています。
             </p>
             <p>
-              This site is my tech playground, where I share my journey and connect with like-minded folks. I hope it inspires you as much as it inspires me.
+              一方で、AI や Web アプリの開発にも取り組み、現場での気づきをプロダクトや仕組みに落とし込むことを楽しんでいます。
             </p>
             <p>
-              Thanks for stopping by, and let&apos;s enjoy this ride together.
+              このサイトは、そんな私のプレイグラウンドであり実験場。プロジェクトの記録や学んだことをシェアしています。
+            </p>
+            <p>
+              成功も失敗も、そのすべてを含めて共有していきますので、気軽にのぞいてください。
             </p>
           </div>
         </div>
