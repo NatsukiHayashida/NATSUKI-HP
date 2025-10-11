@@ -148,7 +148,7 @@ export default async function ProjectPage({ params }: Props) {
         )}
 
         {/* Main Content */}
-        <div className="prose prose-sm md:prose-lg dark:prose-invert max-w-none mb-8 md:mb-12">
+        <div className="prose prose-sm md:prose-lg dark:prose-invert max-w-none mb-8 md:mb-12 [&_strong]:font-bold [&_strong]:text-foreground">
           <ReactMarkdown
             remarkPlugins={[remarkGfm, remarkMath]}
             rehypePlugins={[rehypeRaw, rehypeKatex, rehypeHighlight]}
