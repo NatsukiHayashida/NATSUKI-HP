@@ -12,12 +12,17 @@ export default function Home() {
   const recentProjects = getAllProjects().slice(0, 3)
   return (
     <main className="pt-4">
-      <section className="py-8 md:py-12">
+      <section className="py-12 md:py-16">
         <div className="container max-w-5xl">
-          <h1 className="text-2xl md:text-3xl font-bold mb-6">
+          <div className="flex flex-wrap gap-2 mb-6">
+            <Badge variant="secondary">製造業</Badge>
+            <Badge variant="secondary">AI開発</Badge>
+            <Badge variant="secondary">Web開発</Badge>
+          </div>
+          <h1 className="text-3xl md:text-5xl font-bold mb-6">
             こんにちは、
           </h1>
-          <div className="space-y-4 text-base md:text-lg text-muted-foreground leading-relaxed">
+          <div className="space-y-4 text-base md:text-lg text-muted-foreground leading-relaxed mb-8">
             <p>
               普段は自動車の保安部品をつくる仕事に携わっていて、冷間鍛造の技術を中心に開発業務を行っています。
             </p>
@@ -30,6 +35,14 @@ export default function Home() {
             <p>
               成功も失敗も、そのすべてを含めて共有していきますので、気軽にのぞいてください。
             </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Button asChild>
+              <Link href="/projects">プロジェクトを見る</Link>
+            </Button>
+            <Button variant="outline" asChild>
+              <Link href="/blog">ブログを読む</Link>
+            </Button>
           </div>
         </div>
       </section>
