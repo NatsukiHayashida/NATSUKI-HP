@@ -60,9 +60,9 @@ export default async function ProjectPage({ params }: Props) {
     <>
       <ScrollToTop />
       <main className="container py-8 pt-8 md:py-12 md:pt-12">
-        <article className="max-w-4xl mx-auto">
+        <article className="max-w-4xl mx-auto px-4">
         {/* Breadcrumb */}
-        <nav className="mb-8 text-sm text-muted-foreground">
+        <nav className="mb-6 md:mb-8 text-xs md:text-sm text-muted-foreground">
           <Link href="/" className="hover:text-foreground">
             Home
           </Link>
@@ -75,19 +75,19 @@ export default async function ProjectPage({ params }: Props) {
         </nav>
 
         {/* Header */}
-        <header className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">{project.title}</h1>
+        <header className="mb-8 md:mb-12">
+          <h1 className="text-2xl md:text-5xl font-bold mb-3 md:mb-4 leading-tight">{project.title}</h1>
 
-          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6">
-            <span className="px-3 py-1 bg-primary text-primary-foreground rounded-md font-medium">
+          <div className="flex flex-wrap items-center gap-2 md:gap-4 text-xs md:text-sm text-muted-foreground mb-4 md:mb-6">
+            <span className="px-2 py-0.5 md:px-3 md:py-1 bg-primary text-primary-foreground rounded-md font-medium text-xs md:text-sm">
               {project.category}
             </span>
-            <span>{project.role}</span>
-            <span>{project.duration}</span>
-            <span>{project.date}</span>
+            <span className="text-xs md:text-sm">{project.role}</span>
+            <span className="text-xs md:text-sm">{project.duration}</span>
+            <span className="text-xs md:text-sm">{project.date}</span>
           </div>
 
-          <p className="text-lg text-muted-foreground mb-6">{project.excerpt}</p>
+          <p className="text-sm md:text-lg text-muted-foreground mb-4 md:mb-6 leading-relaxed">{project.excerpt}</p>
 
           {/* External Links */}
           {(project.demoUrl || project.githubUrl) && (
@@ -120,13 +120,13 @@ export default async function ProjectPage({ params }: Props) {
 
         {/* Technologies */}
         {project.technologies.length > 0 && (
-          <section className="mb-12 p-6 bg-muted rounded-xl">
-            <h2 className="text-xl font-semibold mb-4">Technologies Used</h2>
-            <div className="flex flex-wrap gap-2">
+          <section className="mb-8 md:mb-12 p-4 md:p-6 bg-muted rounded-xl">
+            <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">Technologies Used</h2>
+            <div className="flex flex-wrap gap-1.5 md:gap-2">
               {project.technologies.map((tech) => (
                 <span
                   key={tech}
-                  className="px-3 py-1 bg-background border border-border rounded-md text-sm"
+                  className="px-2 py-0.5 md:px-3 md:py-1 bg-background border border-border rounded-md text-xs md:text-sm"
                 >
                   {tech}
                 </span>
@@ -136,7 +136,7 @@ export default async function ProjectPage({ params }: Props) {
         )}
 
         {/* Main Content */}
-        <div className="prose prose-lg dark:prose-invert max-w-none mb-12">
+        <div className="prose prose-sm md:prose-lg dark:prose-invert max-w-none mb-8 md:mb-12">
           <ReactMarkdown
             remarkPlugins={[remarkGfm, remarkMath]}
             rehypePlugins={[rehypeRaw, rehypeKatex, rehypeHighlight]}
@@ -168,13 +168,13 @@ export default async function ProjectPage({ params }: Props) {
 
         {/* Outcomes */}
         {project.outcomes && project.outcomes.length > 0 && (
-          <section className="mb-12 p-6 bg-muted rounded-xl">
-            <h2 className="text-2xl font-semibold mb-4">Outcomes & Results</h2>
-            <ul className="space-y-2">
+          <section className="mb-8 md:mb-12 p-4 md:p-6 bg-muted rounded-xl">
+            <h2 className="text-lg md:text-2xl font-semibold mb-3 md:mb-4">Outcomes & Results</h2>
+            <ul className="space-y-2 text-sm md:text-base">
               {project.outcomes.map((outcome, index) => (
                 <li key={index} className="flex items-start gap-2">
-                  <span className="text-primary mt-1">✓</span>
-                  <span>{outcome}</span>
+                  <span className="text-primary mt-0.5 md:mt-1 flex-shrink-0">✓</span>
+                  <span className="leading-relaxed">{outcome}</span>
                 </li>
               ))}
             </ul>
@@ -183,11 +183,11 @@ export default async function ProjectPage({ params }: Props) {
 
         {/* Challenges */}
         {project.challenges && project.challenges.length > 0 && (
-          <section className="mb-12 p-6 bg-muted rounded-xl">
-            <h2 className="text-2xl font-semibold mb-4">Challenges Overcome</h2>
-            <ul className="space-y-3">
+          <section className="mb-8 md:mb-12 p-4 md:p-6 bg-muted rounded-xl">
+            <h2 className="text-lg md:text-2xl font-semibold mb-3 md:mb-4">Challenges Overcome</h2>
+            <ul className="space-y-2 md:space-y-3 text-sm md:text-base">
               {project.challenges.map((challenge, index) => (
-                <li key={index} className="pl-4 border-l-2 border-primary">
+                <li key={index} className="pl-2 md:pl-4 border-l-2 border-primary leading-relaxed">
                   {challenge}
                 </li>
               ))}
@@ -197,11 +197,11 @@ export default async function ProjectPage({ params }: Props) {
 
         {/* Learnings */}
         {project.learnings && project.learnings.length > 0 && (
-          <section className="mb-12 p-6 bg-muted rounded-xl">
-            <h2 className="text-2xl font-semibold mb-4">Key Learnings</h2>
-            <ul className="space-y-3">
+          <section className="mb-8 md:mb-12 p-4 md:p-6 bg-muted rounded-xl">
+            <h2 className="text-lg md:text-2xl font-semibold mb-3 md:mb-4">Key Learnings</h2>
+            <ul className="space-y-2 md:space-y-3 text-sm md:text-base">
               {project.learnings.map((learning, index) => (
-                <li key={index} className="pl-4 border-l-2 border-accent">
+                <li key={index} className="pl-2 md:pl-4 border-l-2 border-accent leading-relaxed">
                   {learning}
                 </li>
               ))}

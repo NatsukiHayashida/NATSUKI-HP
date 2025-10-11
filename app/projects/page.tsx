@@ -16,9 +16,9 @@ export default function ProjectsPage() {
 
   return (
     <main className="container py-8 pt-8 md:py-12 md:pt-12">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-4">Projects</h1>
-        <p className="text-muted-foreground mb-12">
+      <div className="max-w-4xl mx-auto px-4">
+        <h1 className="text-2xl md:text-4xl font-bold mb-3 md:mb-4">Projects</h1>
+        <p className="text-sm md:text-base text-muted-foreground mb-6 md:mb-12">
           A collection of projects I&apos;ve built, showcasing my skills in web development, AI integration, and problem-solving.
         </p>
 
@@ -33,34 +33,34 @@ export default function ProjectsPage() {
             }}
           />
         ) : (
-          <div className="grid gap-8">
+          <div className="grid gap-4 md:gap-8">
             {projects.map((project) => (
               <Link
                 key={project.slug}
                 href={`/projects/${project.slug}`}
               >
-                <Card variant="interactive">
-                  <CardHeader>
-                    <div className="flex items-center gap-3 mb-2">
-                      <Badge variant="tag">{project.category}</Badge>
-                      <span className="text-sm text-muted-foreground">{project.duration}</span>
-                      <span className="text-sm text-muted-foreground">{project.date}</span>
+                <Card variant="interactive" className="overflow-hidden">
+                  <CardHeader className="pb-3 md:pb-6">
+                    <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mb-2 md:mb-3">
+                      <Badge variant="tag" className="text-xs">{project.category}</Badge>
+                      <span className="text-xs text-muted-foreground">{project.duration}</span>
+                      <span className="text-xs text-muted-foreground">{project.date}</span>
                     </div>
-                    <CardTitle className="text-2xl">{project.title}</CardTitle>
-                    <CardDescription className="line-clamp-2">
+                    <CardTitle className="text-lg md:text-2xl mb-1.5 md:mb-2 leading-tight">{project.title}</CardTitle>
+                    <CardDescription className="text-xs md:text-base line-clamp-2 md:line-clamp-3 leading-relaxed">
                       {project.excerpt}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2">
+                  <CardContent className="pt-0">
+                    <div className="flex flex-wrap gap-1.5 md:gap-2">
                       {project.technologies.slice(0, 5).map((tech) => (
-                        <Badge key={tech} variant="secondary">
+                        <Badge key={tech} variant="secondary" className="text-xs px-2 py-0.5">
                           {tech}
                         </Badge>
                       ))}
                       {project.technologies.length > 5 && (
                         <span className="text-muted-foreground text-xs self-center">
-                          +{project.technologies.length - 5} more
+                          +{project.technologies.length - 5}
                         </span>
                       )}
                     </div>
