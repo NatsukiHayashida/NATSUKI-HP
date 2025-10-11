@@ -148,7 +148,7 @@ export default async function ProjectPage({ params }: Props) {
         )}
 
         {/* Main Content */}
-        <div className="prose prose-sm md:prose-lg dark:prose-invert max-w-none mb-8 md:mb-12 [&_strong]:font-bold [&_strong]:text-foreground">
+        <div className="prose prose-sm md:prose-lg dark:prose-invert max-w-none mb-8 md:mb-12">
           <ReactMarkdown
             remarkPlugins={[remarkGfm, remarkMath]}
             rehypePlugins={[rehypeRaw, rehypeKatex, rehypeHighlight]}
@@ -168,6 +168,13 @@ export default async function ProjectPage({ params }: Props) {
                   )
                 }
                 return <h2 {...props}>{children}</h2>
+              },
+              strong: ({ children }) => {
+                return (
+                  <strong className="font-bold text-foreground">
+                    {children}
+                  </strong>
+                )
               },
               img: ({ node, ...props }) => {
                 const src = props.src || ''
