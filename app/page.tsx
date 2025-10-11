@@ -14,7 +14,9 @@ export default function Home() {
     <main className="pt-4">
       <section className="py-8 md:py-12">
         <div className="container max-w-5xl">
-          <h1 className="text-3xl md:text-4xl font-bold mb-6">こんにちは、</h1>
+          <h1 className="text-2xl md:text-3xl font-bold mb-6">
+            こんにちは、
+          </h1>
           <div className="space-y-4 text-base md:text-lg text-muted-foreground leading-relaxed">
             <p>
               普段は自動車の保安部品をつくる仕事に携わっていて、冷間鍛造の技術を中心に開発業務を行っています。
@@ -98,7 +100,9 @@ export default function Home() {
       <section className="py-12">
         <div className="container max-w-5xl">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Projects</h2>
+            <h2 className="text-xl md:text-2xl font-bold">
+              Projects
+            </h2>
             <Button variant="ghost" asChild>
               <Link href="/projects" className="gap-2">
                 View all
@@ -143,7 +147,9 @@ export default function Home() {
       <section className="py-12">
         <div className="container max-w-5xl">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Recent Blog Posts</h2>
+            <h2 className="text-xl md:text-2xl font-bold">
+              Recent Blog Posts
+            </h2>
             <Button variant="ghost" asChild>
               <Link href="/blog" className="gap-2">
                 View all
