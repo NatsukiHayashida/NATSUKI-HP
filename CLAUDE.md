@@ -7,9 +7,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Natsukiの個人ポートフォリオサイト（Next.js 15.5.4 App Router）：
 - ポートフォリオページ（About、Projects、Blog、Contact）
 - MDXファイルベースのブログ・プロジェクト管理
-- EmailJS統合のお問合せフォーム（多層スパム対策）
-- ダーク/ライトテーマ対応（next-themes）
+- EmailJS統合のお問合せフォーム（多層スパム対策、稼働中）
+- ダーク/ライトテーマ対応（next-themes、React 19対応済み）
 - トップに戻るボタン（ScrollToTop）実装済み
+- モバイルファーストレスポンシブデザイン（2025-10-11最適化完了）
 
 ## 開発コマンド
 
@@ -30,12 +31,12 @@ npm run lint
 ## アーキテクチャ
 
 ### 技術スタック
-- **フレームワーク**: Next.js 15.5.4（App Router、React Server Components）
+- **フレームワーク**: Next.js 15.5.4（App Router、React 19、Server Components）
 - **言語**: TypeScript（strict mode）
-- **スタイリング**: Tailwind CSS + shadcn/uiコンポーネント
+- **スタイリング**: Tailwind CSS + shadcn/ui（Radix UI v1.2+、React 19対応）
 - **コンテンツ管理**: MDXファイルシステム（`content/blog/`, `content/projects/`）
 - **フォーム**: EmailJS（スパム対策：ハニーポット、日本語必須、レート制限）
-- **テーマ**: next-themes（ダーク/ライトモード）
+- **テーマ**: next-themes（ダーク/ライトモード、suppressHydrationWarning設定済み）
 - **Markdown**: react-markdown + rehype/remark（シンタックスハイライト、KaTeX数式）
 
 ### Next.js 15対応の重要な変更
@@ -73,10 +74,19 @@ excerpt: "記事の要約"
 
 #### 3. デザインシステム
 - **Design Tokens**: `tailwind.config.ts`でブランドカラー（indigo）定義
-- **コンテナ幅**: `max-w-4xl`（Blog、About、Projects）
-- **スペーシング**: `pt-20`（ヘッダー下の統一余白）
+- **コンテナ幅**: `max-w-4xl`（Blog、About、Projects）、`max-w-2xl`（Contact form）
+- **スペーシング**: `pt-20`（ヘッダー下の統一余白）、`px-4`（モバイル左右余白）
+- **レスポンシブタイポグラフィ**: モバイルファースト（例：`text-2xl md:text-4xl`）
 - **セマンティックHTML**: `<main>`, `<article>`, `<section>`の適切な使用
 - **アクセシビリティ**: フォーカスリング、見出し階層、ARIAラベル
+
+**モバイル最適化のガイドライン**:
+- 見出し（H1）: `text-2xl md:text-4xl`または`text-2xl md:text-5xl`
+- 本文: `text-sm md:text-base`または`text-sm md:text-lg`
+- メタ情報: `text-xs md:text-sm`
+- パディング: `p-4 md:p-6`
+- ギャップ: `gap-1.5 md:gap-2`（小）、`gap-4 md:gap-8`（大）
+- リストインデント: `pl-2 md:pl-4`（左余白を節約）
 
 #### 4. パフォーマンス最適化
 - **静的生成**: ブログ・プロジェクトページは全て静的生成
@@ -127,14 +137,15 @@ content/
 types/
 └── project.ts                 # Project型定義
 
-claudedocs/                          # プロジェクトドキュメント
-├── CODE_ANALYSIS_REPORT.md          # コード品質分析レポート
-├── RENEWAL_PLAN.md                  # リニューアル計画
-├── ABOUT_PAGE_PROPOSAL.md           # Aboutページ設計提案
-├── BLOG_POSTING_GUIDE.md            # MDXブログ記事作成ガイド
-├── EMAILJS_SETUP_GUIDE.md           # EmailJS設定とスパム対策セットアップ
-├── HANASEISAKUSYO_INTERVIEW.md      # 花製作所プロジェクトインタビュー記録
-└── HANASEISAKUSYO_UPDATE_LOG.md     # 花製作所記事更新履歴
+claudedocs/                               # プロジェクトドキュメント
+├── CODE_ANALYSIS_REPORT.md               # コード品質分析レポート
+├── RENEWAL_PLAN.md                       # リニューアル計画
+├── ABOUT_PAGE_PROPOSAL.md                # Aboutページ設計提案
+├── BLOG_POSTING_GUIDE.md                 # MDXブログ記事作成ガイド
+├── CONTACT_PAGE_IMPLEMENTATION.md        # お問合せページ実装記録
+├── CONTACT_SETUP_GUIDE.md                # EmailJS設定とスパム対策セットアップ
+├── HANASEISAKUSYO_INTERVIEW.md           # 花製作所プロジェクトインタビュー記録
+└── HANASEISAKUSYO_UPDATE_LOG.md          # 花製作所記事更新履歴
 ```
 
 ### 必要な環境変数
@@ -213,7 +224,9 @@ if (spamCheck.isSpam) {
 ### レイアウト統一
 - **ヘッダー幅**: `max-w-5xl`
 - **コンテンツ幅**: `max-w-4xl`（Blog、About、Projects）
+- **フォーム幅**: `max-w-2xl`（Contact）
 - **ヘッダー下余白**: `pt-20`（全ページ共通）
+- **モバイル左右余白**: `px-4`（必須）
 - **セマンティックHTML**: `<main>`要素必須
 
 ### MDX記事作成規則
@@ -221,6 +234,8 @@ if (spamCheck.isSpam) {
 - **必須フロントマター**: `title`, `date`, `slug`, `excerpt`
 - **日付形式**: `YYYY-MM-DD`（ISO 8601）
 - **配置場所**: `content/blog/`（ブログ）、`content/projects/`（プロジェクト）
+- **見出しレベル**: H2（##）以降を使用（H1は自動生成）
+- **英語略語**: 日本語コンテキストでは避ける（例：TL;DR → プロジェクト概要）
 
 ### Git Workflow
 - **ブランチ**: `main`ブランチで開発
@@ -234,15 +249,56 @@ if (spamCheck.isSpam) {
 - `RENEWAL_PLAN.md` - サイトリニューアル計画（Phase 0-5）
 - `ABOUT_PAGE_PROPOSAL.md` - Aboutページ設計提案
 - `BLOG_POSTING_GUIDE.md` - MDXブログ記事作成ガイド
-- `EMAILJS_SETUP_GUIDE.md` - EmailJS設定とスパム対策セットアップ
-- `HANASEISAKUSYO_INTERVIEW.md` - 花製作所プロジェクトインタビュー記録
+- `CONTACT_PAGE_IMPLEMENTATION.md` - お問合せページ実装記録（EmailJS統合、スパム対策）
+- `CONTACT_SETUP_GUIDE.md` - EmailJS設定とスパム対策セットアップガイド
+- `HANASEISAKUSYO_INTERVIEW.md` - 花製作所プロジェクトインタビュー記録（2025-10-09完了）
 - `HANASEISAKUSYO_UPDATE_LOG.md` - 花製作所記事更新履歴
 
 ---
 
 ## 📅 最新の開発進捗
 
-### 2025-10-11: 花製作所記事完成 & 脆弱性修正
+### 2025-10-11: お問合せページ実装完了 & モバイル最適化
+
+**実装内容**:
+1. **EmailJS統合完了**（`app/contact/page.tsx`）
+   - サービスID、テンプレートID、公開鍵の設定完了
+   - ibron1975@gmail.com宛にメール送信確認済み
+   - 環境変数チェックとエラーハンドリング強化
+
+2. **React 19対応**
+   - Radix UIパッケージを最新版に更新（全コンポーネント）
+   - `suppressHydrationWarning`追加（`app/layout.tsx`）
+   - ハイドレーションエラー解消
+
+3. **モバイルUX最適化**
+   - プロジェクト一覧ページ（`app/projects/page.tsx`）
+     - H1サイズ調整: `text-2xl md:text-4xl`
+     - 全体的なフォントサイズ縮小（モバイル）
+     - カード内の余白とギャップ最適化
+   - プロジェクト詳細ページ（`app/projects/[slug]/page.tsx`）
+     - リストインデント削減: `pl-2 md:pl-4`
+     - 全セクションのレスポンシブ対応
+     - `flex-shrink-0`でアイコン崩れ防止
+   - コンタクトページ（`app/contact/page.tsx`）
+     - 日本語注意書きボックスの幅統一（`max-w-2xl`）
+
+4. **MDX記事修正**
+   - 花製作所記事の見出し修正（H1 → H2）
+   - 「TL;DR」→「プロジェクト概要」に変更
+
+**ドキュメント作成**:
+- `claudedocs/CONTACT_PAGE_IMPLEMENTATION.md` - 実装の詳細記録（371行）
+- EmailJSセットアップ、スパム対策、React 19対応の全手順を記載
+
+**技術的知見**:
+- モバイルファーストレスポンシブの実装パターン確立
+- React 19とRadix UIの互換性対応
+- EmailJS統合のベストプラクティス
+
+---
+
+### 2025-10-11（以前）: 花製作所記事完成 & 脆弱性修正
 
 **実装内容**:
 - 花製作所プロジェクト記事完成（`content/projects/hanaseisakusyo-rebuild.mdx`）
@@ -255,8 +311,3 @@ if (spamCheck.isSpam) {
 - AI協働開発手法の詳述
 - 段階的ロック、リアルタイム在庫同期の技術詳細
 - バランスの取れた共感的トーン
-
-**技術的改善**:
-- Next.js 15対応（params型のPromise化）
-- ScrollToTopコンポーネント（スクロール300px以上で表示）
-- セキュリティアップデート完了
