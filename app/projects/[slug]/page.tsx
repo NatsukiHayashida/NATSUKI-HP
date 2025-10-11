@@ -153,6 +153,22 @@ export default async function ProjectPage({ params }: Props) {
             remarkPlugins={[remarkGfm, remarkMath]}
             rehypePlugins={[rehypeRaw, rehypeKatex, rehypeHighlight]}
             components={{
+              h2: ({ node, children, ...props }) => {
+                const text = children?.toString() || ''
+                if (text.includes('―')) {
+                  const [main, sub] = text.split('―')
+                  return (
+                    <h2 {...props}>
+                      <span>{main}</span>
+                      <br />
+                      <span className="text-base md:text-lg font-normal text-muted-foreground">
+                        {sub}
+                      </span>
+                    </h2>
+                  )
+                }
+                return <h2 {...props}>{children}</h2>
+              },
               img: ({ node, ...props }) => {
                 const src = props.src || ''
                 const alt = props.alt || ''
