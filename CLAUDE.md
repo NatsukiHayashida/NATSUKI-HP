@@ -326,10 +326,43 @@ if (spamCheck.isSpam) {
 - `CONTACT_SETUP_GUIDE.md` - EmailJS設定とスパム対策セットアップガイド
 - `HANASEISAKUSYO_INTERVIEW.md` - 花製作所プロジェクトインタビュー記録（2025-10-09完了）
 - `HANASEISAKUSYO_UPDATE_LOG.md` - 花製作所記事更新履歴
+- `security/` - セキュリティ関連ドキュメント（脆弱性分析・修正プラン）
 
 ---
 
 ## 📅 最新の開発進捗
+
+### 2025-10-12: npm依存関係脆弱性分析完了
+
+**実装内容**:
+1. **脆弱性詳細分析**
+   - 検出: 3件の moderate severity 脆弱性（すべてprismjs関連）
+   - 影響範囲: react-syntax-highlighter → refractor → prismjs（間接依存）
+   - 脆弱性ID: GHSA-x7hr-w5r2-h6wg（PrismJS DOM Clobbering）
+
+2. **リスク評価**
+   - **実際のリスク**: 低（MDX静的コンテンツのためユーザー入力を処理しない）
+   - **攻撃面**: 限定的（信頼できるソースのみ）
+   - **影響**: 本プロジェクトでは実質的な影響なし
+
+3. **修正プラン策定**
+   - **推奨アプローチ**: package.json に overrides を追加してprismjs@1.30.0を固定
+   - **非推奨**: `npm audit fix --force`（破壊的ダウングレードが発生）
+   - **作業時間**: 約15分（破壊的変更なし）
+
+**ドキュメント作成**:
+- `claudedocs/security/README.md` - セキュリティ分析サマリー
+- `claudedocs/security/VULNERABILITY_FIX_PLAN.md` - 詳細な脆弱性分析と修正プラン
+- `claudedocs/security/FIX_COMMANDS.md` - 実行コマンドとチェックリスト
+- `claudedocs/security/package-json-fix.diff` - 具体的な修正差分
+- `claudedocs/security/npm-audit-output.txt` - 元の監査結果
+
+**技術的知見**:
+- 直接依存 vs 間接依存の切り分けが重要
+- overridesによる依存関係固定の有効性
+- コンテキストに応じたリスク評価の重要性
+
+---
 
 ### 2025-10-12: トップページHeroセクションリニューアル
 
