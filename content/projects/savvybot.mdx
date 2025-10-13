@@ -1,11 +1,11 @@
 ---
-title: "Savybot バージョンアップログ"
-date: "2025-01-10"
-excerpt: "Claude / GPT を活用したチャットアプリ「Savybot」の進化記録。v1.0からv3.0への改善プロセスと成果を公開。"
+title: "SavvyBot バージョンアップログ"
+date: "2025-10-13"
+excerpt: "Claude / GPT を活用したチャットアプリ「SavvyBot」の進化記録。Webアプリから LINE Bot へ、v1.0からv4.0への改善プロセスと成果を公開。"
 category: "AI / Webアプリ開発"
-tags: ["AI", "ChatBot", "Claude", "GPT-4", "TypeScript", "Vercel"]
+tags: ["AI", "ChatBot", "LINE Bot", "GPT-4", "TypeScript", "Supabase", "Edge Function"]
 demoUrl: "https://savybot.vercel.app"
-technologies: ["Next.js 14", "TypeScript", "OpenAI API", "Claude API", "Vercel AI SDK", "Tailwind CSS"]
+technologies: ["Supabase Edge Function", "LINE Messaging API", "Deno", "TypeScript", "OpenAI API", "HMAC-SHA256", "GitHub Actions"]
 role: "Full Stack Developer"
 duration: "2024年6月〜現在（進行中）"
 outcomes:
@@ -25,7 +25,7 @@ learnings:
 
 ## プロジェクト背景
 
-2024年6月、個人的な実験として「Savybot」というAIチャットアプリを開発しました。当初はOpenAI GPT-3.5を使ったシンプルなチャットボットでしたが、ユーザーフィードバックと技術進化に合わせて継続的に改善してきました。
+2024年6月、個人的な実験として「SavvyBot」というAIチャットアプリを開発しました。当初はOpenAI GPT-3.5を使ったシンプルなチャットボットでしたが、ユーザーフィードバックと技術進化に合わせて継続的に改善してきました。
 
 ### なぜ改善を続けるのか
 
@@ -331,28 +331,305 @@ const MODEL_SELECTION_RULES = {
 
 ---
 
+## v4.0（2025年10月〜現在）：LINE Bot化とEdge Function実装
+
+### 新しいアプローチ
+
+WebアプリからLINE Botへの移行を決定：
+
+**移行の理由：**
+- ユーザーがアプリをインストール不要（LINEで完結）
+- プッシュ通知が標準で使える
+- 日本国内での普及率が高い（LINE：9,500万ユーザー）
+- モバイルファーストの体験を提供
+
+**技術スタックの刷新：**
+- **従来**: Next.js + Vercel
+- **新規**: Supabase Edge Function + Deno + LINE Messaging API
+
+---
+
+### 実装内容
+
+#### 1. Supabase Edge Function（Deno）
+
+**アーキテクチャ：**
+```typescript
+// supabase/functions/savvybot/index.ts
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { verifyLineSignature } from './lib/line.ts'
+import { handleMessage } from './lib/message-handler.ts'
+
+serve(async (req) => {
+  // 1. LINE webhook 署名検証
+  const signature = req.headers.get('X-Line-Signature')
+  const body = await req.text()
+
+  const isValid = await verifyLineSignature(body, signature, channelSecret)
+  if (!isValid) {
+    return new Response('Forbidden', { status: 403 })
+  }
+
+  // 2. メッセージ処理
+  const events = JSON.parse(body).events
+  for (const event of events) {
+    if (event.type === 'message' && event.message.type === 'text') {
+      await handleMessage(event)
+    }
+  }
+
+  return new Response('OK', { status: 200 })
+})
+```
+
+#### 2. LINE署名検証（セキュリティ）
+
+**HMAC-SHA256 + Constant-time comparison：**
+
+```typescript
+// supabase/functions/savvybot/lib/line.ts
+export async function verifyLineSignature(
+  body: string,
+  signature: string,
+  channelSecret: string
+): Promise<boolean> {
+  // 1. HMAC-SHA256 鍵のインポート
+  const enc = new TextEncoder()
+  const key = await crypto.subtle.importKey(
+    'raw',
+    enc.encode(channelSecret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  )
+
+  // 2. 署名計算
+  const sig = await crypto.subtle.sign('HMAC', key, enc.encode(body))
+  const calcB64 = btoa(String.fromCharCode(...new Uint8Array(sig)))
+
+  // 3. Constant-time比較（タイミング攻撃対策）
+  if (calcB64.length !== signature.length) return false
+  let diff = 0
+  for (let i = 0; i < calcB64.length; i++) {
+    diff |= calcB64.charCodeAt(i) ^ signature.charCodeAt(i)
+  }
+  return diff === 0
+}
+```
+
+**セキュリティ対策：**
+- ✅ HMAC-SHA256による署名検証
+- ✅ Constant-time比較（タイミング攻撃防止）
+- ✅ テキストサニタイゼーション（制御文字除去）
+- ✅ 環境変数検証（Zodスキーマ）
+
+#### 3. CI/CD パイプライン
+
+**GitHub Actions による自動デプロイ：**
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy to Supabase
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+
+      - name: Set Secrets
+        run: |
+          supabase secrets set \
+            OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
+            LINE_CHANNEL_ACCESS_TOKEN=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }} \
+            LINE_CHANNEL_SECRET=${{ secrets.LINE_CHANNEL_SECRET }}
+
+      - name: Deploy Function
+        run: supabase functions deploy savvybot
+```
+
+**デプロイフロー：**
+1. `main` ブランチへpush
+2. GitHub Actionsが自動起動
+3. Supabase CLIでシークレット設定
+4. Edge Functionデプロイ
+5. 本番環境に即座反映
+
+#### 4. 診断ログとモニタリング
+
+**構造化ログ：**
+```typescript
+// supabase/functions/savvybot/lib/logger.ts
+logger.info({
+  event_type: 'signature.verification.success',
+  request_id: crypto.randomUUID(),
+  user_id: event.source.userId,
+})
+
+logger.error({
+  event_type: 'openai.api.error',
+  error_code: 'rate_limit',
+  retry_after: 60,
+})
+```
+
+**ログ確認：**
+```bash
+# リアルタイムログ監視
+./scripts/check-logs.sh
+
+# フィルタリング
+./scripts/check-logs.sh | grep "signature.verification"
+```
+
+---
+
+### 技術的な挑戦と解決
+
+#### 1. Promise処理の修正
+
+**問題：**
+```typescript
+// ❌ 誤った Promise チェーン
+return cryptoKey.then((k) =>
+  crypto.subtle.sign('HMAC', k, data).then((hashBuffer) => {
+    return ok(isValid) // Promise<Result> を返していた
+  })
+)
+```
+
+**解決：**
+```typescript
+// ✅ async/await で明確に
+const key = await crypto.subtle.importKey(...)
+const sig = await crypto.subtle.sign('HMAC', key, enc.encode(body))
+return ok(diff === 0) // Result を直接返す
+```
+
+#### 2. トークンローテーション
+
+**問題：** LINE_CHANNEL_ACCESS_TOKEN の期限切れ
+
+**解決フロー：**
+1. LINE Developers Console で新しいトークン発行
+2. GitHub Secrets 更新
+3. 空コミットで再デプロイ
+
+```bash
+git commit --allow-empty -m "ci: rotate LINE_CHANNEL_ACCESS_TOKEN"
+git push origin main
+```
+
+#### 3. デバッグログの実装
+
+**診断ポイント：**
+- 起動時のシークレット長確認
+- リクエスト毎の署名比較
+- OpenAI API レスポンス詳細
+
+```typescript
+// スタートアップ診断
+logger.info({
+  event_type: 'startup.config',
+  line_token_len: config.line.channelAccessToken?.length ?? 0,
+  line_secret_len: config.line.channelSecret?.length ?? 0,
+})
+
+// 署名比較診断
+logger.info({
+  event_type: 'signature.verify.compare',
+  expected_prefix: expected.slice(0, 12),
+  received_prefix: signature.slice(0, 12),
+  equal: expected === signature,
+})
+```
+
+---
+
+### 実機テスト結果
+
+**テスト日**: 2025年10月13日
+
+**テスト内容：**
+1. ✅ LINE Bot 友だち追加
+2. ✅ 「テスト」メッセージ送信
+3. ✅ Bot からの返信受信（正常動作）
+
+**ログフロー確認：**
+```
+startup.config →
+webhook.diag →
+signature.verify.compare (equal: true) →
+signature.verification.success →
+line.reply.response (status: 200) →
+message.processed
+```
+
+**成功の証明：**
+- 署名検証：成功（403エラーなし）
+- LINE API：成功（401エラーなし）
+- メッセージ送受信：正常動作
+
+---
+
+### v4.0の成果
+
+#### デプロイ完了
+- ✅ LINE webhook 署名検証実装
+- ✅ Supabase Edge Function デプロイ
+- ✅ GitHub Actions CI/CD 構築
+- ✅ 診断ログ実装
+- ✅ 実機テスト成功
+
+#### セキュリティ強化
+- ✅ HMAC-SHA256署名検証
+- ✅ タイミング攻撃対策
+- ✅ テキストサニタイゼーション
+- ✅ 環境変数検証
+
+#### 運用基盤
+- ✅ 自動デプロイパイプライン
+- ✅ 構造化ログ
+- ✅ トラブルシューティングスクリプト
+
+---
+
 ## 次のステップ
 
-### 短期（〜2025年3月）
+### v4.1（〜2025年11月）
+- [ ] OpenAI連携の実機テスト
+- [ ] メッセージ履歴管理（Supabase Database）
+- [ ] デデュプリケーション強化（Supabase KV）
+
+### v4.2（〜2025年12月）
+- [ ] モニタリング強化（Supabase Analytics）
+- [ ] アラート設定（エラー率閾値）
+- [ ] 本番環境セットアップ
+
+### v5.0（〜2026年3月）
 - [ ] マルチモーダル対応（画像理解）
-- [ ] 音声入力機能
-- [ ] 会話分岐機能（複数会話の並行管理）
-
-### 中期（〜2025年6月）
-- [ ] RAG（検索拡張生成）統合
-- [ ] カスタムGPTs対応
-- [ ] チーム機能（複数ユーザーで共有）
-
-### 長期（〜2025年12月）
-- [ ] ファインチューニングモデルの導入
-- [ ] エンタープライズ向け機能
-- [ ] 月間ユーザー1,000人達成
+- [ ] RAG統合（検索拡張生成）
+- [ ] LINE リッチメニュー実装
 
 ---
 
 ## 参考リソース
 
+### v1.0〜v3.0（Webアプリ版）
 - [Vercel AI SDK Documentation](https://sdk.vercel.ai/docs)
 - [OpenAI Platform](https://platform.openai.com/)
 - [Anthropic Claude](https://www.anthropic.com/claude)
 - [Next.js Streaming Guide](https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming)
+
+### v4.0（LINE Bot版）
+- [LINE Messaging API Reference](https://developers.line.biz/ja/reference/messaging-api/)
+- [Supabase Edge Functions](https://supabase.com/docs/guides/functions)
+- [Deno Deploy Documentation](https://deno.com/deploy/docs)
+- [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API)
