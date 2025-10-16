@@ -1,399 +1,197 @@
 ---
-title: "SavvyBot バージョンアップログ"
-date: "2025-10-13"
-excerpt: "Claude / GPT を活用したチャットアプリ「SavvyBot」の進化記録。Webアプリから LINE Bot へ、v1.0からv4.0への改善プロセスと成果を公開。"
-category: "AI / Webアプリ開発"
-tags: ["AI", "ChatBot", "LINE Bot", "GPT-4", "TypeScript", "Supabase", "Edge Function"]
-demoUrl: "https://savybot.vercel.app"
-technologies: ["Supabase Edge Function", "LINE Messaging API", "Deno", "TypeScript", "OpenAI API", "HMAC-SHA256", "GitHub Actions"]
-role: "Full Stack Developer"
-duration: "2024年6月〜現在（進行中）"
+title: "SavvyBot ― 会話を邪魔しない、グループチャット専属AIアシスタント"
+date: "2025-10-16"
+excerpt: "LINE Messaging APIとOpenAI APIを連携させた対話型チャットボット。GAS MVP実装から始まり、Supabase Edge Functionsへの移行を完了。個人向けから「グループチャット特化型AIアシスタント」への戦略的ピボットを経て、SaaS化に向けた開発フェーズへ。"
+category: "AI / チャットボット開発"
+tags: ["LINE Bot", "OpenAI API", "Tavily API", "Supabase", "TypeScript", "Deno", "Function Calling", "グループチャット"]
+technologies: ["Supabase Edge Functions", "LINE Messaging API", "OpenAI Function Calling", "Tavily API", "Deno", "TypeScript", "GitHub Actions", "HMAC-SHA256"]
+role: "フルスタック開発 / プロダクトオーナー / アーキテクト"
+duration: "2023年3月〜現在（進行中）"
 outcomes:
-  - "応答時間75%短縮（7.2s → 1.8s）"
-  - "月間アクティブユーザー400%増（50人 → 250人）"
-  - "API利用コスト60%削減（$45 → $18/月）"
-  - "ユーザー満足度4.6/5.0達成"
+  - "セキュリティ強化（HMAC-SHA256署名検証、タイミング攻撃対策）"
+  - "Web検索統合（OpenAI Function Calling + Tavily API）"
+  - "時間表現解釈の精度向上（現在日付コンテキスト追加）"
+  - "CI/CDパイプライン構築（GitHub Actions自動デプロイ）"
 challenges:
-  - "複数AIモデルの統合と最適な使い分け"
-  - "ストリーミング応答の実装とUI最適化"
-  - "コスト効率化とレスポンス品質のバランス"
+  - "個人向けChatGPTとの差別化（戦略的ピボット）"
+  - "署名検証エラー（403 Forbidden）の解決"
+  - "時間表現の誤認識（「去年」が2022年と解釈される問題）"
+  - "グループチャット特化機能の設計と実装"
 learnings:
-  - "AIモデルの特性を活かしたハイブリッド設計"
-  - "ストリーミングUIによるUX改善手法"
-  - "プロンプトエンジニアリングとコスト最適化"
+  - "Result型による型安全なエラーハンドリング"
+  - "アダプターパターンによるテスタビリティ向上"
+  - "OpenAI Function Callingによる自動ツール選択"
+  - "Temporal Context Patternによる時間認識精度の改善"
+  - "ニッチ市場への特化によるプロダクト差別化"
 ---
 
-## プロジェクト背景
+## プロジェクト概要
 
-2024年6月、個人的な実験として「SavvyBot」というAIチャットアプリを開発しました。当初はOpenAI GPT-3.5を使ったシンプルなチャットボットでしたが、ユーザーフィードバックと技術進化に合わせて継続的に改善してきました。
+SavvyBotは、LINE Messaging APIとOpenAI APIを連携させた対話型チャットボットです。Google Apps Script（GAS）でのMVP実装から開始し、Supabase Edge Functionsへの移行を完了（Phase 2）。現在は**グループチャット特化型AIアシスタント**への戦略的ピボットを経て、SaaS化に向けた開発フェーズ（Phase 3）に移行しています。
 
-### なぜ改善を続けるのか
+### コアコンセプト
 
-1. **技術的好奇心**
-   - 新しいAIモデル（Claude 3.5、GPT-4o）の実践的な活用
-   - ストリーミング応答やマルチモーダルAIの実装経験
+**「会話を邪魔しない、グループチャット専属AIアシスタント」**
+- 人の会話の邪魔をしない（基本は沈黙、裏で記録・分析）
+- 裏方に徹する（コマンドで呼ばれた時だけ発言）
+- まとめる、追跡する、リマインドする（議事録、決定事項、TODO管理）
 
-2. **ユーザーニーズの変化**
-   - より高速で自然な対話体験への期待
-   - 用途に応じた柔軟なAIモデル選択
+### ビジネス目標
 
-3. **コスト最適化の必要性**
-   - 個人プロジェクトとしての持続可能性
-   - ユーザー増加に伴うAPI コストの管理
+**年内に収益化の可能性を探る**（副業ベース、リーンスタートアップアプローチ）
 
----
+### 技術スタック
 
-## バージョン進化ログ
+**バックエンド**
+- TypeScript / Deno
+- Supabase Edge Functions
+- LINE Messaging API
+- OpenAI API（GPT-4 + Function Calling）
+- Tavily API（Web検索）
 
-### v1.0（2024年6月）：シンプルなチャットボット
+**インフラ・DevOps**
+- GitHub Actions（CI/CD）
+- Supabase CLI
+- HMAC-SHA256署名検証
 
-**実装内容：**
-- OpenAI GPT-3.5 Turbo統合
-- 基本的なチャットUI
-- 会話履歴の保存（セッションのみ）
-
-**技術スタック：**
-- Next.js 14
-- OpenAI API
-- React
-
-**制限事項：**
-- 応答速度が遅い（平均7.2秒）
-- コンテキストがセッションでリセット
-- 単一AIモデルのみ
-
-**KPI：**
-- 月間ユーザー：50人
-- 応答時間：7.2秒
-- API コスト：$15/月
+**将来のフロントエンド**
+- Next.js / React
+- Tailwind CSS
 
 ---
 
-### v2.0（2024年9月）：マルチAI対応とストリーミング
+## プロジェクトの進化
 
-**新機能：**
-1. **マルチAIモデル統合**
-   - Claude 3.5 Sonnet追加
-   - GPT-4 Turbo追加
-   - ユーザーがモデルを選択可能に
+### Phase 1: GAS での MVP（2023年3月 - 完了）
 
-2. **ストリーミング応答**
-   - Vercel AI SDKでストリーミング実装
-   - リアルタイム応答表示
-   - 体感速度の大幅改善
+LINE Messaging APIとOpenAI APIの基本連携を実現。簡易的なチャットボット機能を実装しましたが、セキュリティ脆弱性とシークレット管理の困難さが課題となりました。
 
-3. **UI改善**
-   - モバイル最適化
-   - Markdown/コードハイライト対応
-   - ダークモード対応
+### Phase 2: Supabase Edge Functionsへの移行（2024年10月 - 完了）
 
-**実装例：**
-```typescript
-// app/api/chat/route.ts
-import { StreamingTextResponse, OpenAIStream } from 'ai'
-import OpenAI from 'openai'
+**達成事項**
+- HMAC-SHA256署名検証の実装（セキュリティ強化）
+- Result型によるエラーハンドリング
+- 構造化ログによる可観測性の確保
+- GitHub ActionsによるCI/CDパイプライン構築
+- 実機テストでの動作確認完了
 
-const openai = new OpenAI()
+**技術的成果**
+- 署名検証エラー（403 Forbidden）の解決
+- 非同期Web Crypto APIの正しい実装
+- 定数時間比較によるタイミング攻撃対策
+- 診断ログによる運用性向上
 
-export async function POST(req: Request) {
-  const { messages, model } = await req.json()
+### Phase 3: 戦略的ピボット（2024年10月 - 進行中）
 
-  const response = await openai.chat.completions.create({
-    model: model === 'gpt4' ? 'gpt-4-turbo' : 'gpt-3.5-turbo',
-    messages,
-    stream: true,
-  })
+**背景と課題認識**（2025年10月20日 ブレインストーミングセッション）
+- 個人向けチャットボットは無料のChatGPTと差別化が困難
+- 市場分析の結果、グループチャット領域に明確なペインポイントを発見
+- 収益化可能性の探索のため、ニッチ市場への特化を決定
 
-  const stream = OpenAIStream(response)
-  return new StreamingTextResponse(stream)
-}
-```
+**差別化戦略**
 
-**成果：**
-- 応答時間：3.5秒（51%改善）
-- 月間ユーザー：120人（140%増）
-- API コスト：$35/月（ユーザー増に対応）
+競合（ChatGPT公式、他社Bot）の弱点：
+- 個人利用がメイン
+- グループでは会話に割り込んでうるさい
+- 議事録機能が弱い
+- 最新情報の取得が不十分
 
-**新たな課題：**
-- 複数モデルで設定が分散
-- コストが増加傾向
-- モバイルUIがまだ改善の余地あり
+SavvyBotの強み：
+- グループチャット特化
+- 沈黙がデフォルト（会話を邪魔しない）
+- 構造化された議事録
+- 決定事項の自動追跡
+- 豊富なコマンド体系（`/sv:*` プレフィックス）
+- Web検索統合で最新情報に対応
 
----
+### Phase 4-6: SaaS化（2025年11月〜12月予定）
 
-### v3.0（2024年12月〜現在）：コスト最適化と高度な機能
+- **Phase 4**: 高度な機能（使用量トラッキング、マルチテナント対応）
+- **Phase 5**: 管理画面（Next.js + Supabase Auth）
+- **Phase 6**: 課金システム（Stripe統合）、ベータテスト、正式リリース
 
-**改善ポイント：**
+**収益モデル**
+- Freeプラン: 個人利用、基本機能のみ
+- Teamプラン（¥2,980/月）: 3-10人チーム、議事録・決定追跡・TODO管理
+- Businessプラン（¥9,800/月）: 11-50人、ナレッジベース、全連携
 
-#### 1. ストリーミング応答の最適化
-
-リアルタイム応答表示でUX向上：
-
-```typescript
-// app/api/chat/route.ts
-import { streamText } from 'ai'
-import { openai } from '@ai-sdk/openai'
-import { anthropic } from '@ai-sdk/anthropic'
-
-export async function POST(req: Request) {
-  const { messages, provider } = await req.json()
-
-  const model = provider === 'claude'
-    ? anthropic('claude-3-5-sonnet-20241022')
-    : openai('gpt-4-turbo')
-
-  const result = await streamText({
-    model,
-    messages,
-    temperature: 0.7,
-  })
-
-  return result.toDataStreamResponse()
-}
-```
-
-**UIコンポーネント：**
-```tsx
-// components/chat.tsx
-'use client'
-import { useChat } from 'ai/react'
-
-export function Chat() {
-  const { messages, input, handleSubmit, isLoading } = useChat()
-
-  return (
-    <div>
-      {messages.map(m => (
-        <div key={m.id}>
-          <ReactMarkdown>{m.content}</ReactMarkdown>
-        </div>
-      ))}
-      <form onSubmit={handleSubmit}>
-        <input value={input} />
-        <button disabled={isLoading}>送信</button>
-      </form>
-    </div>
-  )
-}
-```
-
-#### 2. コスト効率化
-
-**戦略：**
-- 簡単な質問はGPT-3.5-turbo（安価）
-- 複雑な質問はGPT-4/Claude（高品質）
-- システムプロンプト最適化でトークン削減
-
-```typescript
-// lib/model-selector.ts
-export function selectModel(message: string): AIModel {
-  const complexity = analyzeComplexity(message)
-
-  if (complexity === 'low') {
-    return 'gpt-3.5-turbo' // コスト: $0.001/1K tokens
-  }
-
-  if (complexity === 'high' && needsReasoning(message)) {
-    return 'claude-3-5-sonnet' // 高度な推論
-  }
-
-  return 'gpt-4-turbo' // バランス型
-}
-
-function analyzeComplexity(message: string): 'low' | 'medium' | 'high' {
-  const wordCount = message.split(' ').length
-  const hasCodeRequest = /code|program|script/.test(message)
-  const hasAnalysisRequest = /analyze|compare|evaluate/.test(message)
-
-  if (wordCount < 10 && !hasCodeRequest && !hasAnalysisRequest) {
-    return 'low'
-  }
-
-  if (hasCodeRequest || hasAnalysisRequest) {
-    return 'high'
-  }
-
-  return 'medium'
-}
-```
-
-#### 3. UI改善とモバイル対応
-
-**改善内容：**
-- レスポンシブデザイン刷新
-- プリセットプロンプト機能
-- コードブロックのシンタックスハイライト
-- 会話エクスポート機能
-
-**モバイル最適化：**
-```tsx
-// components/mobile-chat.tsx
-export function MobileChat() {
-  return (
-    <div className="flex flex-col h-screen">
-      {/* 固定ヘッダー */}
-      <header className="sticky top-0 z-10 bg-background/95 backdrop-blur">
-        <ModelSelector />
-      </header>
-
-      {/* スクロール可能なメッセージエリア */}
-      <div className="flex-1 overflow-y-auto pb-24">
-        <Messages />
-      </div>
-
-      {/* 固定入力フォーム */}
-      <div className="fixed bottom-0 w-full p-4 bg-background/95 backdrop-blur">
-        <ChatInput />
-      </div>
-    </div>
-  )
-}
-```
+**目標**: 年内に5-30チームの有料ユーザー獲得、MRR ¥15,000-¥90,000
 
 ---
 
-## 成果・KPI
+## はじめに ― 動くものから、人の役に立つものへ
 
-### パフォーマンス改善
+2023年3月、ChatGPTの登場に刺激を受けて、個人的な実験として開発を始めました。「AIを使ったLINE Botが動くかどうか試してみたい」――最初はただそれだけでした。
 
-| 指標 | v1.0 | v2.0 | v3.0 | 改善率 |
-|------|------|------|------|--------|
-| 平均応答時間 | 7.2秒 | 3.5秒 | 1.8秒 | **75%改善** |
-| 初回トークン表示 | - | 1.2秒 | 0.4秒 | **67%改善** |
-| モバイルLCP | 3.8秒 | 2.1秒 | 1.1秒 | **71%改善** |
+**動くだけで満足していた頃**
 
-### ユーザー成長
+Google Apps Scriptで署名検証もなく、セキュリティも考えず、ただ「動く」ことに喜びを感じていました。自分と数人の友人が使えれば十分。技術的な興味が満たされれば、それで良かったのです。
 
-| 指標 | v1.0 | v2.0 | v3.0 | 成長率 |
-|------|------|------|------|--------|
-| 月間アクティブユーザー | 50人 | 120人 | 250人 | **400%増** |
-| 1日あたり会話数 | 150 | 420 | 980 | **553%増** |
-| ユーザー満足度 | 3.8/5 | 4.2/5 | 4.6/5 | **21%向上** |
+**使ってくれる人が増えてきた**
 
-### コスト最適化
+気づけば、登録者が30名弱まで増えていました。「便利だから使ってる」「助かってる」という声をもらうようになって、意識が変わりました。
 
-| 指標 | v1.0 | v2.0 | v3.0 | 削減率 |
-|------|------|------|------|--------|
-| 月間API コスト | $15 | $35 | $18 | **60%削減**（v2比） |
-| ユーザーあたりコスト | $0.30 | $0.29 | $0.072 | **76%削減** |
-| 平均トークン使用量 | 1,200 | 1,100 | 650 | **41%削減** |
+**動くものから、人の役に立つものへ**
 
----
+「動くだけで満足」から「多くの人に使ってもらいたい」という気持ちに変わったとき、プロジェクトの方向性を見直す必要性を感じました。
 
-## 技術的な学び
+個人向けChatGPTは、すでに完成されている。無料で使えるChatGPT公式アプリは、個人ユーザーにとって完璧に近い体験を提供しています。
 
-### 1. AIモデルの使い分け
+**グループチャットには、まだ解決されていない課題がある**
 
-**学んだこと：**
-- GPT-3.5: 簡単な質問、速度重視の場合に最適
-- GPT-4: バランス型、幅広い用途に対応
-- Claude 3.5: 長文生成、複雑な推論に強い
+一方、グループチャットでのAI活用には明確なペインポイントがありました：
+- 既存のBotは会話に割り込んでうるさい
+- 議事録作成が手動で面倒
+- 決定事項が埋もれて見つからない
+- TODOが口約束で終わってしまう
 
-**実践的な使い分けルール：**
-```typescript
-const MODEL_SELECTION_RULES = {
-  // 簡単な質問 → GPT-3.5（速度・コスト優先）
-  simple: {
-    model: 'gpt-3.5-turbo',
-    triggers: ['天気', '時間', '計算', '翻訳'],
-    maxTokens: 500,
-  },
-
-  // コード関連 → GPT-4（高精度）
-  coding: {
-    model: 'gpt-4-turbo',
-    triggers: ['code', 'debug', 'プログラム'],
-    maxTokens: 2000,
-  },
-
-  // 長文・分析 → Claude（推論力）
-  analysis: {
-    model: 'claude-3-5-sonnet',
-    triggers: ['分析', '比較', '要約', 'レビュー'],
-    maxTokens: 4000,
-  },
-}
-```
-
-### 2. ストリーミングUIのベストプラクティス
-
-**重要ポイント：**
-- 初回トークン表示を最優先（0.5秒以内）
-- 途中でローディング表示しない（体感速度低下）
-- Markdownレンダリングは完了後に適用
-
-### 3. プロンプトエンジニアリング
-
-**トークン削減テクニック：**
-- システムプロンプトを簡潔に（500→150トークン）
-- 会話履歴は最新3ターンのみ保持
-- 重要な情報のみをコンテキストに含める
+この気づきから、「グループチャット特化型AIアシスタント」へのピボットを決断しました。単なる技術実験から、本当に人の役に立つプロダクトへ。
 
 ---
 
-## v4.0（2025年10月〜現在）：LINE Bot化とEdge Function実装
+## コアコンセプト ― 会話を邪魔しない裏方AI
 
-### 新しいアプローチ
+SavvyBotは、グループチャットでの**裏方に徹する**設計思想を持っています。
 
-WebアプリからLINE Botへの移行を決定：
+### 基本は沈黙
+- 人の会話に割り込まない
+- 裏で会話を記録・分析
+- コマンドで呼ばれた時だけ発言
 
-**移行の理由：**
-- ユーザーがアプリをインストール不要（LINEで完結）
-- プッシュ通知が標準で使える
-- 日本国内での普及率が高い（LINE：9,500万ユーザー）
-- モバイルファーストの体験を提供
+### まとめる、追跡する、リマインドする
+- 議事録の自動生成
+- 決定事項の追跡
+- TODOの管理
+- 質問と回答のトラッキング
 
-**技術スタックの刷新：**
-- **従来**: Next.js + Vercel
-- **新規**: Supabase Edge Function + Deno + LINE Messaging API
+### モード設計
+
+**個人モード**（1対1チャット）
+- 積極的に会話
+- 会話履歴保持
+- ChatGPT的な対話体験
+
+**グループモード**（複数人チャット）
+- 基本は沈黙
+- 裏で記録・分析
+- コマンドで呼ばれた時のみ発言
 
 ---
 
-### 実装内容
+## Phase 2完了 ― 堅牢な基盤の構築
 
-#### 1. Supabase Edge Function（Deno）
+### セキュリティの強化
 
-**アーキテクチャ：**
-```typescript
-// supabase/functions/savvybot/index.ts
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import { verifyLineSignature } from './lib/line.ts'
-import { handleMessage } from './lib/message-handler.ts'
+GASでは困難だった署名検証を、Supabase Edge Functionsで実装しました。
 
-serve(async (req) => {
-  // 1. LINE webhook 署名検証
-  const signature = req.headers.get('X-Line-Signature')
-  const body = await req.text()
-
-  const isValid = await verifyLineSignature(body, signature, channelSecret)
-  if (!isValid) {
-    return new Response('Forbidden', { status: 403 })
-  }
-
-  // 2. メッセージ処理
-  const events = JSON.parse(body).events
-  for (const event of events) {
-    if (event.type === 'message' && event.message.type === 'text') {
-      await handleMessage(event)
-    }
-  }
-
-  return new Response('OK', { status: 200 })
-})
-```
-
-#### 2. LINE署名検証（セキュリティ）
-
-**HMAC-SHA256 + Constant-time comparison：**
+**HMAC-SHA256による署名検証**
 
 ```typescript
-// supabase/functions/savvybot/lib/line.ts
 export async function verifyLineSignature(
   body: string,
   signature: string,
   channelSecret: string
 ): Promise<boolean> {
-  // 1. HMAC-SHA256 鍵のインポート
   const enc = new TextEncoder()
   const key = await crypto.subtle.importKey(
     'raw',
@@ -403,11 +201,10 @@ export async function verifyLineSignature(
     ['sign']
   )
 
-  // 2. 署名計算
   const sig = await crypto.subtle.sign('HMAC', key, enc.encode(body))
   const calcB64 = btoa(String.fromCharCode(...new Uint8Array(sig)))
 
-  // 3. Constant-time比較（タイミング攻撃対策）
+  // Constant-time比較（タイミング攻撃対策）
   if (calcB64.length !== signature.length) return false
   let diff = 0
   for (let i = 0; i < calcB64.length; i++) {
@@ -417,219 +214,322 @@ export async function verifyLineSignature(
 }
 ```
 
-**セキュリティ対策：**
-- ✅ HMAC-SHA256による署名検証
-- ✅ Constant-time比較（タイミング攻撃防止）
-- ✅ テキストサニタイゼーション（制御文字除去）
-- ✅ 環境変数検証（Zodスキーマ）
+**セキュリティ対策**
+- HMAC-SHA256による署名検証
+- Constant-time比較（タイミング攻撃防止）
+- テキストサニタイゼーション
+- 環境変数検証（Zodスキーマ）
 
-#### 3. CI/CD パイプライン
+### CI/CDパイプラインの構築
 
-**GitHub Actions による自動デプロイ：**
+GitHub Actionsによる自動デプロイを実現しました。
 
 ```yaml
-# .github/workflows/deploy.yml
 name: Deploy to Supabase
-
 on:
   push:
     branches: [main]
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
-
-      - name: Set Secrets
-        run: |
-          supabase secrets set \
-            OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
-            LINE_CHANNEL_ACCESS_TOKEN=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }} \
-            LINE_CHANNEL_SECRET=${{ secrets.LINE_CHANNEL_SECRET }}
-
       - name: Deploy Function
         run: supabase functions deploy savvybot
 ```
 
-**デプロイフロー：**
-1. `main` ブランチへpush
+**デプロイフロー**
+1. `main`ブランチへpush
 2. GitHub Actionsが自動起動
 3. Supabase CLIでシークレット設定
 4. Edge Functionデプロイ
 5. 本番環境に即座反映
 
-#### 4. 診断ログとモニタリング
+### 実機テスト成功
 
-**構造化ログ：**
-```typescript
-// supabase/functions/savvybot/lib/logger.ts
-logger.info({
-  event_type: 'signature.verification.success',
-  request_id: crypto.randomUUID(),
-  user_id: event.source.userId,
-})
+2025年10月13日、署名検証からLINE API連携まで、エンドツーエンドでの動作を確認しました。
 
-logger.error({
-  event_type: 'openai.api.error',
-  error_code: 'rate_limit',
-  retry_after: 60,
-})
-```
-
-**ログ確認：**
-```bash
-# リアルタイムログ監視
-./scripts/check-logs.sh
-
-# フィルタリング
-./scripts/check-logs.sh | grep "signature.verification"
-```
-
----
-
-### 技術的な挑戦と解決
-
-#### 1. Promise処理の修正
-
-**問題：**
-```typescript
-// ❌ 誤った Promise チェーン
-return cryptoKey.then((k) =>
-  crypto.subtle.sign('HMAC', k, data).then((hashBuffer) => {
-    return ok(isValid) // Promise<Result> を返していた
-  })
-)
-```
-
-**解決：**
-```typescript
-// ✅ async/await で明確に
-const key = await crypto.subtle.importKey(...)
-const sig = await crypto.subtle.sign('HMAC', key, enc.encode(body))
-return ok(diff === 0) // Result を直接返す
-```
-
-#### 2. トークンローテーション
-
-**問題：** LINE_CHANNEL_ACCESS_TOKEN の期限切れ
-
-**解決フロー：**
-1. LINE Developers Console で新しいトークン発行
-2. GitHub Secrets 更新
-3. 空コミットで再デプロイ
-
-```bash
-git commit --allow-empty -m "ci: rotate LINE_CHANNEL_ACCESS_TOKEN"
-git push origin main
-```
-
-#### 3. デバッグログの実装
-
-**診断ポイント：**
-- 起動時のシークレット長確認
-- リクエスト毎の署名比較
-- OpenAI API レスポンス詳細
-
-```typescript
-// スタートアップ診断
-logger.info({
-  event_type: 'startup.config',
-  line_token_len: config.line.channelAccessToken?.length ?? 0,
-  line_secret_len: config.line.channelSecret?.length ?? 0,
-})
-
-// 署名比較診断
-logger.info({
-  event_type: 'signature.verify.compare',
-  expected_prefix: expected.slice(0, 12),
-  received_prefix: signature.slice(0, 12),
-  equal: expected === signature,
-})
-```
-
----
-
-### 実機テスト結果
-
-**テスト日**: 2025年10月13日
-
-**テスト内容：**
-1. ✅ LINE Bot 友だち追加
-2. ✅ 「テスト」メッセージ送信
-3. ✅ Bot からの返信受信（正常動作）
-
-**ログフロー確認：**
-```
-startup.config →
-webhook.diag →
-signature.verify.compare (equal: true) →
-signature.verification.success →
-line.reply.response (status: 200) →
-message.processed
-```
-
-**成功の証明：**
+**テスト結果**
 - 署名検証：成功（403エラーなし）
 - LINE API：成功（401エラーなし）
 - メッセージ送受信：正常動作
 
 ---
 
-### v4.0の成果
+## Phase 3.2完了 ― Web検索と時間認識の実装
 
-#### デプロイ完了
-- ✅ LINE webhook 署名検証実装
-- ✅ Supabase Edge Function デプロイ
-- ✅ GitHub Actions CI/CD 構築
-- ✅ 診断ログ実装
-- ✅ 実機テスト成功
+### OpenAI Function Callingによる自動ツール選択
 
-#### セキュリティ強化
-- ✅ HMAC-SHA256署名検証
-- ✅ タイミング攻撃対策
-- ✅ テキストサニタイゼーション
-- ✅ 環境変数検証
+Tavily APIとOpenAI Function Callingを組み合わせ、AIが自動的に最新情報が必要かを判断し、Web検索を実行する機能を実装しました。
 
-#### 運用基盤
-- ✅ 自動デプロイパイプライン
-- ✅ 構造化ログ
-- ✅ トラブルシューティングスクリプト
+**ツール定義**
+
+```typescript
+const SEARCH_TOOLS = [
+  {
+    type: 'function',
+    function: {
+      name: 'search_web',
+      description: '最新の情報やニュースをWeb検索します。',
+      parameters: {
+        type: 'object',
+        properties: {
+          query: { type: 'string', description: '検索クエリ' },
+        },
+        required: ['query'],
+      },
+    },
+  },
+]
+
+const response = await openai.chat.completions.create({
+  model: 'gpt-4o-mini',
+  messages,
+  tools: SEARCH_TOOLS,
+  tool_choice: 'auto', // AIが必要性を判断
+})
+```
+
+**自動判断の流れ**
+1. ユーザー：「去年のワールドシリーズで優勝したチームは？」
+2. AI：最新情報が必要と判断 → `search_web`を呼び出し
+3. システム：Tavily APIでWeb検索実行
+4. AI：検索結果を基に回答生成 → 「2024年ロサンゼルス・ドジャース」
+
+### 時間表現の正確な解釈（Temporal Context Pattern）
+
+**問題**: AIモデルの学習データカットオフ（2023年10月）により、「去年」などの相対的な時間表現が誤って解釈される
+
+**例**
+- ユーザー：「去年のワールドシリーズで優勝したチームは？」
+- AI（誤）：2022年のデータを返答（学習カットオフの視点から「去年=2022年」と解釈）
+
+**解決策**: システムプロンプトに現在日付を動的に追加
+
+```typescript
+const now = new Date()
+const currentDate = now.toISOString().split('T')[0] // YYYY-MM-DD
+const enhancedSystemPrompt = `${config.app.systemPrompt}
+
+【重要】今日の日付: ${currentDate}
+「去年」「今年」「最近」などの時間表現は、この日付を基準に解釈してください。`
+
+const messages: OpenAIMessage[] = [
+  { role: 'system', content: enhancedSystemPrompt },
+  // ...
+]
+```
+
+**結果**
+- 現在日付（2025-10-16）を明示
+- AIが「去年=2024年」と正しく認識
+- Web検索を実行
+- 正確に2024年ロサンゼルス・ドジャースの優勝を回答
+
+**3つの根本原因と段階的解決**
+1. TAVILY_API_KEYがGitHub Actionsワークフローに含まれていない → 追加
+2. SYSTEM_PROMPTが空白で、Web検索使用の指示がない → 指示を含むプロンプトを設定
+3. 時間表現をAIが学習データの視点から解釈 → 現在日付を動的に追加（決定的な解決策）
 
 ---
 
-## 次のステップ
+## 技術的なハイライト
 
-### v4.1（〜2025年11月）
-- [ ] OpenAI連携の実機テスト
-- [ ] メッセージ履歴管理（Supabase Database）
-- [ ] デデュプリケーション強化（Supabase KV）
+### 1. Result型による型安全なエラーハンドリング
 
-### v4.2（〜2025年12月）
-- [ ] モニタリング強化（Supabase Analytics）
-- [ ] アラート設定（エラー率閾値）
-- [ ] 本番環境セットアップ
+従来の`try-catch`ではなく、RustのResult型をTypeScriptで実装し、コンパイル時にエラー処理の漏れを防ぎます。
 
-### v5.0（〜2026年3月）
-- [ ] マルチモーダル対応（画像理解）
-- [ ] RAG統合（検索拡張生成）
-- [ ] LINE リッチメニュー実装
+```typescript
+export type Result<T, E = Error> =
+  | { ok: true; value: T }
+  | { ok: false; error: E }
+
+// 使用例
+const result = await openaiAdapter.sendMessage(userMessage, SYSTEM_PROMPT)
+
+if (!result.ok) {
+  logError(result.error)
+  return err(new AppError('AI response failed'))
+}
+
+const aiResponse = result.value // 型安全にアクセス
+```
+
+### 2. SYSTEM_PROMPTの一元管理
+
+会話のトーン、ルール、禁止事項を一箇所に集約し、チーム全体で簡単に更新・レビューできる仕組みを構築しました。
+
+```typescript
+export const SYSTEM_PROMPT = `
+あなたは親切で知識豊富なアシスタントです。
+
+【応答ルール】
+- 簡潔で分かりやすい日本語で回答してください
+- 不確実な情報には「〜かもしれません」など推測であることを明示
+
+【禁止事項】
+- 医療・法律の専門的アドバイス
+- 金融商品の取引推奨
+`
+```
+
+### 3. 依存性逆転の原則（DIP）適用
+
+アダプターパターンにより、外部APIに依存しない設計を実現。OpenAIから別のAIサービスへの切り替えも容易です。
+
+```typescript
+export interface ChatAdapter {
+  sendMessage(prompt: string, systemPrompt: string): Promise<Result<string, Error>>
+}
+
+export class OpenAIAdapter implements ChatAdapter {
+  async sendMessage(prompt: string, systemPrompt: string) {
+    // 実装
+  }
+}
+
+// 実行時に具体的な実装を注入
+const openaiAdapter = new OpenAIAdapter(config)
+const service = new ConversationService(openaiAdapter)
+
+// テスト時はモックを注入
+const mockAdapter = new MockChatAdapter()
+const testService = new ConversationService(mockAdapter)
+```
+
+### 4. 構造化ログによる可観測性
+
+JSON形式の構造化ログで、障害時の原因特定を迅速化しました。
+
+```typescript
+interface LogContext {
+  request_id: string      // リクエスト追跡
+  user_id?: string        // ユーザー識別
+  event_type: string      // イベント種別
+  latency_ms?: number     // レイテンシ計測
+  error_code?: string     // エラー分類
+}
+
+logRequest({
+  request_id: 'req_abc123',
+  user_id: 'U1234567',
+  event_type: 'message.received',
+  latency_ms: 234
+}, 'Message processed successfully')
+```
+
+---
+
+## 解決した課題
+
+### 1. セキュリティの脆弱性
+
+**課題**: GASでは署名検証が困難で、不正なリクエストを防げない
+
+**解決策**: HMAC-SHA256 + Constant-time comparisonによる堅牢な署名検証を実装しました。
+
+### 2. シークレット管理の改善
+
+**課題**: GASではスクリプトプロパティに直接保存、Git管理が困難
+
+**解決策**
+- `.env.example`でテンプレート管理
+- Supabase SecretsでセキュアにSecret管理
+- GitHub Actionsでの自動デプロイ時に環境変数を注入
+
+### 3. テスタビリティとメンテナンス性
+
+**課題**: GASでは依存関係が密結合で、テストが困難
+
+**解決策**: アダプターパターンで外部APIを抽象化し、モックに差し替え可能な設計にしました。
+
+### 4. 運用性の向上
+
+**課題**: エラーログが不十分で、障害時の原因特定が困難
+
+**解決策**: 構造化ログで可観測性を確保しました。
+
+---
+
+## 今後の展開
+
+### Phase 3.3-3.4: グループチャット機能（2025年10月〜11月）
+
+- モード判定ロジック（個人 vs グループ自動判定）
+- Supabase Database設計・構築（5つのテーブル）
+- グループモード裏処理（会話記録・自動抽出）
+- コマンド実装（`/sv:minutes`, `/sv:decisions`, `/sv:todo`, `/sv:help`）
+- 個人モード会話履歴（5-10件保持）
+- OpenAI Function Callingによる決定事項・TODO自動抽出
+- ローカル＆実機テスト
+
+**主要機能**
+
+**コマンド体系**（`/sv:` プレフィックス）
+- `/sv:minutes` - 議事録生成
+- `/sv:decisions` - 決定事項確認
+- `/sv:todo` - TODO抽出
+- `/sv:summary` - 議論要約
+- `/sv:help` - ヘルプ表示
+
+**自動抽出機能**（OpenAI Function Calling活用）
+- 議題の自動抽出
+- 決定事項の検出と追跡
+- TODOの自動リスト化
+- 質問の検出と未回答追跡
+
+**データベース設計**（Supabase PostgreSQL）
+- `group_settings`: グループごとの設定管理
+- `conversations`: 会話履歴の永続化
+- `decisions`: 決定事項の追跡
+- `todos`: タスク管理
+- `questions`: 質問と回答のトラッキング
+
+### Phase 4: 高度な機能（2025年11月）
+
+- 使用量トラッキング（APIコスト管理）
+- マルチテナント対応（グループID分離）
+- 高度なコマンド（`/sv:summary`, `/sv:search`, `/sv:questions`）
+- リマインダー機能（決定事項の定期通知）
+- ベータテスト準備
+
+### Phase 5: 管理画面（2025年11月〜12月）
+
+- Next.js + Supabase Auth実装
+- ダッシュボード（利用状況可視化）
+- グループ管理画面
+- 設定画面（モード切替、通知設定）
+
+### Phase 6: 収益化とリリース（2025年12月）
+
+- Stripeサブスクリプション統合
+- 請求管理システム
+- クローズドベータテスト（5-10チーム）
+- フィードバック収集と改善
+- ランディングページ制作
+- 正式リリース（年内目標）
+
+### 長期展望（2026年以降）
+
+- ナレッジベース機能（過去の決定事項・議事録の検索）
+- 多言語対応
+- エンタープライズ向け機能（SSO、監査ログ）
+- 音声会議の自動文字起こし＆議事録生成
+- Slack/Teams連携
 
 ---
 
 ## 参考リソース
 
-### v1.0〜v3.0（Webアプリ版）
-- [Vercel AI SDK Documentation](https://sdk.vercel.ai/docs)
-- [OpenAI Platform](https://platform.openai.com/)
-- [Anthropic Claude](https://www.anthropic.com/claude)
-- [Next.js Streaming Guide](https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming)
-
-### v4.0（LINE Bot版）
+**Phase 2: 基盤構築**
 - [LINE Messaging API Reference](https://developers.line.biz/ja/reference/messaging-api/)
 - [Supabase Edge Functions](https://supabase.com/docs/guides/functions)
 - [Deno Deploy Documentation](https://deno.com/deploy/docs)
 - [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API)
+
+**Phase 3: グループチャット特化**
+- [OpenAI Function Calling](https://platform.openai.com/docs/guides/function-calling)
+- [Tavily API Documentation](https://docs.tavily.com/)
+- [Supabase Database](https://supabase.com/docs/guides/database)
