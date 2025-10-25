@@ -1,10 +1,10 @@
 ---
 title: "SavvyBot ― 会話を邪魔しない、グループチャット専属AIアシスタント"
-date: "2025-10-16"
-excerpt: "LINE Messaging APIとOpenAI APIを連携させた対話型チャットボット。GAS MVP実装から始まり、Supabase Edge Functionsへの移行を完了。個人向けから「グループチャット特化型AIアシスタント」への戦略的ピボットを経て、SaaS化に向けた開発フェーズへ。"
+date: "2025-10-25"
+excerpt: "LINE Messaging APIとOpenAI APIを連携させた対話型チャットボット。GAS MVP実装から始まり、Supabase Edge Functionsへの移行を完了。個人向けから「グループチャット特化型AIアシスタント」への戦略的ピボットを経て、管理ダッシュボード実装完了。SaaS化に向けた収益化フェーズへ。"
 category: "AI / チャットボット開発"
-tags: ["LINE Bot", "OpenAI API", "Tavily API", "Supabase", "TypeScript", "Deno", "Function Calling", "グループチャット"]
-technologies: ["Supabase Edge Functions", "LINE Messaging API", "OpenAI Function Calling", "Tavily API", "Deno", "TypeScript", "GitHub Actions", "HMAC-SHA256"]
+tags: ["LINE Bot", "OpenAI API", "Tavily API", "Supabase", "TypeScript", "Deno", "Function Calling", "グループチャット", "Next.js", "SaaS"]
+technologies: ["Supabase Edge Functions", "LINE Messaging API", "OpenAI Function Calling", "Tavily API", "Deno", "TypeScript", "PostgreSQL", "GitHub Actions", "HMAC-SHA256", "Next.js 15", "shadcn/ui", "Recharts", "Supabase Auth"]
 role: "フルスタック開発 / プロダクトオーナー / アーキテクト"
 duration: "2023年3月〜現在（進行中）"
 outcomes:
@@ -12,17 +12,28 @@ outcomes:
   - "Web検索統合（OpenAI Function Calling + Tavily API）"
   - "時間表現解釈の精度向上（現在日付コンテキスト追加）"
   - "CI/CDパイプライン構築（GitHub Actions自動デプロイ）"
+  - "グループチャット機能完全実装（議事録、決定事項、TODO、質問管理）"
+  - "API使用量トラッキングシステム構築（コスト管理の自動化）"
+  - "管理ダッシュボード実装（Next.js 15、認証、データ可視化）"
+  - "プロダクションビルド成功（1.5秒、TypeScript型エラー0件）"
 challenges:
   - "個人向けChatGPTとの差別化（戦略的ピボット）"
   - "署名検証エラー（403 Forbidden）の解決"
   - "時間表現の誤認識（「去年」が2022年と解釈される問題）"
   - "グループチャット特化機能の設計と実装"
+  - "Personal Mode自動検出バグの解決"
+  - "TODO表示とJST対応の実装"
+  - "Recharts TypeScript型定義の解決"
 learnings:
   - "Result型による型安全なエラーハンドリング"
   - "アダプターパターンによるテスタビリティ向上"
   - "OpenAI Function Callingによる自動ツール選択"
   - "Temporal Context Patternによる時間認識精度の改善"
   - "ニッチ市場への特化によるプロダクト差別化"
+  - "PostgreSQLビューとTTLによる効率的なデータ管理"
+  - "モード自動検出ロジックの段階的設計"
+  - "Next.js App Routerとサーバーコンポーネントの活用"
+  - "Row Level Security（RLS）によるマルチテナント実装"
 ---
 
 ## プロジェクト概要
@@ -66,7 +77,7 @@ SavvyBotは、LINE Messaging APIとOpenAI APIを連携させた対話型チャ�
 
 LINE Messaging APIとOpenAI APIの基本連携を実現。簡易的なチャットボット機能を実装しましたが、セキュリティ脆弱性とシークレット管理の困難さが課題となりました。
 
-### Phase 2: Supabase Edge Functionsへの移行（2024年10月 - 完了）
+### Phase 2: Supabase Edge Functionsへの移行（2025年10月 - 完了）
 
 **達成事項**
 - HMAC-SHA256署名検証の実装（セキュリティ強化）
@@ -81,9 +92,9 @@ LINE Messaging APIとOpenAI APIの基本連携を実現。簡易的なチャッ�
 - 定数時間比較によるタイミング攻撃対策
 - 診断ログによる運用性向上
 
-### Phase 3: 戦略的ピボット（2024年10月 - 進行中）
+### Phase 3: 戦略的ピボット（2025年10月 - 完了）
 
-**背景と課題認識**（2025年10月20日 ブレインストーミングセッション）
+**背景と課題認識**（2025年10月ブレインストーミングセッション）
 - 個人向けチャットボットは無料のChatGPTと差別化が困難
 - 市場分析の結果、グループチャット領域に明確なペインポイントを発見
 - 収益化可能性の探索のため、ニッチ市場への特化を決定
@@ -104,18 +115,21 @@ SavvyBotの強み：
 - 豊富なコマンド体系（`/sv:*` プレフィックス）
 - Web検索統合で最新情報に対応
 
-### Phase 4-6: SaaS化（2025年11月〜12月予定）
+**Phase 3の成果**
+- Phase 3.2: Web検索統合（OpenAI Function Calling + Tavily API）
+- Phase 3.3: Personal Mode実機テスト（Web検索機能の包括的検証）
+- Phase 3.4: Group Mode実機テスト + `/sv:questions` コマンド実装
 
-- **Phase 4**: 高度な機能（使用量トラッキング、マルチテナント対応）
-- **Phase 5**: 管理画面（Next.js + Supabase Auth）
-- **Phase 6**: 課金システム（Stripe統合）、ベータテスト、正式リリース
+### Phase 4: API使用量トラッキング（2025年10月 - 完了）
 
-**収益モデル**
-- Freeプラン: 個人利用、基本機能のみ
-- Teamプラン（¥2,980/月）: 3-10人チーム、議事録・決定追跡・TODO管理
-- Businessプラン（¥9,800/月）: 11-50人、ナレッジベース、全連携
+SaaS化に向けた基盤整備として、API使用量の自動トラッキングシステムを構築しました。
 
-**目標**: 年内に5-30チームの有料ユーザー獲得、MRR ¥15,000-¥90,000
+**達成内容**
+- OpenAI API使用量の自動記録（トークン数、コスト）
+- グループ別・日次集計ビュー
+- Personal Mode自動検出バグ修正
+- PostgreSQLでのコスト計算関数実装
+- 実機テスト成功（複数ユーザーで動作確認）
 
 ---
 
@@ -335,6 +349,349 @@ const messages: OpenAIMessage[] = [
 
 ---
 
+## Phase 3.3完了 ― Personal Mode 実機テスト
+
+### Web検索機能の包括的検証（2025年10月17日）
+
+Phase 3.2で実装したWeb検索機能を、実際のLINE環境で包括的にテストしました。
+
+**テストシナリオ**
+1. **ノーベル物理学賞2024**: AIの知識カットオフ後の情報
+2. **最新iPhone価格**: カットオフ8ヶ月後の製品情報
+3. **大谷翔平ニュース**: 最新スポーツ情報
+4. **第二次世界大戦終結**: 学習データ内の歴史的事実
+
+**テスト結果（4/4 PASS, 100%達成率）**
+- ノーベル物理学賞2024 → Hopfield & Hinton（正確な受賞者情報）
+- 最新iPhone価格 → iPhone 17シリーズ価格（知識カットオフ8ヶ月後の製品）
+- 大谷翔平ニュース → 50-50達成、プレーオフ勝利（最新スポーツ情報）
+- 第二次世界大戦終結 → 1945年（学習データから回答、Web検索不使用）
+
+**重要な発見**
+
+**iPhone 17ケース**: AI知識カットオフ（2025年1月）の8ヶ月後にリリースされた製品の正確な価格情報を取得できました。これはWeb検索の価値を完璧に実証するケースです。学習データのみでは不可能な情報提供が可能になっています。
+
+**ツール呼び出し判定の精度**: 「最新」というキーワードで検索を実行し、歴史的事実は学習データを使用するという適切な判断を確認しました。
+
+**時間表現解釈**: 現在日付コンテキストの効果を実証し、「去年」を正しく2024年と認識できることを確認しました。
+
+---
+
+## Phase 3.4完了 ― Group Mode 実機テスト + `/sv:questions` コマンド
+
+### グループチャット機能の完全実装（2025年10月19日）
+
+**達成事項**
+- グループチャット設定問題の解決（LINE設定でグループ参加許可が必要）
+- 全コマンドの実機テスト成功（`/sv:help`, `/sv:minutes`, `/sv:decisions`, `/sv:todo`）
+- グループモードのサイレント動作確認（通常メッセージには反応しない）
+- 自動抽出機能の検証（100%精度で決定事項・TODO抽出）
+- 構造化議事録生成の動作確認
+
+**技術的成果**
+- TODO表示バグ修正（`[object Object]` → スマートな Object/String 処理）
+- 全コマンドのレスポンスタイム目標達成（<5秒）
+- 議事録生成の高品質出力確認（OpenAI Function Calling活用）
+
+### `/sv:questions` コマンド実装
+
+**機能概要**
+
+グループチャット内の質問を自動的に抽出・追跡し、未回答の質問を可視化する機能です。
+
+**主要機能**
+- 質問の自動抽出と表示
+- 重複チェック機能（1時間以内の同一質問をスキップ）
+- 日本時間（JST）表示対応（全コマンド統一）
+- フィルター機能（unanswered/all）
+
+**実装詳細**
+
+```typescript
+// 重複チェック機能
+async checkQuestionDuplicate(
+  groupId: string,
+  question: string,
+  withinMinutes: number = 60
+): Promise<boolean> {
+  const { data, error } = await this.client
+    .from('questions')
+    .select('id')
+    .eq('group_id', groupId)
+    .eq('question', question)
+    .gte('asked_at', new Date(Date.now() - withinMinutes * 60 * 1000).toISOString())
+    .limit(1)
+  return (data && data.length > 0) || false
+}
+```
+
+**日本時間表示の統一**
+
+```typescript
+// JST変換の統一実装
+const jstDate = new Date(isoString).toLocaleString('en-US', {
+  timeZone: 'Asia/Tokyo'
+})
+```
+
+**実機テスト結果**
+- 質問抽出精度：100%
+- 重複チェック：正常動作（1時間以内の同一質問を適切にスキップ）
+- JST表示：全コマンドで統一実装完了
+- ユーザーID表示：シンプル表示に改善
+
+---
+
+## Phase 4完了 ― API 使用量トラッキング実装
+
+### 自動コスト管理システムの構築（2025年10月19日）
+
+SaaS化に向けて、OpenAI API使用量の自動トラッキングシステムを実装しました。
+
+**達成事項**
+- OpenAI API使用量の自動トラッキング
+- トークン数とコスト計算の記録
+- グループごとの使用量集計
+- Personal mode自動検出バグ修正
+- 実機テスト成功（複数ユーザーで動作確認）
+
+### データベーススキーマ
+
+**`usage_logs` テーブル**: API使用履歴を記録
+
+```sql
+CREATE TABLE usage_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  group_id TEXT NOT NULL,
+  operation_type TEXT NOT NULL,
+  model TEXT NOT NULL,
+  prompt_tokens INTEGER NOT NULL,
+  completion_tokens INTEGER NOT NULL,
+  total_tokens INTEGER NOT NULL,
+  estimated_cost_usd NUMERIC(10, 6) NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  expires_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '365 days')
+);
+```
+
+**集計ビュー**
+- `daily_usage_summary`: 日次集計
+- `group_usage_summary`: グループ別集計
+
+**コスト計算関数**: PostgreSQLでのモデル別価格計算
+
+```sql
+CREATE FUNCTION calculate_openai_cost(
+  model TEXT,
+  prompt_tokens INTEGER,
+  completion_tokens INTEGER
+) RETURNS NUMERIC AS $$
+BEGIN
+  RETURN CASE model
+    WHEN 'gpt-4o' THEN
+      (prompt_tokens * 2.50 / 1000000.0) + (completion_tokens * 10.00 / 1000000.0)
+    WHEN 'gpt-4o-mini' THEN
+      (prompt_tokens * 0.15 / 1000000.0) + (completion_tokens * 0.60 / 1000000.0)
+    -- ...
+  END;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+### 使用量トラッキングロジック
+
+**OpenAI API関数の拡張**
+
+全API関数の戻り値に使用量情報を追加しました：
+- `getAIResponse` → `AIResponseWithUsage`
+- `getAIResponseWithTools` → `AIResponseWithUsage`
+- `extractInformation` → `ExtractionResultWithUsage`
+- `generateStructuredMinutes` → `StructuredMinutesWithUsage`
+
+```typescript
+export interface UsageInfo {
+  prompt_tokens: number
+  completion_tokens: number
+  total_tokens: number
+}
+
+export type AIResponseWithUsage = Result<
+  { response: string; usage: UsageInfo },
+  AppError
+>
+```
+
+**使用量ロギング**
+
+```typescript
+await logUsage(
+  groupId,
+  'personal_chat',
+  'gpt-4o',
+  usage.prompt_tokens,
+  usage.completion_tokens,
+  usage.total_tokens
+)
+```
+
+### Personal Mode 自動検出バグの解決
+
+**問題**: 新規ユーザーが1対1チャットでメッセージを送っても返信がない（`group_mode.silent` と認識される）
+
+**根本原因**: `getOrCreateGroupSettings()` がデフォルトで `mode: 'group'` を設定していた
+
+**修正内容**
+- `getOrCreateGroupSettings()` に `defaultMode` パラメータを追加
+- モード検出を2段階に分離：
+  1. 自動検出（settings なし）→ autoMode
+  2. settings 取得時に autoMode.mode をデフォルトとして渡す
+  3. 最終的なモード決定（settings を含めて再検出）
+
+**結果**: `source.type === 'user'` → `mode: 'personal'` で作成、`source.type === 'group'` → `mode: 'group'` で作成
+
+### 実機テスト結果
+
+```
+Personal Chat:
+  operation_type: "personal_chat"
+  model: "gpt-4o"
+  total_tokens: 414, 706
+  estimated_cost: $0.001155, $0.001923
+
+Auto Extraction:
+  operation_type: "auto_extraction"
+  model: "gpt-4o"
+  total_tokens: 485-506
+  estimated_cost: $0.001317-$0.001490
+
+Group Summary:
+  2ユーザー、9回の操作
+  合計4,572トークン
+  推定コスト: $0.012795（約1.9円）
+```
+
+**技術的成果**
+- 型安全な使用量トラッキング（Result型パターンの維持）
+- エラーハンドリング完備（失敗時も処理継続）
+- リアルタイムコスト推定（トークン数からUSDコストを自動計算）
+- 1年間のデータ保持期間（TTL: 365 days）
+- インデックス最適化とビューによる高速集計
+
+---
+
+## Phase 5完了 ― 管理ダッシュボード実装
+
+### 公式Webサイトと認証システムの構築（2025年10月24-25日）
+
+SaaS化に向けた重要なマイルストーンとして、管理ダッシュボードを完全実装しました。
+
+**達成事項**
+- Next.js 15プロジェクトセットアップ（TypeScript + Tailwind CSS + shadcn/ui）
+- Supabase Auth統合（email/password認証）
+- データベーススキーマ実装（8テーブル + RLS policies）
+- 認証フロー（login/signup/callback）
+- ミドルウェアによるルート保護
+- セッション管理
+
+### 実装した管理機能
+
+**1. ランディングページ**
+- Hero Section（SavvyBotキャラクター画像配置）
+- Features Section（4つの主要機能）
+- How to Use Section（3ステップガイド）
+- Pricing Section（3プラン: 個人/チーム/ビジネス）
+- CTA Section（行動喚起）
+- Footer（ナビゲーションリンク）
+- SEO最適化（メタデータ、OpenGraph）
+- レスポンシブデザイン（モバイルファースト）
+- ダークモード対応
+
+**2. ダッシュボードレイアウト**
+- サイドバーナビゲーション
+- ヘッダーとユーザープロフィールドロップダウン
+- サインアウト機能
+- レスポンシブデザイン
+
+**3. ダッシュボードホーム**
+- 概要統計表示（グループ数、会話数、トークン、コスト）
+- アクティビティフィード
+- クイックアクションカード
+- ウェルカムメッセージ
+
+**4. 使用量ダッシュボード**
+- 期間フィルター（7/30/90日）
+- トークン使用量バーチャート（Recharts）
+- コストトレンドラインチャート
+- グループ別統計テーブル
+- データ集計とゼロ埋め処理
+
+**5. グループ管理UI**
+- グループ一覧ページ（カード表示）
+- グループ詳細ページ（統計 + 設定）
+- 設定エディター（権限ベース）
+- モード選択（personal/group）
+- 自動機能トグル（4種類）
+- 権限システム実装（owner/admin/member）
+
+**6. 設定ページ**
+- ユーザープロフィール設定
+- LINE連携状態表示
+- 通知設定（メール通知トグル）
+- アカウント管理（パスワード変更、アカウント削除）
+- 2段階確認フロー（アカウント削除）
+
+### データベース設計
+
+**8テーブル + RLS policies**
+- `profiles`: ユーザープロフィール
+- `user_groups`: ユーザー-グループ関連（role: owner/admin/member）
+- `group_settings`: グループ設定（mode, auto_features）
+- `conversations`: 会話履歴（90日TTL）
+- `decisions`: 決定事項
+- `todos`: タスク管理
+- `questions`: 質問追跡
+- `usage_logs`: API使用量（365日TTL）
+
+**Row Level Security（RLS）実装**
+- ユーザー別データ分離
+- グループベースのアクセス制御
+- ロールベースの権限管理
+
+### プロダクションビルド成功
+
+```
+✓ Compiled successfully in 1464ms
+✓ All 20 routes generated
+✓ 0 TypeScript errors
+✓ 0 ESLint errors (dashboard)
+
+Total Bundle Size: 102 kB (shared)
+Largest Page: /dashboard/usage (105 kB - Recharts)
+All Other Pages: < 6 kB each
+```
+
+**技術スタック**
+- Next.js 15.5.6（App Router）
+- TypeScript 5
+- Tailwind CSS 4
+- shadcn/ui（Button, Card, Badge, Switch, Label, Table, Dropdown Menu）
+- Recharts（データ可視化）
+- Supabase（Auth, Database, RLS）
+
+**技術的成果**
+- マイグレーションベースのスキーマ管理
+- セキュアな認証フロー（cookie-based sessions）
+- マルチテナント対応のデータ分離
+- 複雑なデータ集計ロジック
+- Recharts TypeScript型定義の解決
+- カスタムツールチップ実装
+- 日付連続性の確保（ゼロ埋め）
+- 楽観的UI更新
+- フォームバリデーション
+- パフォーマンス最適化（バンドルサイズ、ビルド時間）
+
+---
+
 ## 技術的なハイライト
 
 ### 1. Result型による型安全なエラーハンドリング
@@ -453,26 +810,16 @@ logRequest({
 
 ---
 
-## 今後の展開
+## 実装済み機能
 
-### Phase 3.3-3.4: グループチャット機能（2025年10月〜11月）
-
-- モード判定ロジック（個人 vs グループ自動判定）
-- Supabase Database設計・構築（5つのテーブル）
-- グループモード裏処理（会話記録・自動抽出）
-- コマンド実装（`/sv:minutes`, `/sv:decisions`, `/sv:todo`, `/sv:help`）
-- 個人モード会話履歴（5-10件保持）
-- OpenAI Function Callingによる決定事項・TODO自動抽出
-- ローカル＆実機テスト
-
-**主要機能**
+### LINEボット機能
 
 **コマンド体系**（`/sv:` プレフィックス）
+- `/sv:help` - ヘルプ表示
 - `/sv:minutes` - 議事録生成
 - `/sv:decisions` - 決定事項確認
 - `/sv:todo` - TODO抽出
-- `/sv:summary` - 議論要約
-- `/sv:help` - ヘルプ表示
+- `/sv:questions` - 質問管理（未回答追跡）
 
 **自動抽出機能**（OpenAI Function Calling活用）
 - 議題の自動抽出
@@ -480,44 +827,71 @@ logRequest({
 - TODOの自動リスト化
 - 質問の検出と未回答追跡
 
+**デュアルモード設計**
+- **個人モード**（1対1チャット）: 積極的に会話、会話履歴保持、Web検索統合
+- **グループモード**（複数人チャット）: 基本は沈黙、裏で記録・分析、コマンドで呼ばれた時のみ発言
+
+**Web検索統合**
+- OpenAI Function Callingによる自動ツール選択
+- 最新情報の自動取得（Tavily API）
+- 時間表現の正確な解釈
+
+### 管理ダッシュボード機能（NEW - Phase 5）
+
+**認証システム**
+- Email/passwordサインアップ・ログイン
+- セッション管理
+- ルート保護
+- ロールベース権限制御（owner/admin/member）
+
+**ダッシュボード機能**
+- 概要統計（グループ数、会話数、トークン、コスト）
+- 使用量グラフ（期間フィルター、トークン/コストチャート）
+- グループ管理（一覧、詳細、設定エディター）
+- 設定ページ（プロフィール、LINE連携、通知、アカウント管理）
+
 **データベース設計**（Supabase PostgreSQL）
-- `group_settings`: グループごとの設定管理
-- `conversations`: 会話履歴の永続化
+- 8テーブル + RLS policies
+- `profiles`: ユーザープロフィール
+- `user_groups`: ユーザー-グループ関連
+- `group_settings`: グループ設定管理
+- `conversations`: 会話履歴の永続化（90日TTL）
 - `decisions`: 決定事項の追跡
 - `todos`: タスク管理
 - `questions`: 質問と回答のトラッキング
+- `usage_logs`: API使用量トラッキング（365日TTL）
+- インデックス最適化とビューによる高速集計
 
-### Phase 4: 高度な機能（2025年11月）
+---
 
-- 使用量トラッキング（APIコスト管理）
-- マルチテナント対応（グループID分離）
-- 高度なコマンド（`/sv:summary`, `/sv:search`, `/sv:questions`）
-- リマインダー機能（決定事項の定期通知）
-- ベータテスト準備
+## 今後の展開
 
-### Phase 5: 管理画面（2025年11月〜12月）
+### Phase 6: 収益化とリリース（2025年11月〜12月）
 
-- Next.js + Supabase Auth実装
-- ダッシュボード（利用状況可視化）
-- グループ管理画面
-- 設定画面（モード切替、通知設定）
+**目標**: SaaS化完了と正式リリース
 
-### Phase 6: 収益化とリリース（2025年12月）
+- [ ] Stripeサブスクリプション統合
+- [ ] 請求管理システム
+- [ ] プラン別機能制限
+- [ ] LINE Bot連携ガイド（ダッシュボード内）
+- [ ] クローズドベータテスト（5-10チーム）
+- [ ] フィードバック収集と改善
+- [ ] 正式リリース（年内目標）
 
-- Stripeサブスクリプション統合
-- 請求管理システム
-- クローズドベータテスト（5-10チーム）
-- フィードバック収集と改善
-- ランディングページ制作
-- 正式リリース（年内目標）
+**収益モデル**
+- **Freeプラン**: 個人利用（Personal modeのみ）、基本機能
+- **Teamプラン**（¥2,980/月）: 3-10人チーム、全機能、グループ対応
+- **Businessプラン**（¥9,800/月）: 11-50人、API連携、優先サポート
+
+**目標**: 年内に5-30チームの有料ユーザー獲得、MRR ¥15,000-¥90,000
 
 ### 長期展望（2026年以降）
 
-- ナレッジベース機能（過去の決定事項・議事録の検索）
-- 多言語対応
-- エンタープライズ向け機能（SSO、監査ログ）
-- 音声会議の自動文字起こし＆議事録生成
-- Slack/Teams連携
+- [ ] ナレッジベース機能（過去の決定事項・議事録の検索）
+- [ ] 多言語対応
+- [ ] エンタープライズ向け機能（SSO、監査ログ）
+- [ ] 音声会議の自動文字起こし＆議事録生成
+- [ ] Slack/Teams連携
 
 ---
 
@@ -529,7 +903,54 @@ logRequest({
 - [Deno Deploy Documentation](https://deno.com/deploy/docs)
 - [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API)
 
-**Phase 3: グループチャット特化**
+**Phase 3-4: グループチャット特化 & 使用量管理**
 - [OpenAI Function Calling](https://platform.openai.com/docs/guides/function-calling)
 - [Tavily API Documentation](https://docs.tavily.com/)
 - [Supabase Database](https://supabase.com/docs/guides/database)
+- [PostgreSQL Views](https://www.postgresql.org/docs/current/sql-createview.html)
+
+**Phase 5: 管理ダッシュボード**
+- [Next.js 15 Documentation](https://nextjs.org/docs)
+- [Supabase Auth](https://supabase.com/docs/guides/auth)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [Recharts](https://recharts.org/)
+- [Row Level Security](https://supabase.com/docs/guides/auth/row-level-security)
+
+---
+
+## プロジェクトステータス
+
+- ✅ **Phase 1完了**（2023年3月）: GAS MVP実装
+- ✅ **Phase 2完了**（2025年10月）: Supabase Edge Functions移行、セキュリティ強化
+- ✅ **Phase 3完了**（2025年10月）: 戦略的ピボット、グループチャット特化
+  - ✅ Phase 3.2: Web検索統合（OpenAI Function Calling + Tavily API）
+  - ✅ Phase 3.3: Personal Mode実機テスト（100%成功率）
+  - ✅ Phase 3.4: Group Mode実機テスト + `/sv:questions` コマンド
+- ✅ **Phase 4完了**（2025年10月19日）: API使用量トラッキング実装
+- ✅ **Phase 5完了**（2025年10月24-25日）: 管理ダッシュボード実装
+  - ✅ Phase 5.1: 公式Webサイト LP実装
+  - ✅ Phase 5.2: 認証システム & データベース設計
+  - ✅ Phase 5.3: ダッシュボード完全実装（7サブフェーズ）
+  - ✅ Phase 5.3.7: 最終テスト & プロダクションビルド成功
+- 📅 **Phase 6計画済み**（2025年11月〜12月）: Stripe統合、収益化、年内リリース目標
+
+**現在の機能実装状況**
+
+**LINEボット**:
+- グループチャット機能: 完全実装（議事録、決定事項、TODO、質問管理）
+- Web検索統合: 実機テスト完了（知識カットオフ超える情報取得を実証）
+- 使用量トラッキング: 自動記録・集計システム稼働中
+- コマンド体系: 5つの主要コマンド実装済み
+
+**管理ダッシュボード**（NEW）:
+- 認証システム: Supabase Auth完全統合
+- ダッシュボード: 全20ルート生成成功
+- データ可視化: Rechartsによる使用量グラフ
+- グループ管理: CRUD操作完備
+- 設定ページ: プロフィール・通知・アカウント管理
+- プロダクション品質: TypeScript型エラー0件、ビルド時間1.5秒
+
+**次のマイルストーン**
+- 2025年11月末: Stripe統合完了（課金システム実装）
+- 2025年12月中旬: クローズドベータテスト開始（5-10チーム）
+- 2025年12月末: 正式リリース（一般公開）
