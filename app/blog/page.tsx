@@ -5,17 +5,19 @@ import { parseISO8601Date } from '@/lib/utils'
 import { Card } from '@/components/ui/card'
 import { EmptyState } from '@/components/ui/empty-state'
 import { FileText } from 'lucide-react'
+import BlogNetworkBanner from './_components/BlogNetworkBanner'
 
 export default async function Blog() {
   const posts = getAllPosts()
   return (
     <main className='container py-8 pt-8 md:py-12 md:pt-12'>
-      <div className='max-w-4xl mx-auto'>
-        <h1 className="text-4xl font-bold mb-4">Blog</h1>
-        <article className="prose dark:prose-invert mb-12">
-          <p className='font-light text-lg leading-relaxed mb-2'>{`This blog is where I share the knowledge of AI and programming that I've gained through daily learning and trial and error. `}</p>
-          <p className='font-light text-lg leading-relaxed'>{`Including the times when things don't go as planned, I hope we can enjoy the journey of technology and grow step by step together`}</p>
-        </article>
+      {/* Three.js Network Animation Banner */}
+      <BlogNetworkBanner
+        title="Blog"
+        subtitle="AI、プログラミング、製造業の日々の学びと試行錯誤を共有します"
+      />
+
+      <div className='max-w-4xl mx-auto mt-8'>
         <section>
           <h2 className="text-2xl font-semibold mb-6">Writing</h2>
           {posts.length === 0 ? (
@@ -29,11 +31,11 @@ export default async function Blog() {
               }}
             />
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-8">
               {posts.map((post) => {
                 const date = parseISO8601Date(post.date);
                 return (
-                  <Link key={post.slug} href={`articles/${post.slug}`}>
+                  <Link key={post.slug} href={`articles/${post.slug}`} className="block">
                     <Card variant="interactive" className="p-6">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                         <h3 className="font-semibold text-lg">{post.title}</h3>
