@@ -7,7 +7,6 @@ import { useTheme } from "next-themes"
 
 // Single light streak flowing along a curve
 function LightStreak({ curve, speed, offset, color }: { curve: THREE.CubicBezierCurve3; speed: number; offset: number; color: number }) {
-  const meshRef = useRef<THREE.Line>(null)
   const materialRef = useRef<THREE.ShaderMaterial>(null)
 
   // Create geometry for the streak with more points for smooth line
@@ -49,7 +48,8 @@ function LightStreak({ curve, speed, offset, color }: { curve: THREE.CubicBezier
   })
 
   return (
-    <line ref={meshRef} geometry={geometry}>
+    // @ts-expect-error - Three.js line element
+    <line geometry={geometry}>
       <shaderMaterial
         ref={materialRef}
         transparent
@@ -255,6 +255,7 @@ function NetworkScene() {
       const geometry = new THREE.BufferGeometry().setFromPoints(points)
 
       return (
+        // @ts-expect-error - Three.js line element
         <line key={`path-${i}`} geometry={geometry}>
           <lineBasicMaterial color={pathColor} transparent opacity={0.3} blending={THREE.AdditiveBlending} linewidth={2} />
         </line>

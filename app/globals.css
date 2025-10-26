@@ -112,3 +112,9 @@
     font-family: 'Courier New', Courier, monospace;
   }
 }
+/* === n163 tube (one-way linear) === */
+@keyframes n163-tube-run {
+  0%   { transform: translateX(-40%); }
+  100% { transform: translateX(140%); }
+}
+.n163-tube-animate { animation: n163-tube-run var(--tube-speed,8s) linear infinite; }
