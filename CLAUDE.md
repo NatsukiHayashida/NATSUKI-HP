@@ -326,11 +326,52 @@ if (spamCheck.isSpam) {
 - `CONTACT_SETUP_GUIDE.md` - EmailJS設定とスパム対策セットアップガイド
 - `HANASEISAKUSYO_INTERVIEW.md` - 花製作所プロジェクトインタビュー記録（2025-10-09完了）
 - `HANASEISAKUSYO_UPDATE_LOG.md` - 花製作所記事更新履歴
+- `NEXTJS14_DOWNGRADE_FIX.md` - Next.js 14ダウングレード修正記録（@react-three/fiber互換性）
 - `security/` - セキュリティ関連ドキュメント（脆弱性分析・修正プラン）
 
 ---
 
 ## 📅 最新の開発進捗
+
+### 2025-10-27: Next.js 14.2.11ダウングレード - @react-three/fiber互換性修正
+
+**問題概要**:
+- Next.js 15.5.6とReact 18.2.0の組み合わせで、@react-three/fiberがランタイムエラーを引き起こしていました
+- ブラウザコンソールエラー: `Cannot read properties of undefined (reading 'ReactCurrentBatchConfig')`
+- Three.jsハートビートアニメーションが動作せず
+
+**実装内容**:
+1. **Next.js 14スタックへのダウングレード**
+   - Next.js: 15.5.4 → 14.2.11
+   - @react-three/fiber: 9.4.0 → 8.15.19
+   - @react-three/drei: 9.105.6（新規追加）
+   - React: ^18 → 18.2.0（exact version）
+   - Three.js: ^0.180.0 → 0.160.0
+
+2. **クリーン再インストール**
+   - `node_modules/`, `package-lock.json`, `.next/` 削除
+   - `npm install` 実行
+   - React単一インスタンス確認（`npm ls react` で全てdeduped）
+
+3. **ビルドとデプロイ成功**
+   - ローカルビルド成功（24ページコンパイル）
+   - Vercelデプロイ成功
+   - Three.jsアニメーション正常動作確認
+
+**技術的知見**:
+- Next.js 15とReact 18の組み合わせでは@react-three/fiberが動作しない
+- React 19が必要な場合はNext.js 15、React 18の場合はNext.js 14が安定
+- Three.jsコンポーネントは必ず`{ ssr: false }`でdynamic import必須
+- `npm ls react`でReactインスタンスのdedup確認が重要
+
+**ドキュメント作成**:
+- `claudedocs/NEXTJS14_DOWNGRADE_FIX.md` - 詳細な修正記録とトラブルシューティングガイド
+
+**コミット情報**:
+- コミットハッシュ: `8b8bee4`
+- メッセージ: "fix: Next.js 14.2.11へダウングレード - @react-three/fiber互換性問題を解決"
+
+---
 
 ### 2025-10-12: npm依存関係脆弱性分析完了
 
