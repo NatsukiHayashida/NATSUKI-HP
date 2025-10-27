@@ -227,7 +227,7 @@ function NetworkScene() {
 
     // Create 1 heartbeat trace at center
     const y = 0  // Center position
-    const heartbeatSegments = createHeartbeatCurve(y, -18)
+    const heartbeatSegments = createHeartbeatCurve(y, -35)
 
     // Combine all segments into one continuous curve by sampling points
     const allPoints: THREE.Vector3[] = []

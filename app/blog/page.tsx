@@ -15,9 +15,10 @@ export default async function Blog() {
       <BlogNetworkBanner
         title="Blog"
         subtitle="AI、プログラミング、製造業の日々の学びと試行錯誤を共有します"
+        minHeightPx={240}
       />
 
-      <div className='max-w-4xl mx-auto mt-8'>
+      <div className='max-w-4xl mx-auto mt-4 md:mt-8'>
         <section>
           <h2 className="text-2xl font-semibold mb-6">Writing</h2>
           {posts.length === 0 ? (
