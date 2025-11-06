@@ -1,0 +1,1975 @@
+---
+title: "SavvyBot ― 会話を邪魔しない、グループチャット専属AIアシスタント"
+date: "2025-11-02"
+excerpt: "LINE Messaging APIとOpenAI APIを連携させた対話型チャットボット。GAS MVP実装から始まり、Supabase Edge Functionsへの移行を完了。個人向けから「グループチャット特化型AIアシスタント」への戦略的ピボットを経て、管理ダッシュボード実装完了。Phase 6でUX改善とインタラクティブTODO管理を実装し、Phase 7でStripe統合・収益化へ。"
+category: "AI / チャットボット開発"
+tags: ["LINE Bot", "OpenAI API", "Tavily API", "Supabase", "TypeScript", "Deno", "Function Calling", "グループチャット", "Next.js", "SaaS", "Quick Reply", "インタラクティブUI"]
+technologies: ["Supabase Edge Functions", "LINE Messaging API", "OpenAI Function Calling", "Tavily API", "Deno", "TypeScript", "PostgreSQL", "GitHub Actions", "HMAC-SHA256", "Next.js 15", "shadcn/ui", "Recharts", "Supabase Auth", "LINE Quick Reply API", "LINE Profile API"]
+role: "フルスタック開発 / プロダクトオーナー / アーキテクト"
+duration: "2023年3月〜現在（進行中）"
+outcomes:
+  - "セキュリティ強化（HMAC-SHA256署名検証、タイミング攻撃対策）"
+  - "Web検索統合（OpenAI Function Calling + Tavily API）"
+  - "時間表現解釈の精度向上（現在日付コンテキスト追加）"
+  - "CI/CDパイプライン構築（GitHub Actions自動デプロイ）"
+  - "グループチャット機能完全実装（議事録、決定事項、TODO、質問管理）"
+  - "API使用量トラッキングシステム構築（コスト管理の自動化）"
+  - "管理ダッシュボード実装（Next.js 15、認証、データ可視化）"
+  - "プロダクションビルド成功（1.5秒、TypeScript型エラー0件）"
+  - "UX改善完了（ユーザー名表示、期限表示、暗黙的自己割り当て）"
+  - "インタラクティブTODO管理実装（Quick Reply Buttons、3ステップUI、複数フィールド編集）"
+challenges:
+  - "個人向けChatGPTとの差別化（戦略的ピボット）"
+  - "署名検証エラー（403 Forbidden）の解決"
+  - "時間表現の誤認識（「去年」が2022年と解釈される問題）"
+  - "グループチャット特化機能の設計と実装"
+  - "Personal Mode自動検出バグの解決"
+  - "TODO表示とJST対応の実装"
+  - "Recharts TypeScript型定義の解決"
+  - "LINE Quick Reply API制約（最大13個）への対応"
+  - "対話型UI設計（3ステップフロー、状態管理）"
+learnings:
+  - "Result型による型安全なエラーハンドリング"
+  - "アダプターパターンによるテスタビリティ向上"
+  - "OpenAI Function Callingによる自動ツール選択"
+  - "Temporal Context Patternによる時間認識精度の改善"
+  - "ニッチ市場への特化によるプロダクト差別化"
+  - "PostgreSQLビューとTTLによる効率的なデータ管理"
+  - "モード自動検出ロジックの段階的設計"
+  - "Next.js App Routerとサーバーコンポーネントの活用"
+  - "Row Level Security（RLS）によるマルチテナント実装"
+  - "LINE Quick Reply Buttonsによる操作性向上"
+  - "3ステップ対話型UIパターンの有効性"
+  - "LINEプロファイルキャッシュシステムの実装"
+---
+
+# SavvyBot - 会話を邪魔しない、グループチャット専属 AI アシスタント
+
+## プロジェクト概要
+
+SavvyBot は、LINE Messaging API と OpenAI API を連携させた対話型チャットボットです。Google Apps Script (GAS) での MVP 実装から開始し、Supabase Edge Functions への移行を完了（Phase 2）。現在は**グループチャット特化型 AI アシスタント**への戦略的ピボットを経て、SaaS 化に向けた開発フェーズ（Phase 3）に移行しています。
+
+**コアコンセプト**: 「会話を邪魔しない、グループチャット専属 AI アシスタント」
+- 人の会話の邪魔をしない（基本は沈黙、裏で記録・分析）
+- 裏方に徹する（コマンドで呼ばれた時だけ発言）
+- まとめる、追跡する、リマインドする（議事録、決定事項、TODO 管理）
+
+**ビジネス目標**: 年内に収益化の可能性を探る（副業ベース、リーンスタートアップアプローチ）
+
+### 技術スタック
+
+**フロントエンド（将来）**
+- Next.js / React
+- TypeScript
+- Tailwind CSS
+
+**バックエンド**
+- TypeScript / Node.js or Deno
+- Supabase Edge Functions / GCP Cloud Run / Cloud Functions
+
+**外部サービス連携**
+- LINE Messaging API
+- OpenAI API (GPT-4)
+- Supabase (Database, Storage, Auth)
+
+**インフラ・DevOps**
+- GitHub Actions (CI/CD)
+- Docker (Cloud Run デプロイ時)
+- Supabase CLI / Google Cloud SDK
+
+## プロジェクトの進化
+
+### Phase 1: GAS での MVP（完了）
+- LINE Messaging API と OpenAI API の基本連携
+- 簡易的なチャットボット機能の実装
+- 課題: セキュリティ脆弱性、シークレット管理の困難さ
+
+### Phase 2: Supabase Edge Functions への移行（完了 - 2025年10月）
+**達成事項**:
+- ✅ HMAC-SHA256 署名検証の実装（セキュリティ強化）
+- ✅ Result 型によるエラーハンドリング
+- ✅ 構造化ログによる可観測性の確保
+- ✅ GitHub Actions による CI/CD パイプライン構築
+- ✅ 実機テストでの動作確認完了
+
+**技術的成果**:
+- 署名検証エラー（403 Forbidden）の解決
+- 非同期 Web Crypto API の正しい実装
+- 定数時間比較によるタイミング攻撃対策
+- 診断ログによる運用性向上
+
+**詳細記録**: [DEPLOYMENT_LOG.md](./DEPLOYMENT_LOG.md)
+
+### Phase 3: 戦略的ピボット - グループチャット特化（進行中 - 2025年10月〜）
+
+**背景と課題認識**（2025年10月20日 ブレインストーミングセッション）:
+- 個人向けチャットボットは無料の ChatGPT と差別化が困難
+- 市場分析の結果、グループチャット領域に明確なペインポイントを発見
+- 収益化可能性の探索のため、ニッチ市場への特化を決定
+
+**差別化戦略**:
+```
+競合（ChatGPT公式、他社Bot）:
+❌ 個人利用がメイン
+❌ グループでは会話に割り込んでうるさい
+❌ 議事録機能が弱い
+❌ 最新情報の取得が不十分
+
+SavvyBot:
+✅ グループチャット特化
+✅ 沈黙がデフォルト（会話を邪魔しない）
+✅ 構造化された議事録
+✅ 決定事項の自動追跡
+✅ 豊富なコマンド体系（/sv:* プレフィックス）
+✅ Web検索統合で最新情報に対応
+```
+
+#### Phase 3.2: OpenAI Function Calling + Web Search（完了 - 2025年10月16日）
+**達成事項**:
+- ✅ Tavily API 統合による Web 検索機能
+- ✅ OpenAI Function Calling 実装
+- ✅ 時間表現の正確な解釈（現在日付コンテキスト追加）
+- ✅ デプロイおよび動作確認完了
+
+**技術的成果**:
+- 最新情報取得（スポーツ結果、ニュース、現在の情報）
+- 時間表現解釈問題の解決（「去年」が2022年ではなく2024年を正しく認識）
+- OpenAI の Function Calling による自動ツール選択
+- 3つの根本原因の特定と段階的な解決
+
+**詳細記録**: メモリ `web_search_implementation_troubleshooting` および `temporal_context_pattern_for_ai`
+
+#### Phase 3.3: Personal Mode 実機テスト（完了 - 2025年10月17日）
+**達成事項**:
+- ✅ Web検索機能の包括的な実機テスト（4つのシナリオ）
+- ✅ 全テストケース成功（4/4 PASS, 100%達成率）
+- ✅ AI知識カットオフを超える情報の正確な取得を実証
+
+**テスト結果**:
+1. **ノーベル物理学賞2024**: ✅ Hopfield & Hinton（正確な受賞者情報）
+2. **最新iPhone価格**: ✅ iPhone 17シリーズ価格（知識カットオフ8ヶ月後の製品情報）
+3. **大谷翔平ニュース**: ✅ 50-50達成、プレーオフ勝利（最新スポーツ情報）
+4. **第二次世界大戦終結**: ✅ 1945年（学習データから回答、Web検索不使用）
+
+**重要な発見**:
+- **iPhone 17ケース**: AI知識カットオフ（2025年1月）の8ヶ月後にリリースされた製品の正確な価格情報を取得
+- Web検索の価値を完璧に実証（学習データのみでは不可能な情報提供）
+- ツール呼び出し判定の精度確認（「最新」→検索実行、歴史的事実→学習データ使用）
+- 適切な時間表現解釈（現在日付コンテキストの効果を実証）
+
+**詳細記録**: `docs/PHASE3_3_TEST_PLAN.md` および `docs/PHASE3_3_TEST_RESULTS.md`
+
+#### Phase 3.4: Group Mode 実機テスト + `/sv:questions` コマンド（完了 - 2025年10月19日）
+**達成事項**:
+- ✅ グループチャット設定問題の解決（LINE設定でグループ参加許可が必要）
+- ✅ 全コマンドの実機テスト成功（`/sv:help`, `/sv:minutes`, `/sv:decisions`, `/sv:todo`）
+- ✅ グループモードのサイレント動作確認（通常メッセージには反応しない）
+- ✅ 自動抽出機能の検証（100%精度で決定事項・TODO抽出）
+- ✅ 構造化議事録生成の動作確認
+- ✅ `/sv:questions` コマンド実装完了
+
+**技術的成果**:
+- TODO表示バグ修正（`[object Object]` → スマートな Object/String 処理）
+- 全コマンドのレスポンスタイム目標達成（<5秒）
+- 議事録生成の高品質出力確認（OpenAI Function Calling活用）
+- 質問自動抽出と重複チェック機能（1時間以内の同一質問をスキップ）
+- 日本時間（JST）表示対応（全コマンド統一、`toLocaleString('en-US', { timeZone: 'Asia/Tokyo' })`）
+- ユーザーID表示問題の解決（シンプル表示に変更）
+
+**詳細記録**: メモリ `phase4_questions_command_completion`
+
+### Phase 4: API 使用量トラッキング実装（完了 - 2025年10月19日）
+
+**達成事項**:
+- ✅ OpenAI API使用量の自動トラッキング
+- ✅ トークン数とコスト計算の記録
+- ✅ グループごとの使用量集計
+- ✅ Personal mode自動検出バグ修正
+- ✅ 実機テスト成功（複数ユーザーで動作確認）
+
+**実装内容**:
+
+1. **データベーススキーマ** (migration: `20251019000000_usage_tracking.sql`):
+   - `usage_logs` テーブル: API使用履歴を記録（group_id, operation_type, tokens, cost）
+   - `daily_usage_summary` ビュー: 日次集計
+   - `group_usage_summary` ビュー: グループ別集計
+   - `calculate_openai_cost()` 関数: PostgreSQLでのコスト計算
+
+2. **使用量トラッキングロジック** (`lib/usage.ts`):
+   - `logUsage()`: 使用量をDBに記録
+   - `calculateCost()`: モデル別価格でコスト計算（gpt-4o, gpt-4o-mini, gpt-4-turbo対応）
+   - 対応操作タイプ: `personal_chat`, `auto_extraction`, `group_command_minutes`, `web_search`
+
+3. **OpenAI API関数の拡張** (`lib/openai.ts`):
+   - `UsageInfo` 型: トークン使用量情報（prompt_tokens, completion_tokens, total_tokens）
+   - 全API関数の戻り値に使用量情報を追加:
+     - `getAIResponse` → `AIResponseWithUsage`
+     - `getAIResponseWithTools` → `AIResponseWithUsage`
+     - `extractInformation` → `ExtractionResultWithUsage`
+     - `generateStructuredMinutes` → `StructuredMinutesWithUsage`
+
+4. **使用量ロギングの適用**:
+   - Personal mode (`index.ts`): `personal_chat`
+   - Group mode auto-extraction (`index.ts`): `auto_extraction`
+   - `/sv:minutes` コマンド (`lib/commands.ts`): `group_command_minutes`
+
+**バグ修正: Personal Mode 自動検出**:
+
+**問題**: 新規ユーザーが1対1チャットでメッセージを送っても返信がない（`group_mode.silent` と認識される）
+
+**根本原因**: `getOrCreateGroupSettings()` がデフォルトで `mode: 'group'` を設定していた
+
+**修正内容**:
+- `getOrCreateGroupSettings()` に `defaultMode` パラメータを追加
+- モード検出を2段階に分離:
+  1. 自動検出（settings なし）→ autoMode
+  2. settings 取得時に autoMode.mode をデフォルトとして渡す
+  3. 最終的なモード決定（settings を含めて再検出）
+- 結果: `source.type === 'user'` → `mode: 'personal'` で作成、`source.type === 'group'` → `mode: 'group'` で作成
+
+**実機テスト結果**:
+```
+Personal Chat:
+  operation_type: "personal_chat"
+  model: "gpt-4o"
+  total_tokens: 414, 706
+  estimated_cost: $0.001155, $0.001923
+  ✅ 正常に記録
+
+Auto Extraction:
+  operation_type: "auto_extraction"
+  model: "gpt-4o"
+  total_tokens: 485-506
+  estimated_cost: $0.001317-$0.001490
+  ✅ 正常に記録
+
+Group Summary:
+  2ユーザー、9回の操作
+  合計4,572トークン
+  推定コスト: $0.012795（約1.9円）
+  ✅ 集計ビューが正常に動作
+```
+
+**技術的成果**:
+- 型安全な使用量トラッキング（Result型パターンの維持）
+- エラーハンドリング完備（失敗時も処理継続）
+- リアルタイムコスト推定（トークン数からUSDコストを自動計算）
+- 1年間のデータ保持期間（TTL: 365 days）
+- インデックス最適化とビューによる高速集計
+
+**詳細記録**: メモリ `phase4_usage_tracking_completion`
+
+**主要機能（Phase 3-4 で実装完了）**:
+
+1. **デュアルモード設計**
+   - **個人モード**（1対1チャット）: 積極的に会話、会話履歴保持、ChatGPT 的な対話体験、Web検索統合
+   - **グループモード**（複数人チャット）: 基本は沈黙、裏で記録・分析、コマンド/メンションで呼ばれた時のみ発言
+
+2. **Botの呼び出し方法**（グループチャット）
+   - **コマンド**: `/sv:help`, `/sv:search`, `/sv:minutes` など
+   - **メンション**: `@bot`, `@savvybot`, `@savvy` + 質問内容
+   - **サイレント**: 通常メッセージは裏で記録のみ
+
+3. **コマンド体系**（`/sv:` プレフィックス）
+   - **会話管理**:
+     - `/sv:minutes [時間範囲]` - 議事録生成（basic/structured）
+     - `/sv:search <キーワード> [期間]` - 過去の会話からキーワード検索
+   - **情報管理**:
+     - `/sv:decisions [期間]` - 決定事項確認
+     - `/sv:todo [@メンション] [filter]` - TODO リスト表示
+     - `/sv:questions [filter]` - 質問リスト表示（unanswered/all）
+   - **ヘルプ**:
+     - `/sv:help [コマンド名]` - ヘルプ表示
+
+4. **自動抽出機能**（OpenAI Function Calling 活用）
+   - 議題の自動抽出（議事録生成時）
+   - 決定事項の検出と追跡（信頼度0.7以上）
+   - TODO の自動リスト化（担当者・期限含む）
+   - 質問の検出と未回答追跡（重複チェック付き）
+
+5. **Web検索統合**（Tavily API）
+   - OpenAI Function Calling による自動ツール選択
+   - 最新情報の自動取得（スポーツ結果、ニュース、イベント）
+   - 時間表現の正確な解釈（現在日付コンテキスト）
+
+6. **データベース設計**（Supabase PostgreSQL）
+   - `group_settings`: グループごとの設定管理
+   - `conversations`: 会話履歴の永続化（90日TTL、コマンド除外）
+   - `decisions`: 決定事項の追跡
+   - `todos`: タスク管理
+   - `questions`: 質問と回答のトラッキング（重複防止）
+   - `usage_logs`: API使用量記録（365日TTL、コスト計算）
+
+**詳細仕様**: [PRODUCT_REQUIREMENTS.md](./PRODUCT_REQUIREMENTS.md) | [BRAINSTORMING_LOG.md](./BRAINSTORMING_LOG.md)
+
+#### Phase 6.1: UX改善 - ユーザー名表示と暗黙的自己割り当て（完了 - 2025年10月28日）
+**達成事項**:
+- ✅ LINEユーザープロファイルキャッシュシステムの実装（24時間TTL）
+- ✅ TODOの暗黙的自己割り当て機能（"私がやる" → 発言者に自動割り当て）
+- ✅ 全コマンドでuserIdの代わりに表示名を表示（@林田夏樹、@田中さん など）
+- ✅ 実機テストで動作確認完了
+
+**技術的成果**:
+- LINE Profile API統合（`getUserProfile()`）
+- バッチプロフィール取得による効率化（`getUserDisplayNames()`）
+- ノンブロッキングなプロフィールキャッシュ更新
+- フォールバックパターン適用（`assignee || userId`）
+
+**実装詳細**:
+```typescript
+// 暗黙的自己割り当て（index.ts）
+const assignee = todo.assignee || userId; // OpenAIが担当者を認識できない場合は発言者に割り当て
+
+// 表示名解決（commands.ts）
+const displayNames = await db.getUserDisplayNames(assigneeIds);
+const displayName = displayNames.get(assignee) || assignee; // キャッシュから表示名を取得
+```
+
+**データベーススキーマ**:
+- `user_profiles` テーブル: LINE user ID、display name、picture URL、status message
+- 24時間TTLによる自動更新チェック
+- インデックス: `updated_at` でTTLクエリを最適化
+
+**詳細記録**: メモリ `phase6_1_user_display_name_implementation`
+
+#### Phase 6.2: 期限表示改善 - 期日未定表示とキーワード検出（完了 - 2025年10月28日）
+**達成事項**:
+- ✅ 期限なしTODOに「期日未定」と明示表示
+- ✅ 緊急度キーワードの自動認識（「今日」「急ぎ」「至急」→今日の日付を自動設定）
+- ✅ OpenAIへの現在日時コンテキスト提供（相対表現の正確な解釈）
+- ✅ デプロイ完了（実機テスト待ち）
+
+**技術的成果**:
+- 期限表示ロジックの改善（`commands.ts`）
+- OpenAI Function Callingプロンプトの詳細化（4つの処理ルール明示）
+- JST現在日時をコンテキストに含める（時刻・曜日も提供）
+- フォールバック設計（期限なし→「期日未定」表示）
+
+**実装詳細**:
+```typescript
+// 期日未定表示（commands.ts）
+deadline = t.deadline
+  ? ` (期限: ${jstDate.toLocaleDateString('ja-JP')})`
+  : ' (期日未定)';
+
+// 現在日時コンテキスト（openai.ts）
+const currentDate = new Date().toLocaleString('ja-JP', {
+  timeZone: 'Asia/Tokyo',
+  year: 'numeric', month: 'long', day: 'numeric',
+  weekday: 'long', hour: '2-digit', minute: '2-digit'
+});
+// システムプロンプトに追加: "現在の日時: ${currentDate}"
+```
+
+**キーワード検出ルール**:
+1. 明示的な日付（「10月30日まで」）→ その日付の23:59
+2. 緊急度キーワード（「今日」「急ぎ」「至急」）→ 今日の23:59
+3. 相対表現（「明日」「今週」「来週」）→ 適切に計算
+4. 期限の言及なし → null（「期日未定」表示）
+
+**UI/UX改善**:
+```
+修正前: ⏳ パンを買う
+修正後: ⏳ パンを買う (期日未定)
+        ⏳ 今日牛乳を買う (期限: 10/28)
+```
+
+**詳細記録**: メモリ `phase6_2_deadline_display_implementation`
+
+#### Phase 6.3.1: インタラクティブTODO管理（テキストコマンド）（完了 - 2025年10月28日）
+**達成事項**:
+- ✅ TODO完了・未完了切り替えコマンド（/sv:done, /sv:undone）
+- ✅ TODO削除コマンド（/sv:delete todo <ID>）
+- ✅ TODO編集コマンド（/sv:edit todo <ID> [オプション]）
+- ✅ TODOリストへのID番号表示追加
+- ✅ 操作ヒント表示（フッター）
+- ✅ デプロイ完了（実機テスト待ち）
+
+**技術的成果**:
+- データベースメソッド追加（4つ：completeTodo, uncompleteTodo, deleteTodo, updateTodo）
+- コマンドハンドラー実装（4つ：done, undone, delete, edit）
+- 引数パーシング（--flag value パターン）
+- JST timezone handling（期限編集時）
+- Result型パターンの一貫性維持
+
+**実装詳細**:
+```typescript
+// TODO完了（lib/db.ts）
+async completeTodo(todoId: number): Promise<Result<void, string>> {
+  const { error } = await this.client
+    .from('todos')
+    .update({ status: 'completed', updated_at: new Date().toISOString() })
+    .eq('id', todoId);
+  return error ? { ok: false, error: `...` } : { ok: true, value: undefined };
+}
+
+// TODO編集コマンド（lib/commands.ts）
+export async function handleEditCommand(cmd: ParsedCommand, ctx: CommandContext) {
+  // Parse: /sv:edit todo <ID> --deadline YYYY-MM-DD --assignee @name --task "text"
+  const updates: { task?: string; assignee?: string; deadline?: Date | null } = {};
+  // ... argument parsing logic ...
+  return db.updateTodo(id, updates);
+}
+
+// ID番号付きTODO表示（lib/commands.ts）
+return `${t.id}. ${icon} ${t.task}${deadline}`;
+
+// フッター追加
+const footer = '\n\n━━━━━━━━━━━━━━━━━━━\n💡 操作:\n/sv:done <番号> - 完了\n/sv:edit todo <番号> - 編集\n/sv:delete todo <番号> - 削除';
+```
+
+**新しいコマンド**:
+- `/sv:done <番号>` - TODOを完了にする
+- `/sv:undone <番号>` - TODOを未完了に戻す
+- `/sv:delete todo <番号>` - TODOを削除
+- `/sv:edit todo <番号> [オプション]` - TODOを編集
+  - `--deadline YYYY-MM-DD` - 期限を変更
+  - `--assignee @名前` - 担当者を変更
+  - `--task "新しい内容"` - タスク内容を変更
+
+**UI/UX改善**:
+```
+修正前:
+  ⏳ パンを買う (期日未定)
+
+修正後:
+  1. ⏳ パンを買う (期日未定)
+
+  ━━━━━━━━━━━━━━━━━━━
+  💡 操作:
+  /sv:done <番号> - 完了
+  /sv:edit todo <番号> - 編集
+  /sv:delete todo <番号> - 削除
+```
+
+**エラーハンドリング**:
+- 数字以外のID入力時の明確なエラーメッセージ
+- 無効な日付形式のバリデーション
+- 使い方の例を含むエラーメッセージ
+
+**詳細記録**: メモリ `feature_request_interactive_todo_management`
+
+#### Phase 6.3.1 追加機能: メニューシステム + 日本語エイリアス + データ品質改善（完了 - 2025年10月28日）
+
+**背景**: ユーザーフィードバック「使用していて思うことがあります。'/SV:hogehoge'を一般の方が、入力するのに、面倒に思わなかい？とくに、delete,decisionなど英語のスペルを入力するのに、ハードルが高くないか？」
+
+**達成事項**:
+- ✅ `/sv:menu` コマンド実装（番号付きコマンドメニュー表示）
+- ✅ 番号ショートカット実装（/sv:1 〜 /sv:9 で直接実行）
+- ✅ 全コマンドの日本語エイリアス追加（議事録、決定、タスク、完了、削除、編集など）
+- ✅ TODOデータ品質改善（非実行可能項目のフィルタリング）
+- ✅ ヘルプテキスト更新（新機能の説明追加）
+
+**技術的成果**:
+
+1. **メニューシステム**:
+```typescript
+// lib/commands.ts - handleMenuCommand()
+export async function handleMenuCommand(
+  _cmd: ParsedCommand,
+  _ctx: CommandContext
+): Promise<Result<CommandResponse, string>> {
+  const menuLines = [
+    '📋 【コマンドメニュー】',
+    '',
+    '以下の番号でコマンドを実行できます：',
+    '',
+    '1️⃣ /sv:1 - 議事録を生成',
+    '2️⃣ /sv:2 - 決定事項を確認',
+    '3️⃣ /sv:3 - タスク一覧（期限別）',
+    // ... 9つのコマンド
+  ];
+  return { ok: true, value: menuLines.join('\n') };
+}
+```
+
+2. **番号ショートカット + 日本語エイリアス**:
+```typescript
+// lib/commands.ts - routeCommand()
+export async function routeCommand(cmd: ParsedCommand, ctx: CommandContext) {
+  switch (cmd.command) {
+    // 番号ショートカット
+    case '1': return handleMinutesCommand(cmd, ctx);
+    case '2': return handleDecisionsCommand(cmd, ctx);
+    case '3': return handleTodoCommand(cmd, ctx);
+    // ... case '4' から '9' まで
+
+    // 日本語エイリアス
+    case 'minutes': case '議事録':
+      return handleMinutesCommand(cmd, ctx);
+    case 'decisions': case '決定': case '決定事項':
+      return handleDecisionsCommand(cmd, ctx);
+    case 'todo': case 'タスク':
+      return handleTodoCommand(cmd, ctx);
+    case 'done': case '完了':
+      return handleDoneCommand(cmd, ctx);
+    case 'delete': case '削除':
+      return handleDeleteCommand(cmd, ctx);
+    case 'edit': case '編集':
+      return handleEditCommand(cmd, ctx);
+    // ... 他のコマンド
+  }
+}
+```
+
+3. **TODOデータ品質改善**:
+```typescript
+// lib/openai.ts - isValidTodo()
+function isValidTodo(task: string): boolean {
+  const normalized = task.trim().toLowerCase();
+
+  // 空または短すぎる場合は拒否
+  if (normalized.length < 2) return false;
+
+  // 否定表現パターン（非実行可能）を拒否
+  const negativePatterns = [
+    'todoはない', 'todoがない', '特にtodo',
+    'ない', 'なし', 'ありません', '特にない',
+    '特になし', 'わからない', 'わかりません', '未定'
+  ];
+
+  for (const pattern of negativePatterns) {
+    if (normalized.includes(pattern)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+// extractInformation() での使用
+case 'extract_todo':
+  if (isValidTodo(args.task)) {
+    result.todos.push({ task: args.task, ... });
+  } else {
+    logger.debug({
+      event_type: 'extraction.todo.filtered',
+      task: args.task,
+      reason: 'non_actionable',
+    });
+  }
+  break;
+```
+
+**新しいコマンド**:
+- `/sv:menu` または `/sv:メニュー` - コマンドメニューを表示
+- `/sv:1` 〜 `/sv:9` - 番号で直接実行
+- 全コマンドに日本語エイリアス追加（例: `/sv:議事録`, `/sv:完了`, `/sv:削除`）
+
+**UI/UX改善**:
+```
+【メニュー表示例】
+📋 【コマンドメニュー】
+
+以下の番号でコマンドを実行できます：
+
+1️⃣ /sv:1 - 議事録を生成
+2️⃣ /sv:2 - 決定事項を確認
+3️⃣ /sv:3 - タスク一覧（期限別）
+4️⃣ /sv:4 - 質問リスト
+5️⃣ /sv:5 - 会話を検索
+6️⃣ /sv:6 - タスクを完了にする
+7️⃣ /sv:7 - タスクを削除
+8️⃣ /sv:8 - タスクを編集
+9️⃣ /sv:9 - ヘルプを表示
+
+💡 例: /sv:3 でタスク一覧を表示
+💡 例: /sv:6 5 で5番目のタスクを完了
+
+📝 日本語コマンドも使えます:
+/sv:議事録, /sv:決定, /sv:タスク など
+```
+
+**データ品質改善の効果**:
+- OpenAI抽出時の非実行可能項目（「特にTODOはない」など）を自動フィルタリング
+- データベースに無意味な項目が保存されなくなる
+- ユーザーが見るTODOリストの品質向上
+
+**実装の特徴**:
+- 後方互換性維持（既存の英語コマンドもそのまま使用可能）
+- 一般ユーザーの入力負担を大幅軽減（英語スペルの暗記不要）
+- コマンド発見性の向上（メニューで全機能を確認可能）
+
+#### Phase 6.3.2: LINE Quick Reply Buttons（完了 - 2025年10月28日）
+
+**達成事項**:
+- ✅ LINE Messaging API Quick Reply統合
+- ✅ メニューコマンドに6つのQuick Replyボタン追加
+- ✅ TODOリストに表示モード切り替えボタン追加
+- ✅ 型安全なCommandResponse実装（Union Type）
+- ✅ デプロイ完了（実機テスト済み）
+
+**ユーザーフィードバック**: 「最高です！」
+
+**技術的成果**:
+
+1. **LINE Quick Reply型定義**:
+```typescript
+// lib/line.ts
+export interface QuickReplyButton {
+  label: string;  // ボタンラベル（最大20文字）
+  text: string;   // タップ時に送信されるテキスト
+}
+
+interface LineQuickReply {
+  items: Array<{
+    type: 'action';
+    action: {
+      type: 'message';
+      label: string;
+      text: string;
+    };
+  }>;
+}
+```
+
+2. **replyToLine() 拡張**:
+```typescript
+// lib/line.ts
+export async function replyToLine(
+  replyToken: string,
+  text: string,
+  config: Config,
+  logger: Logger,
+  requestId: string,
+  multiBubble = false,
+  quickReply?: QuickReplyButton[]  // 新パラメータ
+): Promise<{ ok: boolean; status: number; body: string }> {
+  // ... 既存のメッセージ構築 ...
+
+  // Quick Replyボタンを最後のメッセージに追加
+  if (quickReply && quickReply.length > 0) {
+    const lastMessage = messages[messages.length - 1];
+    const buttons = quickReply.slice(0, 13); // LINE API制限: 最大13個
+
+    lastMessage.quickReply = {
+      items: buttons.map(btn => ({
+        type: 'action' as const,
+        action: {
+          type: 'message' as const,
+          label: btn.label.slice(0, 20), // ラベル最大20文字
+          text: btn.text,
+        },
+      })),
+    };
+  }
+
+  // ... 既存の送信処理 ...
+}
+```
+
+3. **CommandResponse型定義**:
+```typescript
+// lib/commands.ts
+export interface CommandResponseWithButtons {
+  text: string;
+  quickReply?: QuickReplyButton[];
+}
+
+export type CommandResponse = string | CommandResponseWithButtons;
+
+export type CommandHandler = (
+  cmd: ParsedCommand,
+  ctx: CommandContext
+) => Promise<Result<CommandResponse, string>>;
+```
+
+4. **メニューコマンドのQuick Reply実装**:
+```typescript
+// lib/commands.ts - handleMenuCommand()
+const quickReply: QuickReplyButton[] = [
+  { label: '📝 議事録', text: '/sv:1' },
+  { label: '✅ 決定事項', text: '/sv:2' },
+  { label: '📋 タスク', text: '/sv:3' },
+  { label: '❓ 質問', text: '/sv:4' },
+  { label: '🔍 検索', text: '/sv:5' },
+  { label: 'ℹ️ ヘルプ', text: '/sv:9' },
+];
+
+const response: CommandResponseWithButtons = {
+  text: menuLines.join('\n'),
+  quickReply,
+};
+
+return { ok: true, value: response };
+```
+
+5. **TODOリストのコンテキスト対応ボタン**:
+```typescript
+// lib/commands.ts - handleTodoCommand()
+const quickReply: QuickReplyButton[] = [];
+
+// 現在の表示モードに応じて、他のモードへの切り替えボタンを表示
+if (groupBy === 'deadline') {
+  quickReply.push(
+    { label: '📅 日別表示', text: '/sv:todo date' },
+    { label: '👤 担当者別', text: '/sv:todo assignee' }
+  );
+} else if (groupBy === 'date') {
+  quickReply.push(
+    { label: '⏰ 期限別表示', text: '/sv:todo' },
+    { label: '👤 担当者別', text: '/sv:todo assignee' }
+  );
+} else {
+  quickReply.push(
+    { label: '⏰ 期限別表示', text: '/sv:todo' },
+    { label: '📅 日別表示', text: '/sv:todo date' }
+  );
+}
+
+// 共通アクションボタン
+quickReply.push({ label: '📋 メニュー', text: '/sv:menu' });
+
+const response: CommandResponseWithButtons = {
+  text: result,
+  quickReply,
+};
+
+return { ok: true, value: response };
+```
+
+6. **index.ts での型安全な処理**:
+```typescript
+// index.ts
+const response = commandResult.value;
+let responseText: string;
+let quickReply: Array<{ label: string; text: string }> | undefined;
+
+// Union型のナローイング
+if (typeof response === 'string') {
+  responseText = sanitizeText(response, 4500);
+  quickReply = undefined;
+} else {
+  responseText = sanitizeText(response.text, 4500);
+  quickReply = response.quickReply;
+}
+
+await replyToLine(
+  event.replyToken,
+  responseText,
+  config,
+  logger,
+  requestId,
+  false,
+  quickReply  // Quick Replyボタンを渡す
+);
+```
+
+**実装の特徴**:
+- **後方互換性**: 既存のstring返却コマンドはそのまま動作
+- **型安全性**: TypeScript Union Typeで両方の形式をサポート
+- **コンテキスト対応**: 現在の状態に応じて適切なボタンを表示
+- **LINE API準拠**: 最大13ボタン、ラベル20文字制限に対応
+- **UX最適化**: タップだけでコマンド実行可能、入力負担ゼロ
+
+**UI/UX改善**:
+```
+【Quick Replyボタンの表示例】
+
+メニューコマンド（/sv:menu）:
+[📝 議事録] [✅ 決定事項] [📋 タスク] [❓ 質問] [🔍 検索] [ℹ️ ヘルプ]
+
+TODOリスト（期限別表示中）:
+[📅 日別表示] [👤 担当者別] [📋 メニュー]
+
+TODOリスト（日別表示中）:
+[⏰ 期限別表示] [👤 担当者別] [📋 メニュー]
+```
+
+**技術的挑戦と解決策**:
+- **型エラー**: Union型のナローイングが必要 → 明示的な型ガードで解決
+- **後方互換性**: 既存コードへの影響 → オプショナルパラメータで非破壊的拡張
+- **LINE API制限**: 最大13ボタン、ラベル20文字 → slice()で自動制限
+
+**将来の拡張** (Phase 6.3.3):
+- Flex Messageリッチ表示（チェックボックスUI）
+- カルーセル形式のTODOカード表示
+- 画像・リンク付き決定事項表示
+
+### Phase 6: UX改善とインタラクティブ機能（2025年10月〜11月）
+
+**Phase 6完了状況（2025年11月2日時点）**:
+- ✅ Phase 6.1: ユーザー名表示と暗黙的自己割り当て
+- ✅ Phase 6.2: 期限表示改善とキーワード検出
+- ✅ Phase 6.3.1: インタラクティブTODO管理（テキストコマンド）
+- ✅ Phase 6.3.1 追加: メニューシステム + 日本語エイリアス + データ品質改善
+- ✅ Phase 6.3.2: LINE Quick Reply Buttons
+- ✅ Phase 6.4: Usage Tracking（API使用量記録とコスト管理）
+- ✅ Phase 6.5: TODO Edit Feature（対話型TODO編集機能） **← NEW 2025/11/02完了**
+
+#### Phase 6.4: TODO Done/Undone/Delete Commands（完了 - 2025年10月30日）
+
+**達成事項**:
+- ✅ `/sv:done`, `/sv:undone`, `/sv:delete` コマンド実装
+- ✅ 対話型UI（Quick Reply選択）
+- ✅ 一貫したソート順（sortTodos関数）
+- ✅ インデックスベース操作（getTodoByIndex関数）
+- ✅ 実機テスト成功
+
+**技術的成果**:
+- Union型（CommandResponse = string | CommandResponseWithButtons）
+- 3ステップフロー（一覧表示 → 選択 → 実行）
+- Quick Replyボタンによる直感的な操作
+- 型安全な実装（TypeScript完全対応）
+
+**実装内容**:
+```typescript
+// 共通パターン: 3ステップフロー
+// Step 1: コマンド実行 → TODO一覧 + Quick Replyボタン
+// Step 2: 番号選択 → 確認メッセージ
+// Step 3: 操作実行 → 結果表示
+
+// handleDoneCommand: TODO完了処理
+// handleUndoneCommand: TODO未完了に戻す
+// handleDeleteCommand: TODO削除
+```
+
+#### Phase 6.5: TODO Edit Feature（完了 - 2025年11月2日）
+
+**達成事項**:
+- ✅ `/sv:edit` コマンドの対話型UI実装
+- ✅ 3ステップフロー（一覧 → 選択 → 編集）
+- ✅ 複数フィールド編集対応（task/deadline/assignee）
+- ✅ Quick Reply選択UI（最大13個）
+- ✅ 実機テスト成功（タスク内容編集を確認）
+
+**技術的成果**:
+
+1. **3ステップ対話型フロー**:
+```typescript
+// Step 1: /sv:edit
+// → TODO一覧表示 + Quick Replyボタン（番号選択）
+
+// Step 2: /sv:edit <番号>
+// → 選択されたTODOの編集方法を表示
+
+// Step 3: /sv:edit <番号> <field> <value>
+// → 指定されたフィールドを更新
+```
+
+2. **編集可能フィールド**:
+- `task`: タスク内容（複数単語対応、`args.slice(i + 1).join(' ')`）
+- `deadline`: 期限日付（YYYY-MM-DD形式、または 'none'/'null'/'削除' でクリア）
+- `assignee`: 担当者名（@記号を自動削除）
+
+3. **実装の特徴**:
+- 既存の done/undone/delete コマンドと同じ対話パターン
+- 複数単語タスク対応（残り全引数を結合）
+- JST期限設定（23:59:59.999に自動設定）
+- 柔軟な期限クリア（'none'/'null'/'削除'をサポート）
+- 型安全性（TypeScript型チェック完全対応）
+
+**実装詳細** (`lib/commands.ts` lines 494-677):
+```typescript
+export async function handleEditCommand(
+  cmd: ParsedCommand,
+  ctx: CommandContext
+): Promise<Result<CommandResponse, string>> {
+  const { args } = cmd;
+  const { groupId, db } = ctx;
+
+  // Step 1: No args → Show all TODOs with Quick Reply
+  if (args.length === 0) {
+    const sortedTodos = sortTodos(allTodos);
+    const quickReply: QuickReplyButton[] = sortedTodos.slice(0, 13).map((t, i) => ({
+      type: 'message',
+      label: `${i + 1}`,
+      text: `/sv:edit ${i + 1}`,
+    }));
+    return { ok: true, value: { text: todoList, quickReply } };
+  }
+
+  // Step 2: Only index provided → Show edit instructions
+  if (args.length === 1) {
+    return { ok: true, value: editInstructions };
+  }
+
+  // Step 3: Parse field and value, execute update
+  const updates: { task?: string; assignee?: string; deadline?: Date | null } = {};
+
+  for (let i = 1; i < args.length; i++) {
+    const field = args[i].toLowerCase();
+
+    if (field === 'task' && i + 1 < args.length) {
+      updates.task = args.slice(i + 1).join(' '); // Multi-word support
+      break;
+    } else if (field === 'deadline' && i + 1 < args.length) {
+      // Date parsing with JST timezone handling
+      const deadlineDate = new Date(args[i + 1]);
+      jstDate.setHours(23, 59, 59, 999);
+      updates.deadline = jstDate;
+      i++;
+    } else if (field === 'assignee' && i + 1 < args.length) {
+      updates.assignee = args[i + 1].replace('@', '');
+      i++;
+    }
+  }
+
+  const result = await db.updateTodo(todoId, updates);
+  return { ok: true, value: updateSummary };
+}
+```
+
+**実機テスト結果**:
+```
+テスト1: タスク内容編集
+入力: /sv:edit 1 task 新しいタスク内容
+出力: ✅ 成功「資料を準備する必要がある」→「新しいタスク内容」
+
+未テスト項目（実装済み）:
+- deadline編集（実装済み、テスト待ち）
+- assignee編集（実装済み、テスト待ち）
+- 複数フィールド同時編集（実装済み、テスト待ち）
+```
+
+**UI/UX改善**:
+```
+【Step 1: TODO一覧】
+✏️ 【編集するTODOを選択】
+
+1. ⏳ タスク1 (期限: 11/5)
+2. ✅ タスク2 (期日未定)
+
+━━━━━━━━━━━━━
+👇 編集するTODOをタップ
+[1] [2] ...（Quick Replyボタン）
+
+【Step 2: 編集方法表示】
+✏️ TODO 1 を編集します
+「資料を準備する必要がある」
+
+編集方法:
+━━━━━━━━━━━━━
+📝 内容を変更:
+/sv:edit 1 task 新しいタスク内容
+
+📅 期限を変更:
+/sv:edit 1 deadline 2025-11-05
+
+👤 担当者を変更:
+/sv:edit 1 assignee 田中
+
+【Step 3: 更新完了】
+✏️ TODO 1 を更新しました！
+「資料を準備する必要がある」
+
+📝 内容: 新しいタスク内容
+
+確認: /sv:todo
+```
+
+**詳細記録**: メモリ `phase6_5_todo_edit_completion`
+
+**Phase 7: 収益化（2025年11月〜12月予定）**:
+- Stripe サブスクリプション統合
+- 請求管理システム
+- クローズドベータテスト（5-10チーム）
+- フィードバック収集と改善
+- 正式リリース（年内目標）
+
+**収益モデル**:
+- Free プラン: 個人利用（Personal modeのみ）、基本機能
+- Team プラン（¥2,980/月）: 3-10人チーム、全機能、グループ対応
+- Business プラン（¥9,800/月）: 11-50人、API連携、優先サポート
+
+**目標**: 年内に 5-30 チームの有料ユーザー獲得、MRR ¥15,000-¥90,000
+
+## 解決した課題
+
+### 1. **セキュリティの脆弱性**
+
+**課題**: GAS では署名検証が困難で、不正なリクエストを防げない
+
+**解決策**:
+```typescript
+// LINE webhook の署名検証を必須化
+export function verifyLineSignature(
+  body: string,
+  signature: string,
+  channelSecret: string
+): boolean {
+  const hash = createHmac('sha256', channelSecret)
+    .update(body)
+    .digest('base64');
+  return hash === signature;
+}
+```
+
+### 2. **シークレット管理の改善**
+
+**課題**: GAS ではスクリプトプロパティに直接保存、Git 管理が困難
+
+**解決策**:
+- `.env.example` でテンプレート管理
+- Supabase Secrets / GCP Secret Manager でセキュアに管理
+- GitHub Actions での自動デプロイ時に環境変数を注入
+
+```bash
+# Supabase でのシークレット設定
+npx supabase secrets set OPENAI_API_KEY=sk-xxx
+
+# GCP でのシークレット設定
+echo -n "sk-xxx" | gcloud secrets create OPENAI_API_KEY --data-file=-
+```
+
+### 3. **テスタビリティとメンテナンス性**
+
+**課題**: GAS では依存関係が密結合で、テストが困難
+
+**解決策**: アダプターパターンで外部 API を抽象化
+
+```typescript
+// インターフェースで抽象化
+export interface ChatAdapter {
+  sendMessage(prompt: string, systemPrompt: string): Promise<Result<string, Error>>;
+}
+
+// OpenAI の実装
+export class OpenAIAdapter implements ChatAdapter {
+  async sendMessage(prompt: string, systemPrompt: string) {
+    // 実装
+  }
+}
+
+// モックに差し替え可能でテストが容易
+const mockAdapter = new MockChatAdapter();
+```
+
+### 4. **運用性の向上**
+
+**課題**: エラーログが不十分で、障害時の原因特定が困難
+
+**解決策**: 構造化ログで可観測性を確保
+
+```typescript
+interface LogContext {
+  request_id: string;      // リクエスト追跡
+  user_id?: string;        // ユーザー識別
+  event_type: string;      // イベント種別
+  latency_ms?: number;     // レイテンシ計測
+  error_code?: string;     // エラー分類
+}
+
+// JSON 形式で出力、ログ分析ツールで解析可能
+logRequest({
+  request_id: 'req_abc123',
+  user_id: 'U1234567',
+  event_type: 'message.received',
+  latency_ms: 234
+}, 'Message processed successfully');
+```
+
+## アーキテクチャ設計
+
+### システム構成図
+
+```
+┌─────────────┐
+│   LINE App  │
+└──────┬──────┘
+       │ webhook
+       ▼
+┌─────────────────────────────────┐
+│  Supabase Edge Functions        │
+│  or GCP Cloud Run               │
+│                                 │
+│  ┌─────────────────────────┐   │
+│  │  Webhook Handler        │   │
+│  │  - 署名検証              │   │
+│  │  - イベント振り分け       │   │
+│  └───────────┬─────────────┘   │
+│              ▼                  │
+│  ┌─────────────────────────┐   │
+│  │  Core Logic             │   │
+│  │  - メッセージ整形        │   │
+│  │  - SYSTEM_PROMPT 適用   │   │
+│  │  - 現在日付追加          │   │
+│  └───────────┬─────────────┘   │
+│              ▼                  │
+│  ┌─────────────────────────┐   │
+│  │  Adapters               │   │
+│  │  - OpenAI Adapter       │───┼──► OpenAI API
+│  │    (Function Calling)   │   │    (ツール呼び出し判定)
+│  │  - LINE Adapter         │───┼──► LINE API
+│  │  - Search Adapter       │───┼──► Tavily API
+│  └─────────────────────────┘   │    (Web検索実行)
+└─────────────────────────────────┘
+         ▲
+         │ 検索結果を
+         │ OpenAI に返却
+         └─────────────────────────┘
+```
+
+### モノレポ構成
+
+```
+savvybot/
+├── apps/
+│   ├── api/              # Webhook API
+│   │   ├── src/
+│   │   │   ├── webhook.ts
+│   │   │   ├── handlers/
+│   │   │   └── middleware/
+│   │   ├── package.json
+│   │   └── tsconfig.json
+│   └── web/              # 管理ダッシュボード（将来）
+│
+├── packages/
+│   ├── core/             # ビジネスロジック
+│   │   ├── src/
+│   │   │   ├── config/
+│   │   │   │   └── systemPrompt.ts
+│   │   │   ├── processors/
+│   │   │   └── validators/
+│   │   └── package.json
+│   │
+│   ├── adapters/         # 外部サービス連携
+│   │   ├── src/
+│   │   │   ├── line/
+│   │   │   │   ├── client.ts
+│   │   │   │   └── verifySignature.ts
+│   │   │   ├── openai/
+│   │   │   │   └── client.ts
+│   │   │   └── types.ts
+│   │   └── package.json
+│   │
+│   └── shared/           # 共通ユーティリティ
+│       ├── src/
+│       │   ├── result.ts
+│       │   ├── logger.ts
+│       │   └── types.ts
+│       └── package.json
+│
+├── infra/
+│   ├── ci/
+│   │   └── workflows/
+│   │       ├── test.yml
+│   │       └── deploy.yml
+│   └── deploy/
+│       ├── supabase/
+│       ├── cloudrun/
+│       └── cloudfunctions/
+│
+└── docs/
+    ├── ADRs/             # 設計判断の記録
+    ├── runbook.md        # 運用手順書
+    └── PORTFOLIO.md      # このファイル
+```
+
+## 技術的なハイライト
+
+### 1. Result 型による型安全なエラーハンドリング
+
+従来の `try-catch` ではなく、Rust の Result 型を TypeScript で実装し、コンパイル時にエラー処理の漏れを防ぎます。
+
+```typescript
+// 定義
+export type Result<T, E = Error> =
+  | { ok: true; value: T }
+  | { ok: false; error: E };
+
+// 使用例
+const result = await openaiAdapter.sendMessage(userMessage, SYSTEM_PROMPT);
+
+if (!result.ok) {
+  // TypeScript がエラー処理を強制
+  logError(result.error);
+  return err(new AppError('AI response failed'));
+}
+
+// この時点で result.value に型安全にアクセス可能
+const aiResponse = result.value;
+```
+
+### 2. SYSTEM_PROMPT の一元管理
+
+会話のトーン、ルール、禁止事項を一箇所に集約し、チーム全体で簡単に更新・レビューできる仕組みを構築。
+
+```typescript
+export const SYSTEM_PROMPT = `
+あなたは親切で知識豊富なアシスタントです。
+
+【応答ルール】
+- 簡潔で分かりやすい日本語で回答してください
+- 不確実な情報には「〜かもしれません」など推測であることを明示
+- ユーザーの質問の意図を理解し、的確に答えてください
+
+【禁止事項】
+- 医療・法律の専門的アドバイス
+- 金融商品の取引推奨
+- 差別的・攻撃的な内容
+- 個人情報や機密情報の収集・保存
+`;
+```
+
+### 3. 依存性逆転の原則（DIP）適用
+
+アダプターパターンにより、外部 API に依存しない設計を実現。OpenAI から別の AI サービスへの切り替えも容易。
+
+```typescript
+// core パッケージはインターフェースに依存
+import { ChatAdapter } from '@savvybot/adapters';
+
+export class ConversationService {
+  constructor(private chatAdapter: ChatAdapter) {}
+
+  async processMessage(userMessage: string): Promise<Result<string, Error>> {
+    // chatAdapter の具体的な実装を知らない
+    return this.chatAdapter.sendMessage(userMessage, SYSTEM_PROMPT);
+  }
+}
+
+// 実行時に具体的な実装を注入
+const openaiAdapter = new OpenAIAdapter(config);
+const service = new ConversationService(openaiAdapter);
+
+// テスト時はモックを注入
+const mockAdapter = new MockChatAdapter();
+const testService = new ConversationService(mockAdapter);
+```
+
+### 4. プラットフォーム非依存の設計
+
+Supabase、GCP Cloud Run、Cloud Functions のいずれにもデプロイ可能な抽象化レイヤーを実装。
+
+```typescript
+// プラットフォーム固有の処理を抽象化
+export interface RequestAdapter {
+  getBody(): string;
+  getHeader(name: string): string | undefined;
+  sendResponse(status: number, body: unknown): void;
+}
+
+// Supabase Edge Functions 用
+export class SupabaseRequestAdapter implements RequestAdapter {
+  constructor(private req: Request) {}
+
+  getBody(): string {
+    return this.req.text();
+  }
+  // ...
+}
+
+// GCP Cloud Run 用
+export class CloudRunRequestAdapter implements RequestAdapter {
+  constructor(private req: express.Request, private res: express.Response) {}
+
+  getBody(): string {
+    return JSON.stringify(this.req.body);
+  }
+  // ...
+}
+```
+
+### 5. OpenAI Function Calling による Web 検索統合
+
+Tavily API と OpenAI Function Calling を組み合わせ、AI が自動的に最新情報が必要かを判断し、Web 検索を実行する機能を実装。
+
+```typescript
+// ツール定義
+const SEARCH_TOOLS = [
+  {
+    type: 'function',
+    function: {
+      name: 'search_web',
+      description: '最新の情報やニュースをWeb検索します。トレーニングデータにない情報が必要な場合に使用します。',
+      parameters: {
+        type: 'object',
+        properties: {
+          query: {
+            type: 'string',
+            description: '検索クエリ（例: "MLB ワールドシリーズ 2024 優勝"）',
+          },
+        },
+        required: ['query'],
+      },
+    },
+  },
+];
+
+// OpenAI がツールを呼び出すかを自動判断
+const response = await openai.chat.completions.create({
+  model: 'gpt-4o-mini',
+  messages,
+  tools: SEARCH_TOOLS,
+  tool_choice: 'auto', // AI が必要性を判断
+});
+
+// ツール呼び出しがあれば実行
+if (response.choices[0].message.tool_calls) {
+  const toolCall = response.choices[0].message.tool_calls[0];
+  const searchResult = await searchWeb(toolCall.function.arguments.query);
+
+  // 結果を AI に返して最終回答を生成
+  const finalResponse = await openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [
+      ...messages,
+      response.choices[0].message,
+      {
+        role: 'tool',
+        tool_call_id: toolCall.id,
+        content: formatSearchResults(searchResult),
+      },
+    ],
+  });
+}
+```
+
+### 6. 時間表現の正確な解釈（Temporal Context Pattern）
+
+AI モデルの学習データカットオフ（2023年10月）により、「去年」などの相対的な時間表現が誤って解釈される問題を解決。システムプロンプトに現在日付を動的に追加することで、正確な時間認識を実現。
+
+```typescript
+export async function getAIResponseWithTools(
+  userMessage: string,
+  config: Config,
+  logger: Logger,
+  requestId: string,
+  userId: string,
+  conversationHistory?: ConversationMessage[]
+): Promise<Result<string, AppError>> {
+  // 現在日付をシステムプロンプトに追加
+  const now = new Date();
+  const currentDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
+  const enhancedSystemPrompt = `${config.app.systemPrompt}
+
+【重要】今日の日付: ${currentDate}
+「去年」「今年」「最近」などの時間表現は、この日付を基準に解釈してください。
+例: 今日が${currentDate}の場合、「去年」は${new Date(now.getFullYear() - 1, 0, 1).getFullYear()}年を指します。`;
+
+  const messages: OpenAIMessage[] = [
+    {
+      role: 'system',
+      content: enhancedSystemPrompt,
+    },
+    // ...
+  ];
+}
+```
+
+**実際の問題と解決**:
+- **問題**: 「去年のワールドシリーズで優勝したチームは？」に対し、AI が 2022年のデータを返答（学習カットオフ2023年の視点から「去年=2022年」と解釈）
+- **解決**: 現在日付（2025-10-16）を明示することで、AI が「去年=2024年」と正しく認識し、Web 検索を実行
+- **結果**: 正確に 2024年ロサンゼルス・ドジャースの優勝を回答
+
+**3つの根本原因と段階的解決**:
+1. TAVILY_API_KEY が GitHub Actions ワークフローに含まれていない → 追加
+2. SYSTEM_PROMPT が空白で、Web 検索使用の指示がない → 指示を含むプロンプトを設定
+3. 時間表現を AI が学習データの視点から解釈 → 現在日付を動的に追加（決定的な解決策）
+
+## 開発プロセス
+
+### テスト戦略
+
+**単体テスト**
+- アダプターは外部 API をモック化してテスト
+- コアロジックはアダプターから独立してテスト
+- 署名検証は既知のテストケースで検証
+
+```typescript
+// packages/adapters/src/line/__tests__/verifySignature.test.ts
+describe('verifyLineSignature', () => {
+  it('should verify valid signature', () => {
+    const body = '{"events":[]}';
+    const secret = 'test_secret';
+    const validSignature = 'K+OXxKLFZBvl7q2...' // 既知の正しい署名
+
+    expect(verifyLineSignature(body, validSignature, secret)).toBe(true);
+  });
+
+  it('should reject invalid signature', () => {
+    const body = '{"events":[]}';
+    const secret = 'test_secret';
+    const invalidSignature = 'invalid_signature';
+
+    expect(verifyLineSignature(body, invalidSignature, secret)).toBe(false);
+  });
+});
+```
+
+**統合テスト**
+- LINE イベントペイロードでエンドツーエンドをテスト
+- OpenAI API は実際の API を使用（テスト用キー）
+
+**E2E テスト（将来）**
+- 実際の LINE Bot との会話フローをテスト
+
+### CI/CD パイプライン
+
+```yaml
+# .github/workflows/test.yml
+name: Test
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+
+# .github/workflows/deploy.yml
+name: Deploy
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: npx supabase functions deploy
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+```
+
+## 運用設計
+
+### 監視とアラート
+
+**重要メトリクス**
+- リクエスト成功率（目標: 99.9%）
+- 平均レスポンス時間（目標: < 500ms）
+- OpenAI API エラー率
+- LINE API エラー率
+
+**ログ分析**
+```typescript
+// 構造化ログから分析可能な情報
+{
+  "timestamp": "2025-10-12T10:30:45.123Z",
+  "request_id": "req_abc123",
+  "user_id": "U1234567",
+  "event_type": "message.received",
+  "latency_ms": 234,
+  "status": "success"
+}
+
+// エラー時
+{
+  "timestamp": "2025-10-12T10:31:22.456Z",
+  "request_id": "req_def456",
+  "user_id": "U7890123",
+  "event_type": "message.received",
+  "latency_ms": 5234,
+  "status": "error",
+  "error_code": "OPENAI_TIMEOUT",
+  "error_message": "Request timeout after 5000ms"
+}
+```
+
+### 障害対応手順（runbook）
+
+**シナリオ 1: OpenAI API タイムアウト**
+1. ログから `error_code: OPENAI_TIMEOUT` を検索
+2. 影響範囲を `user_id` で特定
+3. タイムアウト設定を調整 or リトライロジック追加
+4. 再デプロイ
+
+**シナリオ 2: LINE 署名検証エラー急増**
+1. ログから `error_code: INVALID_SIGNATURE` を検索
+2. `LINE_CHANNEL_SECRET` の設定確認
+3. 必要に応じてシークレットをローテーション
+
+**シナリオ 3: レート制限到達**
+1. ログから `error_code: RATE_LIMIT` を検索
+2. `user_id` ごとの利用状況を分析
+3. ユーザー単位のレート制限実装を検討
+
+## 成果と学び
+
+### 定量的成果（目標値）
+
+- **セキュリティ**: 署名検証により不正リクエスト 100% 防止
+- **可用性**: 99.9% のアップタイム達成
+- **パフォーマンス**: 平均レスポンス時間 < 500ms
+- **保守性**: テストカバレッジ 80% 以上
+- **運用効率**: デプロイ時間 < 5 分（自動化）
+
+### 技術的学び
+
+1. **アダプターパターンの有用性**
+   - 外部 API の変更がコアロジックに影響しない
+   - テスタビリティが劇的に向上
+   - 複数プラットフォーム対応が容易
+
+2. **Result 型による型安全性**
+   - コンパイル時にエラー処理の漏れを検出
+   - 例外による隠れた制御フローを排除
+   - エラーハンドリングが明示的でレビューしやすい
+
+3. **構造化ログの重要性**
+   - JSON 形式でログ分析ツールと連携可能
+   - `request_id` によるリクエスト追跡
+   - 障害時の原因特定が迅速化
+
+4. **モノレポによる開発効率**
+   - パッケージ間の型共有が容易
+   - 統一された開発環境とツール設定
+   - アトミックな変更が可能（複数パッケージを1コミットで更新）
+
+### 今後の展開
+
+**Phase 3.2: OpenAI Function Calling + Web Search（2025年10月16日）** ✅ 完了
+- [x] Tavily API 統合
+- [x] OpenAI Function Calling 実装
+- [x] 時間表現の正確な解釈（現在日付コンテキスト）
+- [x] デプロイおよび動作確認
+
+**Phase 3.3: Personal Mode 実機テスト（2025年10月17日）** ✅ 完了
+- [x] Web検索機能の包括的テスト（4シナリオ）
+- [x] 全テストケース成功（100%達成率）
+- [x] 知識カットオフを超える情報取得の実証
+- [x] ツール呼び出し判定精度の確認
+
+**Phase 3.3: Group Mode 実機テスト（完了 - 2025年10月19日）**
+**達成事項**:
+- ✅ グループチャット設定問題の解決（LINE設定でグループ参加許可が必要）
+- ✅ 全コマンドの実機テスト成功（/sv:help, /sv:minutes, /sv:decisions, /sv:todo）
+- ✅ グループモードのサイレント動作確認（通常メッセージには反応しない）
+- ✅ 自動抽出機能の検証（100%精度で決定事項・TODO抽出）
+- ✅ 構造化議事録生成の動作確認
+
+**技術的成果**:
+- TODO表示バグ修正（`[object Object]` → スマートな Object/String 処理）
+- 全コマンドのレスポンスタイム目標達成（<5秒）
+- 議事録生成の高品質出力確認（OpenAI Function Calling活用）
+
+**Phase 3.4: `/sv:questions` コマンド実装（完了 - 2025年10月19日）**
+**達成事項**:
+- ✅ 質問自動抽出と表示機能の実装
+- ✅ 重複チェック機能（1時間以内の同一質問をスキップ）
+- ✅ 日本時間（JST）表示対応（全コマンド統一）
+- ✅ フィルター機能（unanswered/all）
+- ✅ ユーザーID表示問題の解決（シンプル表示に変更）
+
+**技術的成果**:
+- `db.checkQuestionDuplicate()` メソッド追加（重複防止）
+- タイムゾーン変換の統一実装（`toLocaleString('en-US', { timeZone: 'Asia/Tokyo' })`）
+- 実機テストで重複チェック機能の動作確認済み
+- データクリーンアップ済み（既存重複データ削除）
+
+**詳細記録**: `docs/PHASE3_3_TEST_RESULTS.md`、メモリ `phase4_questions_command_completion`
+
+#### Phase 3.5: Database 実装（完了 - 2025年10月19日）
+**達成事項**:
+- ✅ Supabase Database 設計・構築（6つのテーブル + ビュー）
+  - `group_settings`: グループごとの設定管理
+  - `conversations`: 会話履歴の永続化（90日TTL）
+  - `decisions`: 決定事項の追跡
+  - `todos`: タスク管理
+  - `questions`: 質問と回答のトラッキング
+  - `usage_logs`: API使用量記録（Phase 4で追加）
+- ✅ グループモード裏処理（会話記録・自動抽出）
+- ✅ 個人モード会話履歴（5-10件保持）
+- ✅ OpenAI Function Calling による決定事項・TODO・質問の自動抽出
+- ✅ データベース統合テスト（全機能実機テスト済み）
+
+**技術的成果**:
+- マイグレーションによるスキーマ管理
+- インデックス最適化（group_id, created_at）
+- 集計ビュー（daily_usage_summary, group_usage_summary）
+- TTL実装（90日 for会話、365日 for使用量）
+
+### Phase 4: 高度な機能（完了 - 2025年10月19日）
+
+**達成事項**:
+- ✅ 使用量トラッキング（API コスト管理）
+- ✅ マルチテナント対応（グループ ID 分離）
+- ✅ `/sv:search` コマンド（キーワード検索）
+- ✅ `/sv:questions` コマンド（質問リスト表示）
+- ✅ メンション機能（@bot, @savvybot, @savvy）
+- ✅ コマンド除外バグ修正
+- ✅ ヘルプ更新（使い方ガイド追加）
+
+#### 4.1: Usage Tracking 実装（2025年10月19日）
+
+**実装内容**:
+1. **データベーススキーマ** (migration: `20251019000000_usage_tracking.sql`):
+   - `usage_logs` テーブル: API使用履歴（group_id, operation_type, tokens, cost）
+   - `daily_usage_summary` ビュー: 日次集計
+   - `group_usage_summary` ビュー: グループ別集計
+   - `calculate_openai_cost()` 関数: PostgreSQLでのコスト計算
+
+2. **使用量トラッキングロジック** (`lib/usage.ts`):
+   - `logUsage()`: 使用量をDBに記録
+   - モデル別価格対応（gpt-4o, gpt-4o-mini, gpt-4-turbo）
+   - 対応操作タイプ: `personal_chat`, `auto_extraction`, `group_command_minutes`, `web_search`
+
+3. **実機テスト結果**:
+   - 2ユーザー、9回の操作
+   - 合計4,572トークン、推定コスト $0.012795
+   - 全機能正常動作確認
+
+**詳細記録**: メモリ `phase4_usage_tracking_completion`
+
+#### 4.2: `/sv:search` コマンド実装（2025年10月19日）
+
+**機能**:
+- キーワード検索（完全一致、ILIKE使用）
+- 期間フィルタ（today/week/month/all）
+- キーワードハイライト表示（【】で囲む）
+- 日本時間（JST）表示
+
+**実装内容**:
+- `db.searchMessages()`: PostgreSQL ILIKE検索
+- `handleSearchCommand()`: コマンドハンドラー
+- 期間パース再利用（`parsePeriod()`）
+
+**発見・修正したバグ**:
+- **問題**: コマンドメッセージが conversations テーブルに保存され、検索結果に含まれる
+- **原因**: コマンド判定が会話保存の後に実施されていた
+- **修正**: コマンド判定を保存前に移動（Commit: 5c971b9）
+
+**詳細記録**: メモリ `phase4_search_command_completion`, `phase4_search_command_testing_complete`
+
+#### 4.3: メンション機能とヘルプ更新（2025年10月19日）
+
+**メンション機能** (`lib/mode.ts`):
+- グループチャットで `@bot`, `@savvybot`, `@savvy` でBotを呼び出し可能
+- Personal mode風の会話応答
+- Web検索機能との統合（自動的に最新情報を取得）
+
+**ヘルプ更新** (`lib/commands.ts`):
+- Botの呼び出し方法を説明（コマンド + メンション）
+- 実装済みコマンドのみに整理
+- カテゴリ分類（会話管理、情報管理、ヘルプ）
+- バージョン表記を Phase 4 Complete に更新
+
+**実機テスト結果**:
+- `@bot 今日は何曜日？` → 正常に応答
+- `@savvybot MLB質問` → Web検索して最新情報を回答
+- `@Savvy サッカー質問` → 大文字小文字を区別せず正常動作
+
+**技術的成果**:
+- グループチャットでの3つの対話方法確立（コマンド、メンション、サイレント）
+- ユーザー体験の向上（メンション機能の発見可能性）
+- ヘルプの完全性（Phase 4時点で実装済みの全機能を網羅）
+
+**Phase 5: 公式Webサイト・管理画面（2025年10月〜12月）**
+
+#### 5.1: 公式Webサイト LP実装（完了 - 2025年10月19日）
+
+**達成事項**:
+- ✅ Next.js 14プロジェクトセットアップ（TypeScript + Tailwind CSS + shadcn/ui）
+- ✅ ランディングページ実装（6セクション）
+  - Hero Section（SavvyBotキャラクター画像配置）
+  - Features Section（4つの主要機能）
+  - How to Use Section（3ステップガイド）
+  - Pricing Section（3プラン: 個人/チーム/ビジネス）
+  - CTA Section（行動喚起）
+  - Footer（ナビゲーションリンク）
+- ✅ SEO最適化（メタデータ、OpenGraph）
+- ✅ レスポンシブデザイン（モバイルファースト）
+- ✅ ダークモード対応
+
+**技術スタック**:
+- Next.js 15.5.6 (App Router)
+- TypeScript 5
+- Tailwind CSS 4
+- shadcn/ui (Button, Card, Badge)
+- Vercelデプロイ準備完了
+
+**デプロイURL**: http://localhost:3000 (開発サーバー起動中)
+
+**詳細記録**: メモリ `phase5_1_website_lp_completion`
+
+#### 5.2: Authentication & Database（完了 - 2025年10月24日）
+
+**達成事項**:
+- ✅ Supabase Auth 統合（email/password認証）
+- ✅ データベーススキーマ実装（8テーブル + RLS policies）
+- ✅ 認証フロー（login/signup/callback）
+- ✅ ミドルウェアによるルート保護
+- ✅ セッション管理
+
+**実装内容**:
+
+1. **認証システム**:
+   - `lib/supabase/client.ts`: クライアントサイドSupabaseクライアント
+   - `lib/supabase/server.ts`: サーバーサイドSupabaseクライアント
+   - `middleware.ts`: ルート保護とリダイレクト
+   - `app/auth/callback/route.ts`: OAuth callbackハンドラー
+   - `app/(auth)/login/page.tsx`: ログインページ
+   - `app/(auth)/signup/page.tsx`: サインアップページ
+
+2. **データベーススキーマ** (`supabase/migrations/20251024000000_initial_schema.sql`):
+   - `profiles`: ユーザープロフィール
+   - `user_groups`: ユーザー-グループ関連（role: owner/admin/member）
+   - `group_settings`: グループ設定（mode, auto_features）
+   - `conversations`: 会話履歴（90日TTL）
+   - `decisions`: 決定事項
+   - `todos`: タスク管理
+   - `questions`: 質問追跡
+   - `usage_logs`: API使用量（365日TTL）
+
+3. **Row Level Security (RLS) Policies**:
+   - ユーザー別データ分離
+   - グループベースのアクセス制御
+   - ロールベースの権限管理
+
+**技術的成果**:
+- マイグレーションベースのスキーマ管理
+- セキュアな認証フロー（cookie-based sessions）
+- マルチテナント対応のデータ分離
+
+**詳細記録**: メモリ `session_2025_10_24_phase5_2_docs_completion`
+
+#### 5.3: Dashboard Implementation（完了 - 2025年10月24-25日）
+
+**Phase 5.3.1: Landing Page（完了 - 2025年10月24日）**
+
+**達成事項**:
+- ✅ ランディングページ実装（Hero, Features, CTA）
+- ✅ Footerコンポーネント
+- ✅ ドキュメントページ（Quick Start, Commands, FAQ）
+
+**Phase 5.3.2: Dashboard Layout（完了 - 2025年10月24日）**
+
+**達成事項**:
+- ✅ ダッシュボードレイアウト（Sidebar + Header）
+- ✅ ナビゲーションメニュー
+- ✅ ユーザープロフィールドロップダウン
+- ✅ サインアウト機能
+- ✅ レスポンシブデザイン
+
+**実装内容**:
+- `app/(dashboard)/layout.tsx`: ダッシュボードシェル
+- `components/dashboard/sidebar.tsx`: サイドバーナビゲーション
+- `components/dashboard/header.tsx`: ヘッダーとユーザーメニュー
+
+**Phase 5.3.3: Dashboard Home（完了 - 2025年10月24日）**
+
+**達成事項**:
+- ✅ 概要統計表示（グループ数、会話数、トークン、コスト）
+- ✅ アクティビティフィード
+- ✅ クイックアクションカード
+- ✅ ウェルカムメッセージ
+
+**実装内容**:
+- `app/(dashboard)/dashboard/page.tsx`: ダッシュボードホーム
+- データベースからの統計集計
+- サーバーコンポーネントによる効率的なデータフェッチ
+
+**Phase 5.3.4: Usage Dashboard（完了 - 2025年10月25日）**
+
+**達成事項**:
+- ✅ 期間フィルター（7/30/90日）
+- ✅ トークン使用量バーチャート（Recharts）
+- ✅ コストトレンドラインチャート
+- ✅ グループ別統計テーブル
+- ✅ データ集計とゼロ埋め処理
+
+**実装内容**:
+- `app/(dashboard)/dashboard/usage/page.tsx`: 使用量ページ
+- `components/dashboard/usage-charts.tsx`: Rechartsグラフ
+- `components/dashboard/period-filter.tsx`: 期間選択
+- `components/dashboard/group-stats-table.tsx`: 統計テーブル
+- `components/ui/table.tsx`: shadcn/ui Table component
+
+**技術的成果**:
+- 複雑なデータ集計ロジック
+- Recharts TypeScript型定義の解決
+- カスタムツールチップ実装
+- 日付連続性の確保（ゼロ埋め）
+
+**Phase 5.3.5: Group Management UI（完了 - 2025年10月25日）**
+
+**達成事項**:
+- ✅ グループ一覧ページ（カード表示）
+- ✅ グループ詳細ページ（統計 + 設定）
+- ✅ 設定エディター（権限ベース）
+- ✅ モード選択（personal/group）
+- ✅ 自動機能トグル（4種類）
+
+**実装内容**:
+- `app/(dashboard)/dashboard/groups/page.tsx`: グループ一覧
+- `app/(dashboard)/dashboard/groups/[groupId]/page.tsx`: グループ詳細
+- `components/dashboard/group-settings-editor.tsx`: 設定エディター
+- `components/ui/badge.tsx`: shadcn/ui Badge component
+- `components/ui/switch.tsx`: shadcn/ui Switch component
+- `components/ui/label.tsx`: shadcn/ui Label component
+
+**技術的成果**:
+- 権限システム実装（owner/admin/member）
+- 楽観的UI更新
+- フォームバリデーション
+- ESLint警告の完全解消
+
+**Phase 5.3.6: Settings Page（完了 - 2025年10月25日）**
+
+**達成事項**:
+- ✅ ユーザープロフィール設定
+- ✅ LINE連携状態表示
+- ✅ 通知設定（メール通知トグル）
+- ✅ アカウント管理（パスワード変更、アカウント削除）
+
+**実装内容**:
+- `app/(dashboard)/dashboard/settings/page.tsx`: 設定ページ
+- `components/dashboard/user-profile-settings.tsx`: プロフィール設定
+- `components/dashboard/line-connection-status.tsx`: LINE連携状態
+- `components/dashboard/notification-settings.tsx`: 通知設定
+- `components/dashboard/account-management.tsx`: アカウント管理
+
+**技術的成果**:
+- 2段階確認フロー（アカウント削除）
+- パスワード変更（Supabase Auth Admin API）
+- リアルタイムDB更新
+- セキュリティ警告とバリデーション
+
+**Phase 5.3.7: Final Testing & Integration（完了 - 2025年10月25日）**
+
+**達成事項**:
+- ✅ 全20ルートの動作確認
+- ✅ 全10ダッシュボードコンポーネントの検証
+- ✅ ナビゲーションフローの確認
+- ✅ プロダクションビルド成功（1.5秒）
+- ✅ TypeScript型チェック完了（0エラー）
+- ✅ ESLint検証完了（0エラー in dashboard code）
+
+**ビルド統計**:
+```
+✓ Compiled successfully in 1464ms
+✓ All 20 routes generated
+✓ 0 TypeScript errors
+✓ 0 ESLint errors (dashboard)
+
+Total Bundle Size: 102 kB (shared)
+Largest Page: /dashboard/usage (105 kB - Recharts)
+All Other Pages: < 6 kB each
+```
+
+**完了した機能**:
+
+1. **認証・認可**:
+   - Email/passwordサインアップ・ログイン
+   - セッション管理
+   - ルート保護
+   - ロールベース権限制御
+
+2. **ダッシュボード機能**:
+   - 概要統計（グループ数、会話数、トークン、コスト）
+   - 使用量グラフ（期間フィルター、トークン/コストチャート）
+   - グループ管理（一覧、詳細、設定エディター）
+   - 設定ページ（プロフィール、LINE連携、通知、アカウント管理）
+
+3. **データベース統合**:
+   - 8テーブル + RLS policies
+   - インデックス最適化
+   - 集計ビュー（daily_usage_summary, group_usage_summary）
+   - TTL実装（90日 for 会話、365日 for 使用量）
+
+4. **UI/UX**:
+   - レスポンシブデザイン
+   - ローディング状態
+   - エラーハンドリング
+   - 成功フィードバック
+   - アクセシブルフォーム
+   - 一貫したデザインシステム
+
+**技術スタック**:
+- Next.js 15.5.6 (App Router)
+- TypeScript 5
+- Tailwind CSS 4
+- shadcn/ui（Button, Card, Badge, Switch, Label, Table, Dropdown Menu）
+- Recharts（データ可視化）
+- Supabase（Auth, Database, RLS）
+
+**パフォーマンス**:
+- ビルド時間: 1.5秒
+- バンドルサイズ: 最適化済み
+- 静的ページ生成: 100%成功
+- TypeScript型安全性: 100%
+
+**詳細記録**: メモリ `phase_5_admin_dashboard_completion_report`
+
+**Phase 6: UX改善（完了 - 2025年11月2日）**
+- [x] ユーザー名表示と暗黙的自己割り当て（Phase 6.1）
+- [x] 期限表示改善とキーワード検出（Phase 6.2）
+- [x] インタラクティブTODO管理（Phase 6.3.1）
+- [x] メニューシステム + 日本語エイリアス（Phase 6.3.1追加）
+- [x] LINE Quick Reply Buttons（Phase 6.3.2）
+- [x] TODO Done/Undone/Delete Commands（Phase 6.4）
+- [x] TODO Edit Feature（Phase 6.5） **← NEW 2025/11/02完了**
+
+**Phase 7: 収益化とリリース（2025年11月〜12月予定）**
+- [ ] Stripe サブスクリプション統合
+- [ ] 請求管理システム
+- [ ] クローズドベータテスト（5-10チーム）
+- [ ] フィードバック収集と改善
+- [ ] 正式リリース（年内目標）
+
+**長期展望（2026年以降）**
+- [ ] ナレッジベース機能（過去の決定事項・議事録の検索）
+- [ ] 多言語対応
+- [ ] エンタープライズ向け機能（SSO、監査ログ）
+- [ ] 音声会議の自動文字起こし＆議事録生成
+- [ ] Slack/Teams 連携
+
+## 関連リンク
+
+- **GitHub リポジトリ**: [github.com/your-username/savvybot](https://github.com/your-username/savvybot)
+- **技術ブログ**: [あなたのブログ URL]
+- **デモ動画**: [YouTube / Loom URL]
+- **LINE Bot**: [QR コード or URL]
+
+---
+
+**開発期間**: 2025年10月 〜 継続中
+**現在フェーズ**: Phase 6 完了（UX改善・インタラクティブTODO管理）、Phase 7準備中（収益化・Stripe統合）
+**最終更新**: 2025年11月2日
+**役割**: フルスタック開発 / プロダクトオーナー / アーキテクト
+**技術スタック**:
+- バックエンド: TypeScript, Deno, Supabase Edge Functions, PostgreSQL
+- フロントエンド: Next.js 15, React, TypeScript, Tailwind CSS, shadcn/ui
+- API統合: LINE Messaging API, OpenAI API (Function Calling), Tavily API
+- DevOps: GitHub Actions, Supabase CLI, Vercel (予定)
+
+**プロジェクトステータス**:
+- ✅ Phase 1-2 完了（基本インフラ構築、セキュリティ強化）
+- ✅ Phase 3 完了（グループチャット特化機能、Dual-mode実装、OpenAI Function Calling統合）
+- ✅ Phase 4 完了（Usage tracking、高度なコマンド、メンション機能）
+- ✅ Phase 5 完了（公式Webサイト、認証システム、管理ダッシュボード）- 2025年10月24-25日
+- ✅ Phase 6 完了（UX改善、インタラクティブTODO管理、LINE Quick Reply Buttons、TODO編集機能）- 2025年11月2日
+- 📅 Phase 7 計画中（Stripe統合、収益化、ベータテスト、年内リリース目標）
+
+**主要機能（Phase 6完了時点 - 2025年11月2日）**:
+
+**LINEボット機能**:
+- 💬 デュアルモード（Personal/Group）
+- 📝 議事録自動生成（構造化フォーマット）
+- 🔍 キーワード検索（期間フィルタ対応）
+- ✅ 決定事項・TODO・質問の自動抽出
+- 🌐 Web検索統合（Tavily API、最新情報取得）
+- 📊 使用量トラッキング（コスト管理）
+- 💬 メンション機能（@bot で会話可能）
+- 🎯 豊富なコマンド体系（/sv:* プレフィックス、日本語エイリアス対応）
+- 📋 メニューシステム（/sv:menu、番号ショートカット 1-9）
+- 👤 ユーザー名表示（LINEプロファイル統合、24時間キャッシュ）
+- 🎨 LINE Quick Reply Buttons（タップ操作でコマンド実行）
+- ✏️ インタラクティブTODO管理（完了/未完了/削除/編集コマンド）
+  - `/sv:done`, `/sv:undone`, `/sv:delete`, `/sv:edit`
+  - 3ステップ対話型UI（一覧 → 選択 → 実行）
+  - Quick Reply選択（最大13個）
+  - 複数フィールド編集（task/deadline/assignee）
+- ⏰ 期限表示改善（期日未定表示、緊急度キーワード検出）
+- 🧠 暗黙的自己割り当て（「私がやる」→発言者に自動割り当て）
+
+**管理ダッシュボード（NEW - Phase 5）**:
+- 🔐 認証システム（Supabase Auth）
+- 📊 使用量ダッシュボード（グラフ・統計表示）
+- 👥 グループ管理（一覧・詳細・設定）
+- ⚙️ 設定ページ（プロフィール・通知・アカウント管理）
+- 📈 データ可視化（Recharts統合）
+- 🎨 レスポンシブUI（shadcn/ui）
+- 🔒 ロールベース権限制御（owner/admin/member）
+- 🗄️ Supabase Database統合（8テーブル + RLS）
