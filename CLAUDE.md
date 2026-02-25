@@ -4,97 +4,39 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## プロジェクト概要
 
-Natsukiの個人ポートフォリオサイト（Next.js 15.5.4 App Router）：
+Natsukiの個人ポートフォリオサイト（Next.js 14 App Router）：
 - ポートフォリオページ（About、Projects、Blog、Contact）
 - MDXファイルベースのブログ・プロジェクト管理
 - EmailJS統合のお問合せフォーム（多層スパム対策、稼働中）
-- ダーク/ライトテーマ対応（next-themes、React 19対応済み）
-- トップに戻るボタン（ScrollToTop）実装済み
-- モバイルファーストレスポンシブデザイン（2025-10-11最適化完了）
+- ダーク/ライトテーマ対応（next-themes）
+- Three.jsハートビートアニメーション（@react-three/fiber）
+- モバイルファーストレスポンシブデザイン
 
 ## 開発コマンド
 
 ```bash
-# 開発サーバー起動（http://localhost:3000）
-npm run dev
-
-# 本番ビルド
-npm run build
-
-# 本番サーバー起動
-npm start
-
-# リント実行
-npm run lint
+npm run dev      # 開発サーバー起動（http://localhost:3000）
+npm run build    # 本番ビルド
+npm start        # 本番サーバー起動
+npm run lint     # リント実行
 ```
 
-## アーキテクチャ
+## 技術スタック
 
-### 技術スタック
-- **フレームワーク**: Next.js 15.5.4（App Router、React 19、Server Components）
-- **言語**: TypeScript（strict mode）
-- **スタイリング**: Tailwind CSS + shadcn/ui（Radix UI v1.2+、React 19対応）
+- **フレームワーク**: Next.js 14.2.11（App Router、Server Components）
+- **React**: 18.2.0
+- **言語**: TypeScript 5.x（strict mode）
+- **スタイリング**: Tailwind CSS 3.4 + shadcn/ui（Radix UI）
+- **3D**: @react-three/fiber 8.15.19 + three 0.160.0 + @react-three/drei 9.105.6
 - **コンテンツ管理**: MDXファイルシステム（`content/blog/`, `content/projects/`）
 - **フォーム**: EmailJS（スパム対策：ハニーポット、日本語必須、レート制限）
 - **テーマ**: next-themes（ダーク/ライトモード、suppressHydrationWarning設定済み）
 - **Markdown**: react-markdown + rehype/remark（シンタックスハイライト、KaTeX数式）
 
-### Next.js 15対応の重要な変更
-- **params型**: Next.js 15では`params`が`Promise`型になりました
-- **使用方法**: `generateMetadata`, page componentで`await params`を使用
-- **例**: `const { slug } = await params`
+> **注意**: Next.js 14 + React 18の組み合わせは@react-three/fiber互換性のため。
+> React 19へのアップグレードにはNext.js 15が必要。詳細は`claudedocs/NEXTJS14_DOWNGRADE_FIX.md`を参照。
 
-### 重要なアーキテクチャパターン
-
-#### 1. コンテンツ管理システム
-- **ブログ**: `lib/mdx.ts`でMDXファイルをパース、静的生成
-- **プロジェクト**: `lib/projects.ts`でプロジェクトMDXを管理
-- **静的生成**: `generateStaticParams()`でビルド時プリレンダリング
-- **動的パラメータ**: `dynamicParams = false`で未定義パスを404に
-
-```typescript
-// content/blog/[slug].mdx のフロントマター形式
----
-title: "記事タイトル"
-date: "2025-01-15"
-slug: "post-slug"
-excerpt: "記事の要約"
----
-```
-
-#### 2. セキュリティ実装
-- **CSP設定**: `next.config.mjs`で厳格なContent Security Policy
-- **スパム対策**: `lib/spam-protection.ts`の多層防御
-  - ハニーポットフィールド（ボット検出）
-  - 日本語必須チェック（ローカライズ防御）
-  - URL・スパムキーワード検出
-  - レート制限（localStorage、1分クールダウン）
-  - 入力サニタイゼーション
-- **セキュリティヘッダー**: HSTS, X-Frame-Options, CSP, etc.
-
-#### 3. デザインシステム
-- **Design Tokens**: `tailwind.config.ts`でブランドカラー（indigo）定義
-- **コンテナ幅**: `max-w-4xl`（Blog、About、Projects）、`max-w-2xl`（Contact form）
-- **スペーシング**: `pt-20`（ヘッダー下の統一余白）、`px-4`（モバイル左右余白）
-- **レスポンシブタイポグラフィ**: モバイルファースト（例：`text-2xl md:text-4xl`）
-- **セマンティックHTML**: `<main>`, `<article>`, `<section>`の適切な使用
-- **アクセシビリティ**: フォーカスリング、見出し階層、ARIAラベル
-
-**モバイル最適化のガイドライン**:
-- 見出し（H1）: `text-2xl md:text-4xl`または`text-2xl md:text-5xl`
-- 本文: `text-sm md:text-base`または`text-sm md:text-lg`
-- メタ情報: `text-xs md:text-sm`
-- パディング: `p-4 md:p-6`
-- ギャップ: `gap-1.5 md:gap-2`（小）、`gap-4 md:gap-8`（大）
-- リストインデント: `pl-2 md:pl-4`（左余白を節約）
-
-#### 4. パフォーマンス最適化
-- **静的生成**: ブログ・プロジェクトページは全て静的生成
-- **Server Components**: デフォルトでサーバーコンポーネント使用
-- **Client Components**: `'use client'`は必要な場合のみ（フォーム、テーマ切替）
-- **画像最適化**: `next.config.mjs`でAVIF/WebP形式対応
-
-### ディレクトリ構造と役割
+## ディレクトリ構造
 
 ```
 app/
@@ -104,8 +46,8 @@ app/
 │   ├── mobile-nav.tsx         # モバイルナビゲーション（Sheet）
 │   └── footer.tsx             # フッター
 ├── page.tsx                   # トップページ
-├── about/page.tsx             # Aboutページ（プロポーザルC実装）
-├── blog/page.tsx              # ブログ一覧（ja-JP日付、h1/h2階層）
+├── about/page.tsx             # Aboutページ
+├── blog/page.tsx              # ブログ一覧
 ├── articles/[slug]/page.tsx   # ブログ記事詳細（MDX）
 ├── projects/page.tsx          # プロジェクト一覧
 ├── projects/[slug]/page.tsx   # プロジェクト詳細（MDX）
@@ -114,9 +56,6 @@ app/
 
 components/
 ├── ui/                        # shadcn/ui再利用コンポーネント
-│   ├── button.tsx
-│   ├── sheet.tsx
-│   └── ...
 └── scroll-to-top.tsx          # トップに戻るボタン（Client Component）
 
 lib/
@@ -128,57 +67,45 @@ lib/
 
 content/
 ├── blog/                      # MDXブログ記事
-│   ├── hello-world.mdx
-│   └── next-js-tips.mdx
 └── projects/                  # MDXプロジェクト記事
-    ├── hanaseisakusyo-rebuild.mdx
-    └── savvybot.mdx
 
 types/
 └── project.ts                 # Project型定義
-
-claudedocs/                               # プロジェクトドキュメント
-├── CODE_ANALYSIS_REPORT.md               # コード品質分析レポート
-├── RENEWAL_PLAN.md                       # リニューアル計画
-├── ABOUT_PAGE_PROPOSAL.md                # Aboutページ設計提案
-├── BLOG_POSTING_GUIDE.md                 # MDXブログ記事作成ガイド
-├── CONTACT_PAGE_IMPLEMENTATION.md        # お問合せページ実装記録
-├── CONTACT_SETUP_GUIDE.md                # EmailJS設定とスパム対策セットアップ
-├── HANASEISAKUSYO_INTERVIEW.md           # 花製作所プロジェクトインタビュー記録
-└── HANASEISAKUSYO_UPDATE_LOG.md          # 花製作所記事更新履歴
 ```
 
-### 必要な環境変数
+## アーキテクチャパターン
 
-```bash
-# EmailJS設定（お問合せフォーム用）
-NEXT_PUBLIC_EMAILJS_SERVICE_ID=service_xxx
-NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=template_xxx
-NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=xxx
-NEXT_PUBLIC_CONTACT_EMAIL=your-email@domain.com
+### コンテンツ管理システム
+- `lib/mdx.ts`でMDXファイルをパース、静的生成
+- `lib/projects.ts`でプロジェクトMDXを管理
+- `generateStaticParams()`でビルド時プリレンダリング
+- `dynamicParams = false`で未定義パスを404に
 
-# Google Analytics（オプション）
-NEXT_PUBLIC_GA_ID=G-...
+```typescript
+// content/blog/[slug].mdx のフロントマター形式
+---
+title: "記事タイトル"
+date: "2025-01-15"
+slug: "post-slug"
+excerpt: "記事の要約"
+---
 ```
 
-## コードパターン
-
-### React Server Components vs Client Components
+### Server Components vs Client Components
 - **デフォルト**: Server Components（`app/`配下）
 - **Client Components**: `'use client'`ディレクティブが必要
   - フォーム（`contact/page.tsx`）
   - テーマ切替（`mode-toggle.tsx`）
-  - useChat、useState等のReact Hooks使用時
+  - Three.jsコンポーネント（`{ ssr: false }`でdynamic import必須）
+  - useState等のReact Hooks使用時
 
-### スタイリングパターン
+### スタイリング
 - **Tailwind CSS**: ユーティリティクラス優先
 - **cn()関数**: `lib/utils.ts`でクラスマージ（`clsx` + `tailwind-merge`）
 - **shadcn/ui**: `components/ui/`のコンポーネント使用
-- **Design Tokens**: `tailwind.config.ts`で定義された変数使用
 
 ```typescript
 import { cn } from '@/lib/utils'
-
 <div className={cn("base-class", conditionalClass && "extra-class")} />
 ```
 
@@ -199,87 +126,26 @@ export function getPostBySlug(slug: string): BlogPost | null
 export function getAllSlugs(): string[]
 ```
 
-### スパム対策の実装パターン
-```typescript
-// lib/spam-protection.ts
-const spamCheck = calculateSpamScore({
-  name: formData.name,
-  email: formData.email,
-  message: formData.message,
-  honeypot: formData.honeypot
-})
+### ReactMarkdownカスタマイズ
+プロジェクト詳細ページ（`app/projects/[slug]/page.tsx`）でのカスタマイズ：
+- `h2`: サブタイトル自動スタイリング（「―」で分割）
+- `strong`: 太字の明示的スタイリング
+- `ul`/`li`: リスト記号の非表示化（`list-none`）
+- `img`: Next.js Imageコンポーネント使用
 
-if (spamCheck.isSpam) {
-  // スパム検出時の処理
-}
-```
-
-### ReactMarkdownカスタマイズパターン
-プロジェクト詳細ページ（`app/projects/[slug]/page.tsx`）では、ReactMarkdownのコンポーネントをカスタマイズしています：
-
-```typescript
-<ReactMarkdown
-  remarkPlugins={[remarkGfm, remarkMath]}
-  rehypePlugins={[rehypeRaw, rehypeKatex, rehypeHighlight]}
-  components={{
-    // サブタイトル自動スタイリング（「―」で分割）
-    h2: ({ node, children, ...props }) => {
-      const text = children?.toString() || ''
-      if (text.includes('―')) {
-        const [main, sub] = text.split('―')
-        return (
-          <h2 {...props}>
-            <span>{main}</span>
-            <br />
-            <span className="text-base md:text-lg font-normal text-muted-foreground">
-              {sub}
-            </span>
-          </h2>
-        )
-      }
-      return <h2 {...props}>{children}</h2>
-    },
-    // 太字強調の明示的スタイリング
-    strong: ({ children }) => (
-      <strong className="font-bold text-foreground">
-        {children}
-      </strong>
-    ),
-    // リスト記号の非表示化
-    ul: ({ children }) => (
-      <ul className="list-none space-y-2">
-        {children}
-      </ul>
-    ),
-    li: ({ children }) => (
-      <li className="leading-relaxed">
-        {children}
-      </li>
-    ),
-    // Next.js Imageコンポーネントの使用
-    img: ({ node, ...props }) => {
-      const src = props.src || ''
-      const alt = props.alt || ''
-      return (
-        <Image
-          src={src}
-          alt={alt}
-          width={1200}
-          height={900}
-          className={props.className}
-          style={{ width: '100%', height: 'auto' }}
-        />
-      )
-    }
-  }}
->
-  {project.content}
-</ReactMarkdown>
-```
+### セキュリティ
+- **CSP設定**: `next.config.mjs`で厳格なContent Security Policy
+- **スパム対策**: `lib/spam-protection.ts`の多層防御
+  - ハニーポットフィールド（ボット検出）
+  - 日本語必須チェック（ローカライズ防御）
+  - URL・スパムキーワード検出
+  - レート制限（localStorage、1分クールダウン）
+  - 入力サニタイゼーション
+- **セキュリティヘッダー**: HSTS, X-Frame-Options, CSP, etc.
 
 ## 重要な制約と規約
 
-### 日付フォーマット統一
+### 日付フォーマット
 - **ロケール**: `ja-JP`（日本語表示）
 - **タイムゾーン**: `Asia/Tokyo`
 - **フォーマット**: `year: 'numeric', month: 'short', day: 'numeric'`
@@ -294,6 +160,14 @@ if (spamCheck.isSpam) {
 - **モバイル左右余白**: `px-4`（必須）
 - **セマンティックHTML**: `<main>`要素必須
 
+### モバイル最適化ガイドライン
+- 見出し（H1）: `text-2xl md:text-4xl`または`text-2xl md:text-5xl`
+- 本文: `text-sm md:text-base`または`text-sm md:text-lg`
+- メタ情報: `text-xs md:text-sm`
+- パディング: `p-4 md:p-6`
+- ギャップ: `gap-1.5 md:gap-2`（小）、`gap-4 md:gap-8`（大）
+- リストインデント: `pl-2 md:pl-4`（左余白を節約）
+
 ### MDX記事作成規則
 - **ファイル名**: `[slug].mdx`（slugとファイル名を一致）
 - **必須フロントマター**: `title`, `date`, `slug`, `excerpt`
@@ -304,249 +178,41 @@ if (spamCheck.isSpam) {
 - **サブタイトル記法**: 「―」でメインとサブを分離（例：`## はじめに ― 安心して使えるECへ`）
 - **強調記法**: `**テキスト**`で太字強調（自動的に`<strong>`タグに変換）
 
-**CommonMark仕様の重要な注意点**:
-- `**` の直前・直後に空白を入れない（❌ `** テキスト**`、✅ `**テキスト**`）
-- 強調記号の内側で改行しない（❌ `**テキスト`（改行）`続き**`）
-- blockquote記号 `>` の後には空白が必要（❌ `>**テキスト**`、✅ `> **テキスト**`）
-- 全角スペースやゼロ幅スペース（`\u200b`）は強調を壊す原因になる
+**CommonMark仕様の注意点**:
+- `**` の直前・直後に空白を入れない
+- 強調記号の内側で改行しない
+- blockquote記号 `>` の後には空白が必要
+- 全角スペースやゼロ幅スペースは強調を壊す原因になる
 
 ### Git Workflow
 - **ブランチ**: `main`ブランチで開発
 - **コミットメッセージ**: 日本語、詳細な変更内容記載
 - **コミット署名**: `Co-Authored-By: Claude <noreply@anthropic.com>`
 
+### 必要な環境変数
+
+```bash
+# EmailJS設定（お問合せフォーム用）
+NEXT_PUBLIC_EMAILJS_SERVICE_ID=service_xxx
+NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=template_xxx
+NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=xxx
+NEXT_PUBLIC_CONTACT_EMAIL=your-email@domain.com
+
+# Google Analytics（オプション）
+NEXT_PUBLIC_GA_ID=G-...
+```
+
 ## ドキュメント参照
 
 プロジェクト固有のドキュメント（`claudedocs/`ディレクトリ）：
-- `CODE_ANALYSIS_REPORT.md` - コード品質分析レポート（総合評価85/100）
-- `RENEWAL_PLAN.md` - サイトリニューアル計画（Phase 0-5）
+- `CODE_ANALYSIS_REPORT.md` - コード品質分析レポート
+- `RENEWAL_PLAN.md` - サイトリニューアル計画
 - `ABOUT_PAGE_PROPOSAL.md` - Aboutページ設計提案
-- `BLOG_POSTING_GUIDE.md` - MDXブログ記事作成ガイド
-- `CONTACT_PAGE_IMPLEMENTATION.md` - お問合せページ実装記録（EmailJS統合、スパム対策）
-- `CONTACT_SETUP_GUIDE.md` - EmailJS設定とスパム対策セットアップガイド
-- `HANASEISAKUSYO_INTERVIEW.md` - 花製作所プロジェクトインタビュー記録（2025-10-09完了）
+- `CONTACT_PAGE_IMPLEMENTATION.md` - お問合せページ実装記録
+- `CONTACT_SETUP_GUIDE.md` - EmailJS設定とスパム対策セットアップ
+- `HANASEISAKUSYO_INTERVIEW.md` - 花製作所プロジェクトインタビュー記録
 - `HANASEISAKUSYO_UPDATE_LOG.md` - 花製作所記事更新履歴
-- `NEXTJS14_DOWNGRADE_FIX.md` - Next.js 14ダウングレード修正記録（@react-three/fiber互換性）
+- `HERO_RENOVATION_WORKFLOW.md` - Heroセクションリニューアルワークフロー
+- `NEXTJS14_DOWNGRADE_FIX.md` - Next.js 14ダウングレード修正記録
 - `security/` - セキュリティ関連ドキュメント（脆弱性分析・修正プラン）
-
----
-
-## 📅 最新の開発進捗
-
-### 2025-10-27: Next.js 14.2.11ダウングレード - @react-three/fiber互換性修正
-
-**問題概要**:
-- Next.js 15.5.6とReact 18.2.0の組み合わせで、@react-three/fiberがランタイムエラーを引き起こしていました
-- ブラウザコンソールエラー: `Cannot read properties of undefined (reading 'ReactCurrentBatchConfig')`
-- Three.jsハートビートアニメーションが動作せず
-
-**実装内容**:
-1. **Next.js 14スタックへのダウングレード**
-   - Next.js: 15.5.4 → 14.2.11
-   - @react-three/fiber: 9.4.0 → 8.15.19
-   - @react-three/drei: 9.105.6（新規追加）
-   - React: ^18 → 18.2.0（exact version）
-   - Three.js: ^0.180.0 → 0.160.0
-
-2. **クリーン再インストール**
-   - `node_modules/`, `package-lock.json`, `.next/` 削除
-   - `npm install` 実行
-   - React単一インスタンス確認（`npm ls react` で全てdeduped）
-
-3. **ビルドとデプロイ成功**
-   - ローカルビルド成功（24ページコンパイル）
-   - Vercelデプロイ成功
-   - Three.jsアニメーション正常動作確認
-
-**技術的知見**:
-- Next.js 15とReact 18の組み合わせでは@react-three/fiberが動作しない
-- React 19が必要な場合はNext.js 15、React 18の場合はNext.js 14が安定
-- Three.jsコンポーネントは必ず`{ ssr: false }`でdynamic import必須
-- `npm ls react`でReactインスタンスのdedup確認が重要
-
-**ドキュメント作成**:
-- `claudedocs/NEXTJS14_DOWNGRADE_FIX.md` - 詳細な修正記録とトラブルシューティングガイド
-
-**コミット情報**:
-- コミットハッシュ: `8b8bee4`
-- メッセージ: "fix: Next.js 14.2.11へダウングレード - @react-three/fiber互換性問題を解決"
-
----
-
-### 2025-10-12: npm依存関係脆弱性分析完了
-
-**実装内容**:
-1. **脆弱性詳細分析**
-   - 検出: 3件の moderate severity 脆弱性（すべてprismjs関連）
-   - 影響範囲: react-syntax-highlighter → refractor → prismjs（間接依存）
-   - 脆弱性ID: GHSA-x7hr-w5r2-h6wg（PrismJS DOM Clobbering）
-
-2. **リスク評価**
-   - **実際のリスク**: 低（MDX静的コンテンツのためユーザー入力を処理しない）
-   - **攻撃面**: 限定的（信頼できるソースのみ）
-   - **影響**: 本プロジェクトでは実質的な影響なし
-
-3. **修正プラン策定**
-   - **推奨アプローチ**: package.json に overrides を追加してprismjs@1.30.0を固定
-   - **非推奨**: `npm audit fix --force`（破壊的ダウングレードが発生）
-   - **作業時間**: 約15分（破壊的変更なし）
-
-**ドキュメント作成**:
-- `claudedocs/security/README.md` - セキュリティ分析サマリー
-- `claudedocs/security/VULNERABILITY_FIX_PLAN.md` - 詳細な脆弱性分析と修正プラン
-- `claudedocs/security/FIX_COMMANDS.md` - 実行コマンドとチェックリスト
-- `claudedocs/security/package-json-fix.diff` - 具体的な修正差分
-- `claudedocs/security/npm-audit-output.txt` - 元の監査結果
-
-**技術的知見**:
-- 直接依存 vs 間接依存の切り分けが重要
-- overridesによる依存関係固定の有効性
-- コンテキストに応じたリスク評価の重要性
-
----
-
-### 2025-10-12: トップページHeroセクションリニューアル
-
-**実装内容**:
-1. **shadcn/uiコンポーネント導入**
-   - Badgeで役割表示（製造業、AI開発、Web開発）
-   - ButtonでCTA実装（プロジェクト、ブログへのリンク）
-   - レスポンシブボタン配置（モバイル縦、デスクトップ横）
-
-2. **デザイン改善**
-   - 見出しサイズ拡大: `text-3xl md:text-5xl`
-   - コンテナ幅統一: 全セクション `max-w-5xl`
-   - セクション間パディング統一: `py-8`（モバイル）、`py-12`（デスクトップ）
-   - インデント完全統一（Cardコンポーネント削除）
-
-3. **レイアウト統一ルール確立**
-   - トップページ全セクション: `max-w-5xl`
-   - 例外: Contactフォーム `max-w-2xl`、記事本文 `max-w-4xl`
-   - 左右マージン領域の完全統一
-
-**技術的特徴**:
-- Server Component維持（パフォーマンス最適化）
-- シンプルなHTML構造（Cardなし）
-- モバイルファーストレスポンシブ
-- アクセシビリティ準拠
-
-**修正箇所**:
-- `app/page.tsx` - Heroセクション全面リニューアル
-- `claudedocs/HERO_RENOVATION_WORKFLOW.md` - 実装ワークフロー作成
-
----
-
-### 2025-10-12: MDX太字表示修正 & リストスタイリング改善
-
-**実装内容**:
-1. **CommonMark仕様準拠の太字表示修正**
-   - MDXファイル内の `**` マーカー周辺の空白を削除
-   - blockquote内の `>` の後に空白を追加
-   - 200+箇所の修正をsedコマンドで一括処理
-   - 手動で細かい調整を実施
-
-2. **ReactMarkdownカスタマイズ強化**（`app/projects/[slug]/page.tsx`）
-   - `strong`コンポーネント: 太字の明示的スタイリング
-   - `ul`/`li`コンポーネント: リスト箇条書き記号を非表示化（`list-none`）
-   - `h2`コンポーネント: サブタイトル自動スタイリング（「―」分割）
-   - `img`コンポーネント: Next.js Imageコンポーネントの使用
-
-**技術的知見**:
-- CommonMark仕様では `**` の直前・直後の空白が強調を無効化する
-- ReactMarkdownの`components`プロップで柔軟なMarkdownレンダリングカスタマイズが可能
-- `list-none`でリストマーカーを削除し、クリーンな見た目を実現
-
-**修正箇所**:
-- `content/projects/hanaseisakusyo-rebuild.mdx` - 太字マークアップ修正
-- `app/projects/[slug]/page.tsx` - ReactMarkdownコンポーネントカスタマイズ
-
----
-
-### 2025-10-11（続）: トップページ日本語化 & サブタイトルスタイリング
-
-**実装内容**:
-1. **トップページの日本語ローカライズ**（`app/page.tsx`）
-   - ヒーローセクションを英語から日本語に全面変更
-   - 自動車保安部品・冷間鍛造の本業とAI/Web開発の副業を紹介
-   - 日本語タイポグラフィ最適化: `text-base md:text-lg`、`leading-relaxed`
-   - 見出しサイズ縮小: H1 `text-2xl md:text-3xl`、H2 `text-xl md:text-2xl`
-
-2. **サブタイトル自動スタイリング機能**（`app/projects/[slug]/page.tsx`）
-   - プロジェクトタイトルで「―」区切りを検出、自動分割表示
-   - メインタイトル: 通常サイズ・太字
-   - サブタイトル: 小さめ（`text-lg md:text-2xl`）・細字・ミュート色
-   - MDX見出し（H2）でも同様の自動スタイリング実装
-   - ReactMarkdownの`components`プロップで実現
-
-3. **太字表示の明示的適用**
-   - Prose container に`[&_strong]:font-bold [&_strong]:text-foreground`追加
-   - MDXの`**テキスト**`が確実に太字表示されるよう保証
-
-**技術的特徴**:
-- 条件付きレンダリングでサブタイトルを自動検出・スタイリング
-- Tailwindの任意バリアント（arbitrary variants）活用
-- 日本語コンテンツの視認性向上
-
-**例**:
-```typescript
-// タイトル: "EC-CUBEからNext.js + Supabaseへ ― AIと進める、わが家のECリニューアル記"
-// 自動分割:
-// メイン: "EC-CUBEからNext.js + Supabaseへ"（大きく・太字）
-// サブ: "AIと進める、わが家のECリニューアル記"（小さく・細字・ミュート）
-```
-
----
-
-### 2025-10-11: お問合せページ実装完了 & モバイル最適化
-
-**実装内容**:
-1. **EmailJS統合完了**（`app/contact/page.tsx`）
-   - サービスID、テンプレートID、公開鍵の設定完了
-   - ibron1975@gmail.com宛にメール送信確認済み
-   - 環境変数チェックとエラーハンドリング強化
-
-2. **React 19対応**
-   - Radix UIパッケージを最新版に更新（全コンポーネント）
-   - `suppressHydrationWarning`追加（`app/layout.tsx`）
-   - ハイドレーションエラー解消
-
-3. **モバイルUX最適化**
-   - プロジェクト一覧ページ（`app/projects/page.tsx`）
-     - H1サイズ調整: `text-2xl md:text-4xl`
-     - 全体的なフォントサイズ縮小（モバイル）
-     - カード内の余白とギャップ最適化
-   - プロジェクト詳細ページ（`app/projects/[slug]/page.tsx`）
-     - リストインデント削減: `pl-2 md:pl-4`
-     - 全セクションのレスポンシブ対応
-     - `flex-shrink-0`でアイコン崩れ防止
-   - コンタクトページ（`app/contact/page.tsx`）
-     - 日本語注意書きボックスの幅統一（`max-w-2xl`）
-
-4. **MDX記事修正**
-   - 花製作所記事の見出し修正（H1 → H2）
-   - 「TL;DR」→「プロジェクト概要」に変更
-
-**ドキュメント作成**:
-- `claudedocs/CONTACT_PAGE_IMPLEMENTATION.md` - 実装の詳細記録（371行）
-- EmailJSセットアップ、スパム対策、React 19対応の全手順を記載
-
-**技術的知見**:
-- モバイルファーストレスポンシブの実装パターン確立
-- React 19とRadix UIの互換性対応
-- EmailJS統合のベストプラクティス
-
----
-
-### 2025-10-11（以前）: 花製作所記事完成 & 脆弱性修正
-
-**実装内容**:
-- 花製作所プロジェクト記事完成（`content/projects/hanaseisakusyo-rebuild.mdx`）
-- トップに戻るボタン実装（`components/scroll-to-top.tsx`）
-- Next.js 15.5.4へのアップグレード & 脆弱性修正（12件中9件解決）
-
-**花製作所記事の特徴**:
-- EC-CUBE（Xserverサービス）からNext.js + Supabaseへの移行
-- 会員2,658名、商品4,306点の実データ規模
-- AI協働開発手法の詳述
-- 段階的ロック、リアルタイム在庫同期の技術詳細
-- バランスの取れた共感的トーン
+- `development-log.md` - 詳細な開発ログ（2025-10-11〜10-27の作業記録）
