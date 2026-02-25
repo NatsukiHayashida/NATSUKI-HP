@@ -13,10 +13,10 @@ type Props = {
   minHeightPx?: number
 }
 
-export default function BlogNetworkBanner({
-  title = "Blog",
-  subtitle = "AI、プログラミング、製造業の学びを記録しています。",
-  minHeightPx = 360,
+export default function NetworkBanner({
+  title = "接続ノート",
+  subtitle = "異なる領域の知識を意図的に接続する、日々の気づきのアーカイブ。",
+  minHeightPx = 240,
 }: Props) {
   return (
     <div

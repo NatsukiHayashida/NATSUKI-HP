@@ -5,4 +5,6 @@ export interface ConnectionNote {
   tags: string[]
   connections: string[]
   content: string
+  excerpt?: string
+  readingTime: string
 }

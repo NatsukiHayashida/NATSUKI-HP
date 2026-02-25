@@ -1,7 +1,8 @@
 ---
 title: "Next.js 開発Tips集"
 date: "2025-01-10"
-slug: "next-js-tips"
+tags: ["Next.js", "パフォーマンス", "画像最適化", "動的インポート"]
+connections: ["フレームワーク × 実践知"]
 excerpt: "Next.js開発で役立つTipsをまとめました。パフォーマンス向上からデバッグまで。"
 ---
 
@@ -43,7 +44,7 @@ export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method not allowed' })
   }
-  
+
   try {
     const users = await getUsers()
     res.status(200).json(users)

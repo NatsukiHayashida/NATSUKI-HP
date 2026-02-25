@@ -28,8 +28,8 @@ export default function ProjectsPage() {
             title="No projects yet"
             description="Projects are currently being prepared. Check back soon to see my latest work!"
             action={{
-              label: "View Blog",
-              href: "/blog"
+              label: "接続ノートを読む",
+              href: "/connections"
             }}
           />
         ) : (

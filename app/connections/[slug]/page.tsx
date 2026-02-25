@@ -10,6 +10,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
+import rehypeHighlight from 'rehype-highlight'
 
 type Props = {
   params: Promise<{
@@ -55,7 +58,7 @@ export default async function ConnectionPage({ params }: Props) {
         {/* ヘッダー */}
         <h1 className="text-2xl md:text-3xl font-bold mb-2">{note.title}</h1>
 
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-4">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4">
           {date && (
             <span className="text-sm text-muted-foreground">
               {date.toLocaleDateString('ja-JP', {
@@ -71,6 +74,9 @@ export default async function ConnectionPage({ params }: Props) {
               {note.connections.join(' / ')}
             </span>
           )}
+          <span className="text-xs text-muted-foreground">
+            {note.readingTime}
+          </span>
         </div>
 
         {/* タグ */}
@@ -84,7 +90,25 @@ export default async function ConnectionPage({ params }: Props) {
 
         {/* 本文 */}
         <div className="prose dark:prose-invert max-w-none">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm, remarkMath]}
+            rehypePlugins={[rehypeKatex, rehypeHighlight]}
+            components={{
+              h1: ({ ...props }) => <h1 className="text-2xl font-bold mb-4" {...props} />,
+              h2: ({ ...props }) => <h2 className="text-xl font-semibold mb-3" {...props} />,
+              h3: ({ ...props }) => <h3 className="text-lg font-medium mb-2" {...props} />,
+              p: ({ ...props }) => <p className="mb-4 leading-relaxed" {...props} />,
+              ul: ({ ...props }) => <ul className="list-disc pl-6 mb-4" {...props} />,
+              ol: ({ ...props }) => <ol className="list-decimal pl-6 mb-4" {...props} />,
+              li: ({ ...props }) => <li className="mb-1" {...props} />,
+              code: ({ ...props }) => (
+                <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm" {...props} />
+              ),
+              pre: ({ ...props }) => (
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto my-4" {...props} />
+              ),
+            }}
+          >
             {note.content}
           </ReactMarkdown>
         </div>

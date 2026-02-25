@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { getAllPosts } from '@/lib/mdx'
+import { getAllConnections } from '@/lib/connections'
 import { getAllProjects } from '@/lib/projects'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Mountain, ArrowRight } from 'lucide-react'
 
 export default function Home() {
-  const recentPosts = getAllPosts().slice(0, 3)
+  const recentNotes = getAllConnections().slice(0, 3)
   const recentProjects = getAllProjects().slice(0, 3)
   return (
     <main className="pt-4">
@@ -41,7 +41,7 @@ export default function Home() {
               <Link href="/projects">プロジェクトを見る</Link>
             </Button>
             <Button variant="outline" asChild>
-              <Link href="/blog">ブログを読む</Link>
+              <Link href="/connections">接続ノートを読む</Link>
             </Button>
           </div>
         </div>
@@ -161,23 +161,23 @@ export default function Home() {
         <div className="container max-w-5xl">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl md:text-2xl font-bold">
-              Recent Blog Posts
+              接続ノート
             </h2>
             <Button variant="ghost" asChild>
-              <Link href="/blog" className="gap-2">
+              <Link href="/connections" className="gap-2">
                 View all
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {recentPosts.map((post) => (
-              <Link key={post.slug} href={`/articles/${post.slug}`}>
+            {recentNotes.map((note) => (
+              <Link key={note.slug} href={`/connections/${note.slug}`}>
                 <Card variant="interactive" className="h-full">
                   <CardHeader>
                     <div className="flex items-center gap-2 mb-2 text-sm text-muted-foreground">
                       <time>
-                        {new Date(post.date).toLocaleDateString('ja-JP', {
+                        {new Date(note.date).toLocaleDateString('ja-JP', {
                           year: 'numeric',
                           month: 'short',
                           day: 'numeric',
@@ -185,11 +185,11 @@ export default function Home() {
                         })}
                       </time>
                       <span>•</span>
-                      <span>{post.readingTime}</span>
+                      <span>{note.readingTime}</span>
                     </div>
-                    <CardTitle className="text-xl line-clamp-2">{post.title}</CardTitle>
+                    <CardTitle className="text-xl line-clamp-2">{note.title}</CardTitle>
                     <CardDescription className="line-clamp-2">
-                      {post.excerpt}
+                      {note.connections.join(' / ')}
                     </CardDescription>
                   </CardHeader>
                 </Card>

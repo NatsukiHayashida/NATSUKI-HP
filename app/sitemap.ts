@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { getAllPosts } from '@/lib/mdx'
+import { getAllConnections } from '@/lib/connections'
 import { getAllProjects } from '@/lib/projects'
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -20,7 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/blog`,
+      url: `${baseUrl}/connections`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.9,
@@ -37,18 +37,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     },
-    {
-      url: `${baseUrl}/ai`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    },
   ]
 
-  // ブログ記事
-  const blogPosts = getAllPosts().map((post) => ({
-    url: `${baseUrl}/articles/${post.slug}`,
-    lastModified: new Date(post.date),
+  // 接続ノート
+  const connectionNotes = getAllConnections().map((note) => ({
+    url: `${baseUrl}/connections/${note.slug}`,
+    lastModified: new Date(note.date),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }))
@@ -61,5 +55,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }))
 
-  return [...staticPages, ...blogPosts, ...projects]
+  return [...staticPages, ...connectionNotes, ...projects]
 }

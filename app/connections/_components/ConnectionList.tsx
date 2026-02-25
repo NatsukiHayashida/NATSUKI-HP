@@ -69,10 +69,22 @@ export function ConnectionList({ notes, allTags }: ConnectionListProps) {
                   )}
                 </div>
 
-                {/* 接続軸 */}
-                {note.connections.length > 0 && (
-                  <p className="text-sm text-muted-foreground mt-2">
-                    {note.connections.join(' / ')}
+                {/* 接続軸・読了時間 */}
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
+                  {note.connections.length > 0 && (
+                    <span className="text-sm text-muted-foreground">
+                      {note.connections.join(' / ')}
+                    </span>
+                  )}
+                  <span className="text-xs text-muted-foreground">
+                    {note.readingTime}
+                  </span>
+                </div>
+
+                {/* excerpt */}
+                {note.excerpt && (
+                  <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
+                    {note.excerpt}
                   </p>
                 )}
 

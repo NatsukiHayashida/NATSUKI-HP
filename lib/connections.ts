@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
+import readingTime from 'reading-time'
 import type { ConnectionNote } from '@/types/connection'
 
 const connectionsDirectory = path.join(process.cwd(), 'content/connections')
@@ -26,6 +27,8 @@ export function getAllConnections(): ConnectionNote[] {
         tags: data.tags || [],
         connections: data.connections || [],
         content,
+        excerpt: data.excerpt || undefined,
+        readingTime: readingTime(content).text,
       } as ConnectionNote
     })
 
@@ -45,6 +48,8 @@ export function getConnectionBySlug(slug: string): ConnectionNote | null {
       tags: data.tags || [],
       connections: data.connections || [],
       content,
+      excerpt: data.excerpt || undefined,
+      readingTime: readingTime(content).text,
     } as ConnectionNote
   } catch {
     return null
