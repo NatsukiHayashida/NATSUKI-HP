@@ -5,8 +5,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## プロジェクト概要
 
 Natsukiの個人ポートフォリオサイト（Next.js 14 App Router）：
-- ポートフォリオページ（About、Projects、Blog、Contact）
-- MDXファイルベースのブログ・プロジェクト管理
+- ポートフォリオページ（About、Projects、接続ノート、Contact）
+- MDXファイルベースの接続ノート・プロジェクト管理
 - EmailJS統合のお問合せフォーム（多層スパム対策、稼働中）
 - ダーク/ライトテーマ対応（next-themes）
 - Three.jsハートビートアニメーション（@react-three/fiber）
@@ -28,7 +28,7 @@ npm run lint     # リント実行
 - **言語**: TypeScript 5.x（strict mode）
 - **スタイリング**: Tailwind CSS 3.4 + shadcn/ui（Radix UI）
 - **3D**: @react-three/fiber 8.15.19 + three 0.160.0 + @react-three/drei 9.105.6
-- **コンテンツ管理**: MDXファイルシステム（`content/blog/`, `content/projects/`）
+- **コンテンツ管理**: MDXファイルシステム（`content/connections/`, `content/projects/`）
 - **フォーム**: EmailJS（スパム対策：ハニーポット、日本語必須、レート制限）
 - **テーマ**: next-themes（ダーク/ライトモード、suppressHydrationWarning設定済み）
 - **Markdown**: react-markdown + rehype/remark（シンタックスハイライト、KaTeX数式）
@@ -47,8 +47,8 @@ app/
 │   └── footer.tsx             # フッター
 ├── page.tsx                   # トップページ
 ├── about/page.tsx             # Aboutページ
-├── blog/page.tsx              # ブログ一覧
-├── articles/[slug]/page.tsx   # ブログ記事詳細（MDX）
+├── connections/page.tsx       # 接続ノート一覧（タグ絞り込み、NetworkBanner）
+├── connections/[slug]/page.tsx # 接続ノート詳細（MDX）
 ├── projects/page.tsx          # プロジェクト一覧
 ├── projects/[slug]/page.tsx   # プロジェクト詳細（MDX）
 ├── contact/page.tsx           # お問合せフォーム（EmailJS + スパム対策）
@@ -59,35 +59,37 @@ components/
 └── scroll-to-top.tsx          # トップに戻るボタン（Client Component）
 
 lib/
-├── mdx.ts                     # ブログMDXパース（gray-matter、reading-time）
+├── connections.ts             # 接続ノートMDXパース（gray-matter、reading-time）
 ├── projects.ts                # プロジェクトMDXパース
 ├── spam-protection.ts         # スパム対策ロジック
 ├── utils.ts                   # cn()、日付パース等
 └── navigation.ts              # ナビゲーション定義
 
 content/
-├── blog/                      # MDXブログ記事
+├── connections/               # MDX接続ノート
 └── projects/                  # MDXプロジェクト記事
 
 types/
+├── connection.ts              # ConnectionNote型定義
 └── project.ts                 # Project型定義
 ```
 
 ## アーキテクチャパターン
 
 ### コンテンツ管理システム
-- `lib/mdx.ts`でMDXファイルをパース、静的生成
+- `lib/connections.ts`で接続ノートMDXをパース、静的生成
 - `lib/projects.ts`でプロジェクトMDXを管理
 - `generateStaticParams()`でビルド時プリレンダリング
 - `dynamicParams = false`で未定義パスを404に
 
 ```typescript
-// content/blog/[slug].mdx のフロントマター形式
+// content/connections/[slug].mdx のフロントマター形式
 ---
-title: "記事タイトル"
-date: "2025-01-15"
-slug: "post-slug"
-excerpt: "記事の要約"
+title: "粘りと持続"
+date: "2026-02-26"
+tags: ["DRM1", "森信三", "材料特性", "修身教授録"]
+connections: ["冷間鍛造 × 哲学"]
+excerpt: "オプション。長文記事の場合に要約を記載"
 ---
 ```
 
@@ -111,19 +113,22 @@ import { cn } from '@/lib/utils'
 
 ### 型安全なMDXコンテンツ取得
 ```typescript
-// lib/mdx.ts
-export interface BlogPost {
+// lib/connections.ts
+export interface ConnectionNote {
   slug: string
   title: string
   date: string
-  excerpt: string
+  tags: string[]
+  connections: string[]
   content: string
+  excerpt?: string
   readingTime: string
 }
 
-export function getAllPosts(): BlogPost[]
-export function getPostBySlug(slug: string): BlogPost | null
-export function getAllSlugs(): string[]
+export function getAllConnections(): ConnectionNote[]
+export function getConnectionBySlug(slug: string): ConnectionNote | null
+export function getConnectionSlugs(): string[]
+export function getAllConnectionTags(): string[]
 ```
 
 ### ReactMarkdownカスタマイズ
@@ -153,7 +158,7 @@ export function getAllSlugs(): string[]
 ### レイアウト統一
 - **ヘッダー幅**: `max-w-5xl`
 - **トップページコンテナ幅**: `max-w-5xl`（全セクション統一）
-- **コンテンツ幅**: `max-w-4xl`（Blog、About、Projects詳細ページ）
+- **コンテンツ幅**: `max-w-4xl`（接続ノート、About、Projects詳細ページ）
 - **フォーム幅**: `max-w-2xl`（Contact）
 - **セクションパディング**: `py-8`（モバイル）、一部 `md:py-12`（デスクトップ）
 - **ヘッダー下余白**: `pt-20`（全ページ共通）
@@ -170,9 +175,11 @@ export function getAllSlugs(): string[]
 
 ### MDX記事作成規則
 - **ファイル名**: `[slug].mdx`（slugとファイル名を一致）
-- **必須フロントマター**: `title`, `date`, `slug`, `excerpt`
+- **接続ノート必須フロントマター**: `title`, `date`, `tags`, `connections`
+- **接続ノート任意フロントマター**: `excerpt`（長文記事の場合）
+- **プロジェクト必須フロントマター**: `title`, `date`, `slug`, `excerpt`
 - **日付形式**: `YYYY-MM-DD`（ISO 8601）
-- **配置場所**: `content/blog/`（ブログ）、`content/projects/`（プロジェクト）
+- **配置場所**: `content/connections/`（接続ノート）、`content/projects/`（プロジェクト）
 - **見出しレベル**: H2（##）以降を使用（H1は自動生成）
 - **英語略語**: 日本語コンテキストでは避ける（例：TL;DR → プロジェクト概要）
 - **サブタイトル記法**: 「―」でメインとサブを分離（例：`## はじめに ― 安心して使えるECへ`）
