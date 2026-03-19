@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import Header from "./components/header";
 import Footer from "./components/footer";
@@ -7,7 +7,11 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider"
 import Script from 'next/script';
 
-const inter = Inter({ subsets: ["latin"] });
+const notoSansJP = Noto_Sans_JP({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-noto-sans-jp",
+});
 
 export const metadata: Metadata = {
   title: "Natsuki's Portfolio",
@@ -23,7 +27,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
       </head>
-      <body className={cn(inter.className, 'min-h-dvh  ')} suppressHydrationWarning>
+      <body className={cn(notoSansJP.variable, 'font-sans min-h-dvh')} suppressHydrationWarning>
         <ThemeProvider
             attribute="class"
             defaultTheme="system"
