@@ -1,5 +1,3 @@
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import {
   getConnectionBySlug,
   getAllConnections,
@@ -55,8 +53,20 @@ export default async function ConnectionPage({ params }: Props) {
   return (
     <main className="container px-4 py-8 pt-8 mx-auto md:py-12 md:pt-12">
       <article className="max-w-4xl mx-auto">
+        {/* パンくずリスト */}
+        <nav className="mb-6 text-sm text-muted-foreground">
+          <Link
+            href="/connections"
+            className="hover:text-foreground transition-colors"
+          >
+            接続ノート
+          </Link>
+          <span className="mx-2">/</span>
+          <span className="text-foreground">{note.title}</span>
+        </nav>
+
         {/* ヘッダー */}
-        <h1 className="text-2xl md:text-3xl font-bold mb-2">{note.title}</h1>
+        <h1 className="text-2xl md:text-3xl font-bold mb-3">{note.title}</h1>
 
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4">
           {date && (
@@ -80,11 +90,11 @@ export default async function ConnectionPage({ params }: Props) {
         </div>
 
         {/* タグ */}
-        <div className="flex flex-wrap gap-1.5 mb-8">
+        <div className="flex flex-wrap gap-x-2 gap-y-1 mb-10">
           {note.tags.map((tag) => (
-            <Badge key={tag} variant="tag" className="text-xs">
-              {tag}
-            </Badge>
+            <span key={tag} className="text-xs text-muted-foreground/60">
+              #{tag}
+            </span>
           ))}
         </div>
 
@@ -94,18 +104,41 @@ export default async function ConnectionPage({ params }: Props) {
             remarkPlugins={[remarkGfm, remarkMath]}
             rehypePlugins={[rehypeKatex, rehypeHighlight]}
             components={{
-              h1: ({ ...props }) => <h1 className="text-2xl font-bold mb-4" {...props} />,
-              h2: ({ ...props }) => <h2 className="text-xl font-semibold mb-3" {...props} />,
-              h3: ({ ...props }) => <h3 className="text-lg font-medium mb-2" {...props} />,
-              p: ({ ...props }) => <p className="mb-4 leading-relaxed" {...props} />,
-              ul: ({ ...props }) => <ul className="list-disc pl-6 mb-4" {...props} />,
-              ol: ({ ...props }) => <ol className="list-decimal pl-6 mb-4" {...props} />,
-              li: ({ ...props }) => <li className="mb-1" {...props} />,
+              h1: ({ ...props }) => (
+                <h1 className="text-2xl font-bold mb-4" {...props} />
+              ),
+              h2: ({ ...props }) => (
+                <h2
+                  className="text-xl font-semibold mt-10 mb-4"
+                  {...props}
+                />
+              ),
+              h3: ({ ...props }) => (
+                <h3 className="text-lg font-medium mt-8 mb-3" {...props} />
+              ),
+              p: ({ ...props }) => (
+                <p className="mb-5 leading-[1.9]" {...props} />
+              ),
+              ul: ({ ...props }) => (
+                <ul className="list-disc pl-6 mb-4" {...props} />
+              ),
+              ol: ({ ...props }) => (
+                <ol className="list-decimal pl-6 mb-4" {...props} />
+              ),
+              li: ({ ...props }) => (
+                <li className="mb-1 leading-[1.8]" {...props} />
+              ),
               code: ({ ...props }) => (
-                <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm" {...props} />
+                <code
+                  className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm"
+                  {...props}
+                />
               ),
               pre: ({ ...props }) => (
-                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto my-4" {...props} />
+                <pre
+                  className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto my-4"
+                  {...props}
+                />
               ),
             }}
           >
@@ -115,19 +148,32 @@ export default async function ConnectionPage({ params }: Props) {
       </article>
 
       {/* ナビゲーション */}
-      <div className="flex items-center justify-center gap-2 mt-8 mb-8">
-        {prevNote && (
-          <Button asChild variant="outline" size="sm">
-            <Link href={`/connections/${prevNote.slug}`}>前のメモ</Link>
-          </Button>
+      <div className="max-w-4xl mx-auto flex items-center justify-between mt-16 pt-8 border-t border-border/40">
+        {prevNote ? (
+          <Link
+            href={`/connections/${prevNote.slug}`}
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            ← 前のメモ
+          </Link>
+        ) : (
+          <div />
         )}
-        <Button asChild size="sm">
-          <Link href="/connections">一覧に戻る</Link>
-        </Button>
-        {nextNote && (
-          <Button asChild variant="outline" size="sm">
-            <Link href={`/connections/${nextNote.slug}`}>次のメモ</Link>
-          </Button>
+        <Link
+          href="/connections"
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          一覧に戻る
+        </Link>
+        {nextNote ? (
+          <Link
+            href={`/connections/${nextNote.slug}`}
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            次のメモ →
+          </Link>
+        ) : (
+          <div />
         )}
       </div>
     </main>
