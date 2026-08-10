@@ -3,24 +3,7 @@ import { getAllConnections } from '@/lib/connections'
 import { getAllProjects } from '@/lib/projects'
 import { ArrowRight } from 'lucide-react'
 import DieSection from './components/die-section'
-
-const pillars = [
-  {
-    no: '01',
-    title: '金型設計',
-    body: '冷間鍛造の金型を設計・製造。素材が形になる工程の上流を担当しています。',
-  },
-  {
-    no: '02',
-    title: 'AI開発',
-    body: '画像による異常検知、業務の自動化。現場で本当に使えるかを基準に組み立てます。',
-  },
-  {
-    no: '03',
-    title: 'Web開発',
-    body: 'Next.jsを中心に、業務アプリからECまで。課題の発見から実装まで一人で通します。',
-  },
-]
+import { WorkCycle } from './components/diagrams/work-cycle'
 
 export default function Home() {
   const recentNotes = getAllConnections().slice(0, 5)
@@ -68,29 +51,27 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Pillars */}
+      {/* Approach ― サイト全体の中心概念 */}
       <section className="border-t">
-        <div className="container max-w-5xl">
-          <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x">
-            {pillars.map((pillar) => (
-              <div key={pillar.no} className="py-8 md:py-10 md:px-8 md:first:pl-0 md:last:pr-0">
-                <div className="flex items-baseline gap-3 mb-3">
-                  <span className="font-mono text-xs text-primary tabular-nums">{pillar.no}</span>
-                  <h2 className="text-base md:text-lg font-semibold">{pillar.title}</h2>
-                </div>
-                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  {pillar.body}
-                </p>
-              </div>
-            ))}
-          </div>
+        <div className="container max-w-5xl py-14 md:py-20">
+          <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-4">Approach</p>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight leading-snug max-w-2xl">
+            <span className="inline-block">現場で見つけて、</span>
+            <span className="inline-block">技術で形にして、</span>
+            <span className="inline-block">現場で確かめる</span>
+          </h2>
+          <p className="mt-4 mb-10 md:mb-14 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
+            持っている技術の一覧ではなく、回し方の話です。課題は現場で見つかり、手段は課題に合わせて選び、
+            確かめる場所もまた現場になります。
+          </p>
+          <WorkCycle />
         </div>
       </section>
 
       {/* Selected Projects */}
       <section className="border-t">
         <div className="container max-w-5xl py-14 md:py-20">
-          <div className="flex items-baseline justify-between mb-8 md:mb-12">
+          <div className="flex items-baseline justify-between mb-3">
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Projects</h2>
             <Link
               href="/projects"
@@ -100,6 +81,9 @@ export default function Home() {
               <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </div>
+          <p className="mb-8 md:mb-12 text-sm md:text-base text-muted-foreground">
+            上の循環を、実際に回した記録です。
+          </p>
           <div className="divide-y border-t border-b">
             {recentProjects.map((project, index) => (
               <Link

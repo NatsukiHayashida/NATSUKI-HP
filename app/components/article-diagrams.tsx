@@ -1,6 +1,6 @@
-import { MailCompare } from './mail-compare'
+import { MailCompare } from './diagrams/mail-compare'
 import { Legend, Schematic } from './schematic'
-import { SystemMap } from './system-map'
+import { SystemMap } from './diagrams/system-map'
 
 /**
  * 記事本文に差し込む模式図。
