@@ -59,10 +59,13 @@ feca255 docs: セッション引き継ぎ用のHANDOFF.mdを追加
 返ってきた草案の React 化・規約適合・組み込み・表示検証は CC が行う。
 
 **受け渡しの経路（gpt-handoff スキル、2026-08-11整備）**：
-- CC→GPT：依頼文をコピー用HTMLにして `_handoff/`（git管理外）に置く → report-hub
-  （`https://node.taile73628.ts.net:8443/`）からスマホで開き、全文コピーして ChatGPT / Gemini へ。
-  **H-01 の依頼ページは `_handoff/gpt-brief-h01.html` に作成済み**
-- GPT→CC：返答テキストはそのままCCのチャットへ貼る。PCでのファイルは Downloads 経由（from-q と同様）
+- CC→GPT：`python3 scripts/build-handoff.py` で H-01〜H-05 の依頼ページ＋一覧を
+  `_handoff/`（git管理外）へ生成する。**スマホの入口は
+  `https://node.taile73628.ts.net:8443/NATSUKI-HP/_handoff/index.html`**。
+  依頼文の中身を直すときは HTML ではなく `claudedocs/DIAGRAM_BRIEF_GPT_GEMINI.md` を直して流し直す
+- GPT→CC：**受信箱は `C:\Users\林田夏樹\Downloads\gpt`**（ユーザーは貼り付け作業をしない方針）。
+  セッション中は Monitor ツールで5秒ポーリングし、届いたら自動で取り込む
+  （`/mnt/c` は inotify が効かないためポーリング必須）。**次セッションでも監視を張り直すこと**
 - devサーバーのスマホ確認は `https://node.taile73628.ts.net:8445/`（Tailscale served、設定済み）
 
 ### 2. push（ユーザーの明示的な指示を待つこと）
