@@ -1,0 +1,79 @@
+<svg viewBox="0 0 1000 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="旧指標が混同行列の左列二象限だけを見ていたことを示す概念図" fill="none">
+  <defs>
+    <pattern id="hatch-h01r" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="currentColor" stroke-width="1" opacity=".34"/></pattern>
+    <marker id="arrow-h01r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1L9 5L0 9Z" fill="currentColor"/></marker>
+  </defs>
+
+  <!-- 左：全品を不良側へ送る極端な判定装置 -->
+  <g class="text-primary" stroke="currentColor" stroke-width="2.25" vector-effect="non-scaling-stroke">
+    <path d="M62 146H176V314H62Z"/>
+    <path d="M82 174H156V222H82ZM82 238H156V286H82Z"/>
+    <path d="M176 198H236V210H278" marker-end="url(#arrow-h01r)"/>
+    <path d="M176 262H218V270H278" marker-end="url(#arrow-h01r)"/>
+    <circle cx="74" cy="158" r="3"/><circle cx="164" cy="158" r="3"/><circle cx="74" cy="302" r="3"/><circle cx="164" cy="302" r="3"/>
+  </g>
+  <g class="text-primary" stroke="currentColor" fill="hsl(var(--background))" stroke-width="1.5"><circle cx="82" cy="128" r="18"/></g>
+  <text class="text-primary" x="82" y="128" fill="currentColor" font-size="11" font-family="ui-monospace,monospace" text-anchor="middle" dominant-baseline="central">06</text>
+
+  <!-- 中央：2×2判定盤 -->
+  <g stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke">
+    <rect x="300" y="90" width="360" height="280"/>
+    <line x1="480" y1="90" x2="480" y2="370"/><line x1="300" y1="230" x2="660" y2="230"/>
+    <circle cx="312" cy="102" r="3"/><circle cx="648" cy="102" r="3"/><circle cx="312" cy="358" r="3"/><circle cx="648" cy="358" r="3"/>
+    <!-- 旧指標が見ていた左列だけを同じ表現にする -->
+    <path d="M322 116H458V204H322Z" fill="url(#hatch-h01r)"/>
+    <path d="M322 256H458V344H322Z" fill="url(#hatch-h01r)"/>
+    <!-- 見ていなかった右列は無印 -->
+    <path d="M502 116H638V204H502Z"/>
+    <path d="M502 256H638V344H502Z"/>
+  </g>
+
+  <!-- 05：左列だけを囲う旧指標の作用範囲 -->
+  <g class="text-primary" stroke="currentColor" stroke-width="3" vector-effect="non-scaling-stroke">
+    <path d="M286 92H272V368H286"/>
+    <path d="M286 92H300M286 368H300"/>
+  </g>
+  <g class="text-primary" stroke="currentColor" fill="hsl(var(--background))" stroke-width="1.5"><circle cx="272" cy="230" r="18"/></g>
+  <text class="text-primary" x="272" y="230" fill="currentColor" font-size="11" font-family="ui-monospace,monospace" text-anchor="middle" dominant-baseline="central">05</text>
+
+  <!-- 01〜04：象限番号 -->
+  <g stroke="currentColor" fill="hsl(var(--background))" stroke-width="1.25">
+    <circle cx="340" cy="134" r="17"/><circle cx="520" cy="134" r="17"/><circle cx="340" cy="274" r="17"/><circle cx="520" cy="274" r="17"/>
+  </g>
+  <g fill="currentColor" font-size="11" font-family="ui-monospace,monospace" text-anchor="middle" dominant-baseline="central">
+    <text x="340" y="134">01</text><text x="520" y="134">02</text><text x="340" y="274">03</text><text x="520" y="274">04</text>
+  </g>
+
+  <!-- 盤面から新指標群への一本だけの明確な接続 -->
+  <g stroke="currentColor" stroke-width="1.25" opacity=".62" vector-effect="non-scaling-stroke">
+    <path d="M660 230H710"/><circle cx="660" cy="230" r="4" fill="hsl(var(--background))"/><circle cx="710" cy="230" r="4" fill="hsl(var(--background))"/>
+    <path d="M710 130V330"/>
+  </g>
+
+  <!-- 07：F1。小型盤面の三象限を参照 -->
+  <g stroke="currentColor" stroke-width="1.25" vector-effect="non-scaling-stroke">
+    <path d="M710 130H748"/><rect x="748" y="82" width="176" height="96"/>
+    <rect x="772" y="102" width="64" height="56"/><line x1="804" y1="102" x2="804" y2="158"/><line x1="772" y1="130" x2="836" y2="130"/>
+    <path d="M774 104H802V128H774ZM806 104H834V128H806ZM774 132H802V156H774Z" fill="url(#hatch-h01r)"/>
+  </g>
+  <g stroke="currentColor" fill="hsl(var(--background))" stroke-width="1.5"><circle cx="888" cy="130" r="18"/></g>
+  <text x="888" y="130" fill="currentColor" font-size="11" font-family="ui-monospace,monospace" text-anchor="middle" dominant-baseline="central">07</text>
+
+  <!-- 08：ROC。小型盤面の全四象限を参照 -->
+  <g stroke="currentColor" stroke-width="1.25" vector-effect="non-scaling-stroke">
+    <path d="M710 230H748"/><rect x="748" y="182" width="176" height="96"/>
+    <rect x="772" y="202" width="64" height="56"/><line x1="804" y1="202" x2="804" y2="258"/><line x1="772" y1="230" x2="836" y2="230"/>
+    <path d="M774 204H802V228H774ZM806 204H834V228H806ZM774 232H802V256H774ZM806 232H834V256H806Z" fill="url(#hatch-h01r)"/>
+  </g>
+  <g stroke="currentColor" fill="hsl(var(--background))" stroke-width="1.5"><circle cx="888" cy="230" r="18"/></g>
+  <text x="888" y="230" fill="currentColor" font-size="11" font-family="ui-monospace,monospace" text-anchor="middle" dominant-baseline="central">08</text>
+
+  <!-- 09：AUC。小型盤面の全四象限を参照 -->
+  <g stroke="currentColor" stroke-width="1.25" vector-effect="non-scaling-stroke">
+    <path d="M710 330H748"/><rect x="748" y="282" width="176" height="96"/>
+    <rect x="772" y="302" width="64" height="56"/><line x1="804" y1="302" x2="804" y2="358"/><line x1="772" y1="330" x2="836" y2="330"/>
+    <path d="M774 304H802V328H774ZM806 304H834V328H806ZM774 332H802V356H774ZM806 332H834V356H806Z" fill="url(#hatch-h01r)"/>
+  </g>
+  <g stroke="currentColor" fill="hsl(var(--background))" stroke-width="1.5"><circle cx="888" cy="330" r="18"/></g>
+  <text x="888" y="330" fill="currentColor" font-size="11" font-family="ui-monospace,monospace" text-anchor="middle" dominant-baseline="central">09</text>
+</svg>

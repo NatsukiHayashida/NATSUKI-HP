@@ -1,5 +1,6 @@
 import { MailCompare } from './diagrams/mail-compare'
 import { Legend, Schematic } from './schematic'
+import { MetricBlindspot } from './diagrams/metric-blindspot'
 import { ReworkBreakdown } from './diagrams/rework-breakdown'
 import { SystemMap } from './diagrams/system-map'
 
@@ -113,8 +114,70 @@ function FusionRework() {
   )
 }
 
+function GaikanMetric() {
+  return (
+    <Schematic
+      label="FIG. 01"
+      title="評価指標の欠陥 ― 見ていたのは4象限のうち2つだった"
+      note="引き継いだ時点の指標は「不良品の検出率」だけだった。良品側の2象限が計算に入らないため、全品を不良と判定すれば満点が取れてしまう。まず、4象限を全部使う指標に入れ替えるところから始めた。"
+    >
+      <MetricBlindspot />
+      <Legend
+        items={[
+          {
+            no: '01',
+            title: '不良を、不良と判定できたもの',
+            body: '検出できた分。旧指標はこの数を増やすことだけを見ていた。',
+          },
+          {
+            no: '02',
+            title: '不良を、良品として通したもの（見逃し）',
+            body: '検出率はこの数が減るほど良くなる。ここまでが旧指標の計算範囲。',
+          },
+          {
+            no: '03',
+            title: '良品を、不良として弾いたもの（過検出）',
+            body: '現場でいちばん困るのはここ。にもかかわらず旧指標の計算には一切入っていなかった。',
+          },
+          {
+            no: '04',
+            title: '良品を、良品として通したもの',
+            body: '同じく計算に入らない象限。',
+          },
+          {
+            no: '05',
+            title: '旧指標が見ていた範囲',
+            body: '「不良品の検出率」は01と02だけで決まる。下段の03・04がどれだけ増えても、数字にはまったく現れない。',
+          },
+          {
+            no: '06',
+            title: '全品を不良と判定した場合',
+            body: 'すべてを不良側へ送ると02がゼロになり、検出率100%・見逃しゼロが成立する。このとき03は最大まで膨らむが、05の範囲の外なので見えない。指標が壊れているとはこういうこと。',
+          },
+          {
+            no: '07',
+            title: 'F1',
+            body: '01・02・03の3つを使い、検出と過検出の釣り合いを見る。',
+          },
+          {
+            no: '08',
+            title: 'ROC',
+            body: 'しきい値を動かしながら、4象限すべての関係を見る。',
+          },
+          {
+            no: '09',
+            title: 'AUC',
+            body: 'ROCが描く曲線を、しきい値全体にわたって1つの値にまとめたもの。',
+          },
+        ]}
+      />
+    </Schematic>
+  )
+}
+
 export const articleDiagrams: Record<string, () => React.JSX.Element> = {
   'work-hub-map': WorkHubMap,
   'work-hub-mail': WorkHubMail,
   'fusion-rework': FusionRework,
+  'gaikan-metric': GaikanMetric,
 }

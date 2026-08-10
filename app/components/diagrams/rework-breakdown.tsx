@@ -44,7 +44,8 @@ function Horizontal() {
           markerHeight="6"
           orient="auto"
         >
-          <path d="M0 1L9 5L0 9Z" fill="currentColor" />
+          {/* markerの中身は参照元のcurrentColorを継承しない。朱を直に指定する */}
+          <path d="M0 1L9 5L0 9Z" fill="hsl(var(--primary))" />
         </marker>
       </defs>
 
@@ -216,7 +217,8 @@ function Vertical() {
           markerHeight="6"
           orient="auto"
         >
-          <path d="M0 1L9 5L0 9Z" fill="currentColor" />
+          {/* markerの中身は参照元のcurrentColorを継承しない。朱を直に指定する */}
+          <path d="M0 1L9 5L0 9Z" fill="hsl(var(--primary))" />
         </marker>
       </defs>
 
