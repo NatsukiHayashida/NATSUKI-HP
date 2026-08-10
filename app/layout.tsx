@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Noto_Sans_JP } from "next/font/google";
+import { Noto_Sans_JP, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "./components/header";
 import Footer from "./components/footer";
@@ -13,9 +13,19 @@ const notoSansJP = Noto_Sans_JP({
   variable: "--font-noto-sans-jp",
 });
 
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-plex-mono",
+});
+
 export const metadata: Metadata = {
-  title: "Natsuki's Portfolio",
-  description: "Welcome to Natsuki's Portfolio. Here you'll find a showcase of my latest projects, including websites and apps I've developed and AI-generated artwork. Dive into my journey of creativity and innovation in technology.",
+  title: {
+    default: "Natsuki Hayashida | 金型設計 × AI × Web開発",
+    template: "%s | Natsuki Hayashida",
+  },
+  description:
+    "冷間鍛造の金型設計を本業に、AIとWebアプリケーションの開発に取り組むエンジニアのポートフォリオ。プロジェクトの記録と、領域をつなぐ「接続ノート」を公開しています。",
 };
 
 export default function RootLayout({
@@ -24,10 +34,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="ja" suppressHydrationWarning>
       <head>
       </head>
-      <body className={cn(notoSansJP.variable, 'font-sans min-h-dvh')} suppressHydrationWarning>
+      <body className={cn(notoSansJP.variable, plexMono.variable, 'font-sans min-h-dvh')} suppressHydrationWarning>
         <ThemeProvider
             attribute="class"
             defaultTheme="system"

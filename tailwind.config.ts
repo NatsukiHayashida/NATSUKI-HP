@@ -228,6 +228,7 @@ const config = {
       // Design Tokens: Typography
       fontFamily: {
         sans: ['var(--font-noto-sans-jp)', ...systemSans],
+        mono: ['var(--font-plex-mono)', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       fontSize: {
         'xs': ['0.75rem', { lineHeight: '1rem' }],

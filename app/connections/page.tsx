@@ -13,12 +13,13 @@ export default function ConnectionsPage() {
   const allTags = getAllConnectionTags()
 
   return (
-    <main className="container py-8 pt-8 md:py-12 md:pt-12">
+    <main className="container py-14 md:py-20">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
+        <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-4">Notes</p>
+        <h1 className="text-3xl md:text-5xl font-bold tracking-tight">
           接続ノート
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="mt-4 text-sm md:text-base text-muted-foreground">
           異なる領域の知識を意図的に接続する、日々の気づきのアーカイブ。
         </p>
       </div>

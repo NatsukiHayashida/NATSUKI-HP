@@ -13,7 +13,7 @@ export function getAllProjects(): Project[] {
 
   const fileNames = fs.readdirSync(projectsDirectory)
   const allProjects = fileNames
-    .filter((fileName) => fileName.endsWith('.mdx'))
+    .filter((fileName) => fileName.endsWith('.mdx') && !fileName.includes('backup'))
     .map((fileName) => {
       const slug = fileName.replace(/\.mdx$/, '')
       const fullPath = path.join(projectsDirectory, fileName)
@@ -80,6 +80,6 @@ export function getProjectSlugs(): string[] {
 
   const fileNames = fs.readdirSync(projectsDirectory)
   return fileNames
-    .filter((fileName) => fileName.endsWith('.mdx'))
+    .filter((fileName) => fileName.endsWith('.mdx') && !fileName.includes('backup'))
     .map((fileName) => fileName.replace(/\.mdx$/, ''))
 }

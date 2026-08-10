@@ -98,19 +98,14 @@ export default function Contact() {
   return (
     <>
       <ScrollToTop />
-      <main className="container mx-auto py-8 pt-20 md:py-12 md:pt-24">
-        <div className="max-w-4xl mx-auto px-4">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
-              <Mail className="w-8 h-8 text-primary" />
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Get in Touch</h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              For any questions, inquiries, or project and job requests, please feel free to contact me using the form below.
-            </p>
-          </div>
-
+      <main className="container py-14 md:py-20">
+        {/* Header */}
+        <div className="max-w-2xl mx-auto px-4 mb-10 md:mb-12">
+          <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-4">Contact</p>
+          <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Get in Touch</h1>
+          <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+            お仕事のご相談、技術的な質問、その他なんでも。下のフォームからお気軽にご連絡ください。
+          </p>
         </div>
 
         {/* 日本語での注意書き */}

@@ -1,10 +1,27 @@
 import React from 'react'
-
+import Link from 'next/link'
+import { navItems } from '@/lib/navigation'
 
 export default function Footer() {
   return (
-    <div className='container sticky top-full h-16 border-t flex items-center justify-center'>
-      <p className='text-sm sm:text-base  text-muted-foreground/40'> &copy;2025 Natsuki Hayashida. All Rights Reserved.</p>
-    </div>
+    <footer className='sticky top-full border-t'>
+      <div className='container max-w-5xl py-8 flex flex-col md:flex-row items-center justify-between gap-4'>
+        <ul className='flex flex-wrap items-center gap-x-6 gap-y-2'>
+          {navItems.map((item) => (
+            <li key={item.label}>
+              <Link
+                href={item.href}
+                className='font-mono text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors'
+              >
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <p className='font-mono text-xs text-muted-foreground/60'>
+          &copy; {new Date().getFullYear()} Natsuki Hayashida
+        </p>
+      </div>
+    </footer>
   )
 }

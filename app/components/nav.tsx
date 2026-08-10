@@ -1,20 +1,22 @@
 import Link from 'next/link'
 import React from 'react'
-import { Button } from '@/components/ui/button'
 import { navItems } from '@/lib/navigation'
 
 export default function Nav() {
   return (
-      <div>
-          <ul className='flex gap-4'>
-                {navItems.map((item) => (
-                    <li key={item.label} >
-                        <Button variant="ghost" asChild className="text-base">
-                            <Link href={item.href}>{item.label}</Link>
-                        </Button>
-                    </li>
-                ))}
-            </ul>
-    </div>
+    <nav>
+      <ul className='flex items-center gap-6 mr-4'>
+        {navItems.filter((item) => item.href !== '/').map((item) => (
+          <li key={item.label}>
+            <Link
+              href={item.href}
+              className='font-mono text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors'
+            >
+              {item.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
   )
 }

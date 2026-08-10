@@ -3,12 +3,8 @@
 @config '../tailwind.config.ts';
 
 /*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
+  Tailwind v4 ではデフォルトのボーダー色が currentcolor に変わったため、
+  デザイントークンのボーダー色をデフォルトとして適用する。
 */
 @layer base {
   *,
@@ -16,92 +12,84 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
+    border-color: hsl(var(--border));
   }
 }
 
 @layer base {
   :root {
-    /* Base colors - Light mode */
-    --background: 0 0% 100%;
-    --foreground: 222.2 47.4% 11.2%;
+    /* Base - Light mode（ニュートラル基調） */
+    --background: 0 0% 99%;
+    --foreground: 0 0% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 47.4% 11.2%;
+    --card-foreground: 0 0% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 47.4% 11.2%;
+    --popover-foreground: 0 0% 10%;
 
-    /* Brand color - Indigo accent */
-    --primary: 243 75% 59%;
+    /* Brand - 朱（バーミリオン）アクセント */
+    --primary: 17 78% 46%;
     --primary-foreground: 0 0% 100%;
 
-    /* Neutral colors */
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 0 0% 95%;
+    --secondary-foreground: 0 0% 10%;
 
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 243 75% 59%;
+    --accent: 17 78% 46%;
     --accent-foreground: 0 0% 100%;
 
-    /* Semantic colors */
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders & inputs */
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 243 75% 59%;
+    --border: 0 0% 87%;
+    --input: 0 0% 87%;
+    --ring: 17 78% 46%;
 
-    /* Border radius token */
-    --radius: 0.5rem;
+    --radius: 0.25rem;
   }
 
   .dark {
-    /* Base colors - Dark mode */
-    --background: 222.2 47.4% 11.2%;
-    --foreground: 210 40% 98%;
+    /* Base - Dark mode */
+    --background: 0 0% 8%;
+    --foreground: 0 0% 92%;
 
-    --card: 222.2 47.4% 11.2%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 92%;
 
-    --popover: 222.2 47.4% 11.2%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 92%;
 
-    /* Brand color - Indigo accent (slightly brighter for dark mode) */
-    --primary: 243 75% 65%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Brand - 朱（明度を上げてコントラスト確保） */
+    --primary: 17 85% 58%;
+    --primary-foreground: 0 0% 8%;
 
-    /* Neutral colors */
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 92%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 62%;
 
-    --accent: 243 75% 65%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 17 85% 58%;
+    --accent-foreground: 0 0% 8%;
 
-    /* Semantic colors */
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 40%;
+    --destructive-foreground: 0 0% 92%;
 
-    /* Borders & inputs */
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 243 75% 65%;
-  }
-
-  * {
-    @apply border-border;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 17 85% 58%;
   }
 
   body {
     @apply bg-background text-foreground;
+    /* 日本語の約物を詰めてエディトリアルな組みに */
+    font-feature-settings: 'palt';
   }
-  /*ブログ用のスタイル*/
+
+  /* 記事本文用のスタイル */
   .text-sm p {
     margin-bottom: 0.5rem;
   }
@@ -112,27 +100,20 @@
   }
 
   .text-sm code {
-    /* background-color: #f3f4f6; gray-200 */
     padding: 0.25rem;
     border-radius: 0.25rem;
   }
 
   pre {
-    background: #f5f5f5; /* light background for code blocks */
-    color: #333; /* dark text for code blocks */
+    background: hsl(var(--muted));
+    color: hsl(var(--foreground));
     padding: 1rem;
     border-radius: 0.5rem;
     overflow-x: auto;
-    margin: 1rem 0; /* Add margin above and below the code block */
+    margin: 1rem 0;
   }
 
   code {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: var(--font-plex-mono), 'Courier New', Courier, monospace;
   }
 }
-/* === n163 tube (one-way linear) === */
-@keyframes n163-tube-run {
-  0%   { transform: translateX(-40%); }
-  100% { transform: translateX(140%); }
-}
-.n163-tube-animate { animation: n163-tube-run var(--tube-speed,8s) linear infinite; }
