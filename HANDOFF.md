@@ -51,8 +51,30 @@ feca255 docs: セッション引き継ぎ用のHANDOFF.mdを追加
 | 6 | H-05 | Fusion：門は、門が見ている対象しか守らない | **完了** |
 
 **High 6件はすべて実装済み**。外観検査AIの記事に3枚、CAD自動化の記事に2枚、
-トップとAboutに循環図が入った。次は Medium 以降（`DIAGRAM_PLAN_2026.md`）か、
-入った図を実際にスマホで読んでの手直し。
+トップとAboutに循環図が入った。
+
+### ★ 次セッションの入口：実プロジェクトの図を参照して描き直す（ユーザー指示・2026-08-11）
+
+**`~/work/iidzka-inspection/` に、記事の題材そのものの図が実物で残っている。**
+いまサイトに入っている図は「本文の記述だけ」から起こしたため、実際の分布や
+異常マップの見た目とは無関係な模式図になっている。**先にこれらを見ること。**
+
+| 参照 | 場所 | 対応する図 |
+|---|---|---|
+| 混同行列 | `outputs/test_eval/confusion_matrix.png` | H-01 |
+| ROC曲線・閾値分析 | `outputs/test_eval/roc_curve.png` / `threshold_analysis.png` | H-01 |
+| 異常スコアの分布 | `outputs/test_eval/score_distribution.png` | **H-03（重要）** |
+| マスクの比較・生成過程 | `results/analysis/roi_mask_comparison.png` ほか `roi_*.png` 多数 | **H-02（重要）** |
+| 誤検出と正解の異常マップ | `results/analysis/fp_vs_tn_anomaly_maps.png` | H-02 / H-03 |
+| 分布の比較 | `results/analysis/b5_score_distribution_comparison.png` | H-03 |
+| 動画スライド | `docs/reports/video/deck.html` と `dist/*.mp4` | 全体の見せ方 |
+
+**とくに H-03**：いまの図には「分布の形は記録に残っていないため描いていない」と
+注記を入れているが、**`score_distribution.png` が実在する**。実物を見れば
+分布の形を根拠つきで描ける可能性が高い。まずここを確認すること。
+
+**注意**：これらは社内の実データの画像。**そのまま公開しない**（伏字ルール）。
+形状・分布の傾向を参考にして、サイト側の図を描き直すために使う。
 
 **図を実装するときに踏んだ落とし穴（必ず読む）**
 
@@ -76,6 +98,8 @@ feca255 docs: セッション引き継ぎ用のHANDOFF.mdを追加
 返ってきた草案の React 化・規約適合・組み込み・表示検証は CC が行う。
 
 **受け渡しの経路（gpt-handoff スキル、2026-08-11整備）**：
+※ セッションを跨ぐと受信箱の監視は切れる。**次セッションで Monitor を張り直すこと**。
+
 - CC→GPT：`python3 scripts/build-handoff.py` で H-01〜H-05 の依頼ページ＋一覧を
   `_handoff/`（git管理外）へ生成する。**スマホの入口は
   `https://node.taile73628.ts.net:8443/NATSUKI-HP/_handoff/index.html`**。
@@ -87,7 +111,7 @@ feca255 docs: セッション引き継ぎ用のHANDOFF.mdを追加
 
 ### 2. push（ユーザーの明示的な指示を待つこと）
 
-21コミットが手元に残っている。push すると Vercel で本番公開される。
+**44コミットが手元に残っている。** push すると Vercel で本番公開される。
 
 ---
 
