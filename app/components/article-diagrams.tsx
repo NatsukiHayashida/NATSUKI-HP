@@ -1,5 +1,6 @@
 import { MailCompare } from './diagrams/mail-compare'
 import { Legend, Schematic } from './schematic'
+import { MaskPosition } from './diagrams/mask-position'
 import { MetricBlindspot } from './diagrams/metric-blindspot'
 import { ReworkBreakdown } from './diagrams/rework-breakdown'
 import { SystemMap } from './diagrams/system-map'
@@ -175,9 +176,71 @@ function GaikanMetric() {
   )
 }
 
+function GaikanMask() {
+  return (
+    <Schematic
+      label="FIG. 02"
+      title="同じマスクでも、かける場所で結果が逆転する"
+      note="装置の並びは上下で同じで、違うのは朱のマスクをどこに挿すかだけ。入力側に置くと欠陥の情報まで削られ、異常マップに山が立たなくなる。同じ処理を推論後へ移すと、欠陥を残したまま背景の反応だけを外せる。"
+    >
+      <MaskPosition />
+      <Legend
+        items={[
+          {
+            no: '01',
+            title: '入力画像',
+            body: '検査対象の部品。表面には欠陥の情報がまだ残っている。上下のレーンで同じものを入れている。',
+          },
+          {
+            no: '02',
+            title: '入力側マスク',
+            body: 'モデルへ渡す前に、検査対象の領域だけを残す処理。対象外と一緒に、欠陥のある領域まで覆ってしまった。',
+          },
+          {
+            no: '03',
+            title: '情報が欠けた前処理結果',
+            body: 'モデルが判断に使うはずだった欠陥の信号が、この時点で失われている。',
+          },
+          {
+            no: '04',
+            title: '異常検知モデル',
+            body: '上下のレーンで同じもの。モデル自体は何も変えていない。',
+          },
+          {
+            no: '05',
+            title: '山の立たない異常マップ',
+            body: '入力段階で削られたため、不良品の異常スコアが下がる。見逃しを防ぐには閾値を下げるしかなく、その結果として良品の誤検出が跳ね上がった。過検出率は44.2%から72.4%へ悪化。',
+          },
+          {
+            no: '06',
+            title: '入力側マスクの結果',
+            body: '過検出率72.4%。目標の20%から遠ざかった。',
+          },
+          {
+            no: '07',
+            title: '欠陥を保持した前処理結果',
+            body: 'モデルには元の画像をそのまま見せる。欠陥の情報が残ったまま推論に入る。',
+          },
+          {
+            no: '08',
+            title: '推論後マスク',
+            body: '異常マップができてから、検査対象外の領域だけを判定から外す。同じマスク処理を、置く場所だけ変えている。',
+          },
+          {
+            no: '09',
+            title: '推論後マスクの結果',
+            body: '過検出率20.8%。同じ打ち手でも、置く場所で結果が正反対になった。この経験が以降の実験の組み立て方を変えた。',
+          },
+        ]}
+      />
+    </Schematic>
+  )
+}
+
 export const articleDiagrams: Record<string, () => React.JSX.Element> = {
   'work-hub-map': WorkHubMap,
   'work-hub-mail': WorkHubMail,
   'fusion-rework': FusionRework,
   'gaikan-metric': GaikanMetric,
+  'gaikan-mask': GaikanMask,
 }
