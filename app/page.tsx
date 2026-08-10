@@ -63,7 +63,7 @@ export default function Home() {
               </div>
             </div>
 
-            <DieSection className="w-56 sm:w-64 md:w-full md:max-w-[360px] h-auto mx-auto md:mx-0 md:justify-self-end text-foreground/80" />
+            <DieSection className="w-full max-w-[300px] sm:max-w-[340px] md:max-w-[420px] h-auto mx-auto md:mx-0 md:justify-self-end text-foreground/85" />
           </div>
         </div>
       </section>
