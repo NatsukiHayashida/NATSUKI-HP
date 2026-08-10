@@ -1,5 +1,6 @@
 import { MailCompare } from './diagrams/mail-compare'
 import { Legend, Schematic } from './schematic'
+import { ReworkBreakdown } from './diagrams/rework-breakdown'
 import { SystemMap } from './diagrams/system-map'
 
 /**
@@ -71,7 +72,49 @@ function WorkHubMail() {
   )
 }
 
+function FusionRework() {
+  return (
+    <Schematic
+      label="FIG. 01"
+      title="19.6時間を分解する ― 何に時間を使っていたのか"
+      note="体感ではなく作業ログを全部集計して出した内訳。遅かったのは作業そのものではなく、正しさを確定させる前に作り始めて、作ってから照合して壊すループだった。"
+    >
+      <ReworkBreakdown />
+      <Legend
+        items={[
+          {
+            no: '01',
+            title: '手戻り・是正・復旧',
+            body: '13.8時間。全体の70%。何が正しいかを確定させる前に作り始め、作ってから照合して壊す、というループがここで回っていた。',
+          },
+          {
+            no: '02',
+            title: '正味の新しい作業',
+            body: '5.8時間。前へ進んだ時間はこれだけ。構築そのものは速く、ここが遅かったわけではない。',
+          },
+          {
+            no: '03',
+            title: '計測が失われた範囲',
+            body: '記録の25%。クラッシュや再起動で計測そのものが失われ、概算になっている。特定の区間ではなく全体に散っているため、帯の厚みを貫く形で示している。',
+          },
+          {
+            no: '04',
+            title: '発端になった作業',
+            body: '部品に穴をあけるという単純な作業に35分と12万トークンを使っていた。何かがおかしい、と思ったのがこの集計の出発点。',
+          },
+          {
+            no: '05',
+            title: '集計した全体',
+            body: '5日間で38件、合計19.6時間。自分の作業ログをすべて集めた範囲。',
+          },
+        ]}
+      />
+    </Schematic>
+  )
+}
+
 export const articleDiagrams: Record<string, () => React.JSX.Element> = {
   'work-hub-map': WorkHubMap,
   'work-hub-mail': WorkHubMail,
+  'fusion-rework': FusionRework,
 }
