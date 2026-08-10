@@ -3,16 +3,22 @@
  *
  * 設計の要点：
  * - 「3つの技術を持っている」という並列の見せ方を避ける。だからカラムではなく閉じた輪で描く
- * - 技術ノードの中身は入れ替わる前提。いまのスタックは「いまの手段」として従属させる
+ * - 循環そのものは誰でも言える。差分は「AIを軸に、現場にまだ届いていない技術まで自分で
+ *   取りに行き、一人で輪を閉じる」こと。だから 02 に朱を置き、中心の一文で一人・翻訳レスを言う
+ * - 技術ノードの中身は入れ替わる前提。いまのスタックは「いまの軸＋周辺」として従属させる
  * - デスクトップは楕円のリング、モバイルは縦のレール＋戻りの円環矢印に組み替わる
  * - 線はSVG、文言はHTML。図の中に文章を置かないので、どの幅でも文字が潰れない
  */
+
+import { cn } from '@/lib/utils'
 
 type Station = {
   no: string
   title: string
   body: string
+  axis?: string
   means?: string[]
+  accent?: boolean
 }
 
 const STATIONS: Station[] = [
@@ -24,8 +30,10 @@ const STATIONS: Station[] = [
   {
     no: '02',
     title: '技術で形にする',
-    body: '手段は課題に合わせて選ぶ。技術のほうへ課題を寄せない。',
-    means: ['CAD', 'AI', 'Web', 'データ分析', '自動化'],
+    body: '打ち手を、手元にある道具に限らない。AIを軸に、現場にまだ届いていない技術まで取りに行く。',
+    axis: 'AI · LLM',
+    means: ['CAD', 'Web', 'データ分析', '自動化'],
+    accent: true,
   },
   {
     no: '03',
@@ -34,14 +42,20 @@ const STATIONS: Station[] = [
   },
 ]
 
-const CENTER_LINE = '手段は入れ替わる。変わらないのは、この順序で回すこと。'
+const CENTER_LINE =
+  'この輪は、ふつう現場の人と技術の人の二人で回る。ここでは一人で閉じる。仕様書も翻訳も挟まない。'
 const RETURN_LABEL = '新しい課題が出る'
 
 /** ステーション1つ分の文言。デスクトップ・モバイルで共用する */
 function StationBody({ station, align }: { station: Station; align: 'center' | 'left' }) {
   return (
     <div className={align === 'center' ? 'text-center' : 'text-left'}>
-      <p className="font-mono text-[11px] tracking-[0.18em] text-muted-foreground transition-colors group-hover:text-primary">
+      <p
+        className={cn(
+          'font-mono text-[11px] tracking-[0.18em] transition-colors group-hover:text-primary',
+          station.accent ? 'text-primary' : 'text-muted-foreground'
+        )}
+      >
         {station.no}
       </p>
       <p className="mt-1 text-base font-semibold leading-snug md:text-lg">{station.title}</p>
@@ -50,8 +64,12 @@ function StationBody({ station, align }: { station: Station; align: 'center' | '
       </p>
       {station.means && (
         <p className="mt-2.5 font-mono text-[10px] leading-relaxed tracking-[0.08em] text-muted-foreground/80 md:text-[11px]">
-          <span className="text-primary">いまの手段</span>
-          <span className="mx-1.5 text-muted-foreground/50">/</span>
+          {station.axis && (
+            <>
+              <span className="text-primary">いまの軸 / {station.axis}</span>
+              <span className="mx-1.5 text-muted-foreground/50">＋</span>
+            </>
+          )}
           {station.means.join(' · ')}
         </p>
       )}
@@ -104,7 +122,7 @@ export function WorkCycle() {
 
         {/* 中心の一文 */}
         <p
-          className="ds-fade absolute left-1/2 top-1/2 w-[22%] -translate-x-1/2 -translate-y-1/2 text-center text-xs leading-relaxed text-muted-foreground"
+          className="ds-fade absolute left-1/2 top-1/2 w-[26%] -translate-x-1/2 -translate-y-1/2 text-center text-xs leading-relaxed text-muted-foreground"
           style={{ animationDelay: '1100ms' }}
         >
           {CENTER_LINE}
@@ -129,7 +147,12 @@ export function WorkCycle() {
             className="ds-fade group absolute w-[27%] -translate-x-1/2 -translate-y-1/2 bg-background px-3"
             style={{ left: pos.left, top: pos.top, animationDelay: pos.delay }}
           >
-            <div className="border-t border-foreground/50 pt-3 transition-colors group-hover:border-primary">
+            <div
+              className={cn(
+                'border-t pt-3 transition-colors group-hover:border-primary',
+                STATIONS[i].accent ? 'border-primary/60' : 'border-foreground/50'
+              )}
+            >
               <StationBody station={STATIONS[i]} align="center" />
             </div>
           </div>
@@ -146,7 +169,12 @@ export function WorkCycle() {
               aria-hidden="true"
             />
             <span
-              className="absolute left-0 top-0 flex h-[27px] w-[27px] items-center justify-center rounded-full border border-foreground/50 bg-background font-mono text-[10px] text-muted-foreground transition-colors group-hover:border-primary group-hover:text-primary"
+              className={cn(
+                'absolute left-0 top-0 flex h-[27px] w-[27px] items-center justify-center rounded-full border bg-background font-mono text-[10px] transition-colors group-hover:border-primary group-hover:text-primary',
+                station.accent
+                  ? 'border-primary/70 text-primary'
+                  : 'border-foreground/50 text-muted-foreground'
+              )}
               aria-hidden="true"
             >
               {station.no}
@@ -156,8 +184,12 @@ export function WorkCycle() {
               <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{station.body}</p>
               {station.means && (
                 <p className="mt-2.5 font-mono text-[10px] leading-relaxed tracking-[0.08em] text-muted-foreground/80">
-                  <span className="text-primary">いまの手段</span>
-                  <span className="mx-1.5 text-muted-foreground/50">/</span>
+                  {station.axis && (
+                    <>
+                      <span className="text-primary">いまの軸 / {station.axis}</span>
+                      <span className="mx-1.5 text-muted-foreground/50">＋</span>
+                    </>
+                  )}
                   {station.means.join(' · ')}
                 </p>
               )}

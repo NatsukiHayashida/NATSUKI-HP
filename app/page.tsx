@@ -61,8 +61,8 @@ export default function Home() {
             <span className="inline-block">現場で確かめる</span>
           </h2>
           <p className="mt-4 mb-10 md:mb-14 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
-            持っている技術の一覧ではなく、回し方の話です。課題は現場で見つかり、手段は課題に合わせて選び、
-            確かめる場所もまた現場になります。
+            持っている技術の一覧ではなく、回し方の話です。課題は現場で見つかり、打ち手はAIを軸に
+            現場の外の最新まで取りに行き、確かめる場所もまた現場になります。
           </p>
           <WorkCycle />
         </div>

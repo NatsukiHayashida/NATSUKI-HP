@@ -83,6 +83,7 @@ export default function About() {
         <p className="mb-10 md:mb-14 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
           冷間鍛造の金型設計から始めて、いまはAIとWebが加わりました。
           増えたのは手段のほうで、進め方はずっとこの形です。
+          見つける・作る・確かめるを現場の中の一人で回すので、あいだに仕様書も翻訳も挟まりません。
         </p>
         <WorkCycle />
       </section>
