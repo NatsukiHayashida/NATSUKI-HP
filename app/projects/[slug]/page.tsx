@@ -11,6 +11,7 @@ import rehypeRaw from 'rehype-raw'
 import rehypeKatex from 'rehype-katex'
 import rehypeHighlight from 'rehype-highlight'
 import { ScrollToTop } from '@/components/scroll-to-top'
+import { articleDiagrams } from '@/app/components/article-diagrams'
 import 'katex/dist/katex.min.css'
 import 'highlight.js/styles/github-dark.css'
 
@@ -187,6 +188,15 @@ export default async function ProjectPage({ params }: Props) {
                   )
                 }
                 return <h2 {...props}>{children}</h2>
+              },
+              // 本文中の <figure data-diagram="キー"> を模式図に差し替える
+              figure: ({ node, children, ...props }) => {
+                const key = (props as Record<string, unknown>)['data-diagram']
+                if (typeof key === 'string') {
+                  const Diagram = articleDiagrams[key]
+                  if (Diagram) return <Diagram />
+                }
+                return <figure {...props}>{children}</figure>
               },
               strong: ({ children }) => {
                 return (
