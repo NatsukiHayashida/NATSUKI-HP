@@ -58,8 +58,8 @@ function StationBody({ station, align }: { station: Station; align: 'center' | '
       >
         {station.no}
       </p>
-      <p className="mt-1 text-base font-semibold leading-snug md:text-lg">{station.title}</p>
-      <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground md:text-[13px]">
+      <p className="mt-1 text-sm font-semibold leading-snug md:text-base">{station.title}</p>
+      <p className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground md:text-xs">
         {station.body}
       </p>
       {station.means && (
@@ -122,7 +122,7 @@ export function WorkCycle() {
 
         {/* 中心の一文 */}
         <p
-          className="ds-fade absolute left-1/2 top-1/2 w-[26%] -translate-x-1/2 -translate-y-1/2 text-center text-xs leading-relaxed text-muted-foreground"
+          className="ds-fade absolute left-1/2 top-1/2 w-[26%] -translate-x-1/2 -translate-y-1/2 text-center text-[11px] leading-relaxed text-muted-foreground"
           style={{ animationDelay: '1100ms' }}
         >
           {CENTER_LINE}
@@ -180,8 +180,10 @@ export function WorkCycle() {
               {station.no}
             </span>
             <div className="pt-0.5">
-              <p className="text-base font-semibold leading-snug">{station.title}</p>
-              <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{station.body}</p>
+              <p className="text-sm font-semibold leading-snug">{station.title}</p>
+              <p className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground">
+                {station.body}
+              </p>
               {station.means && (
                 <p className="mt-2.5 font-mono text-[10px] leading-relaxed tracking-[0.08em] text-muted-foreground/80">
                   {station.axis && (
