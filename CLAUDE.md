@@ -138,6 +138,26 @@ export function getAllConnectionTags(): string[]
 - `strong`: 太字の明示的スタイリング
 - `ul`/`li`: リスト記号の非表示化（`list-none`）
 - `img`: Next.js Imageコンポーネント使用
+- `figure`: `data-diagram`属性を持つものを模式図に差し替え（下記）
+
+### 記事本文への模式図の差し込み
+MDXに次のように書くと、対応する模式図が本文中に描画される。
+
+```html
+<figure data-diagram="work-hub-collect"></figure>
+```
+
+- 図の定義: `app/components/article-diagrams.tsx`（キー→コンポーネントの対応表）
+- 共通部品: `app/components/schematic.tsx`（`Schematic` / `Flow`）
+- カード・背景色は使わず、罫線・番号・モノスペースのラベルだけで構成する
+- デスクトップは横並び、モバイルは縦積みに自動で組み替わる（矢印も回転する）
+- **図に書く内容は本文で述べた範囲に限る**。伏字ルール（社名・製品名・社内パス・
+  金額など）は図の中でも同じく適用する
+
+### OGP画像の作り直し
+`app/opengraph-image.png` / `app/twitter-image.png` は `scripts/build-ogp.py` で生成する。
+トップページから製図モチーフのSVGを取り込むため、モチーフを変えたら流し直す。
+手順はスクリプト冒頭のdocstringに記載（devサーバー起動＋ネットワークが必要）。
 
 ### セキュリティ
 - **CSP設定**: `next.config.mjs`で厳格なContent Security Policy
