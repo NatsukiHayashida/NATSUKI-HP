@@ -222,7 +222,7 @@ export default async function ProjectPage({ params }: Props) {
             <ul className="space-y-2 text-sm md:text-base">
               {project.outcomes.map((outcome, index) => (
                 <li key={index} className="flex items-start gap-2">
-                  <span className="text-primary mt-0.5 md:mt-1 flex-shrink-0">✓</span>
+                  <span className="text-primary mt-0.5 md:mt-1 shrink-0">✓</span>
                   <span className="leading-relaxed">{outcome}</span>
                 </li>
               ))}

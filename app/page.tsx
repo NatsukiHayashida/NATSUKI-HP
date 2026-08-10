@@ -99,7 +99,7 @@ export default function Home() {
             </div>
             <div className="relative h-full">
               <Image
-                alt="art sketch, simple vector outline drawing, sketch images, hand drawn, white background,prompt: A restaurant serving Spanish tacos in a huge plate simple color"
+                alt="art sketch, simple vector outline-solid drawing, sketch images, hand drawn, white background,prompt: A restaurant serving Spanish tacos in a huge plate simple color"
                 src="/image/TACOS.png"
                 fill
                 sizes="(max-width: 768px) 50vw, 33vw"

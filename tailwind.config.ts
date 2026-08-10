@@ -1,9 +1,12 @@
 import type { Config } from "tailwindcss";
-import type { ThemeConfig } from "tailwindcss/types/config";
-const defaultTheme = require('tailwindcss/defaultTheme');
+
+const systemSans = [
+  'ui-sans-serif', 'system-ui', 'sans-serif',
+  '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', '"Noto Color Emoji"',
+];
 
 const config = {
-  darkMode: ["class"],
+  darkMode: "class",
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
@@ -106,7 +109,7 @@ const config = {
         'inner': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
         'none': 'none',
       },
-      typography: (theme: ThemeConfig) => ({ // 引数の型を ThemeConfig に変更
+      typography: () => ({
         DEFAULT: {
           css: {
             color: 'hsl(var(--foreground))',
@@ -224,7 +227,7 @@ const config = {
       },
       // Design Tokens: Typography
       fontFamily: {
-        sans: ['var(--font-noto-sans-jp)', ...defaultTheme.fontFamily.sans],
+        sans: ['var(--font-noto-sans-jp)', ...systemSans],
       },
       fontSize: {
         'xs': ['0.75rem', { lineHeight: '1rem' }],

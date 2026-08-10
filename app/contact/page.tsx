@@ -153,7 +153,7 @@ export default function Contact() {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-input bg-background rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 border border-input bg-background rounded-lg focus:outline-hidden focus:ring-2 focus:ring-ring focus:border-transparent transition-colors"
                 required
                 maxLength={50}
                 placeholder="山田太郎"
@@ -170,7 +170,7 @@ export default function Contact() {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-input bg-background rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 border border-input bg-background rounded-lg focus:outline-hidden focus:ring-2 focus:ring-ring focus:border-transparent transition-colors"
                 required
                 maxLength={100}
                 placeholder="example@email.com"
@@ -187,7 +187,7 @@ export default function Contact() {
                 value={formData.message}
                 onChange={handleInputChange}
                 rows={8}
-                className="w-full px-4 py-3 border border-input bg-background rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-colors resize-none"
+                className="w-full px-4 py-3 border border-input bg-background rounded-lg focus:outline-hidden focus:ring-2 focus:ring-ring focus:border-transparent transition-colors resize-none"
                 required
                 minLength={10}
                 maxLength={1000}
