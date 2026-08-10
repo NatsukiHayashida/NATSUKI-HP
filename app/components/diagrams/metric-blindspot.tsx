@@ -1,3 +1,5 @@
+import { Callouts, Overlay, type CalloutItem } from '../schematic'
+
 /**
  * 評価指標の欠陥（H-01）。GPTから受け取った第2版（claudedocs/received/）を元に実装した。
  *
@@ -11,11 +13,9 @@
  * その結果、06が塗る範囲と05が見ている範囲が食い違う——それがこの図の要点になる。
  *
  * 設計の要点：
- * - SVGに文字は入れない（番号バルーンのみ）。名称と説明は Legend 側に持たせる
+ * - 名前はHTMLでSVGに重ねる（Callouts）。番号だけだと図と凡例の往復が要る
  * - モバイルは盤面を縦に積み替える。横組みのまま縮めると番号が読めなくなる
  */
-
-const MONO = 'ui-monospace,monospace'
 
 /** 横組み（デスクトップ） */
 function Wide() {
@@ -25,7 +25,7 @@ function Wide() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
-      className="hidden w-full text-foreground sm:block"
+      className="absolute inset-0 h-full w-full text-foreground"
     >
       <defs>
         <pattern
@@ -62,27 +62,6 @@ function Wide() {
         <circle cx="74" cy="302" r="3" />
         <circle cx="164" cy="302" r="3" />
       </g>
-      <circle
-        cx="82"
-        cy="128"
-        r="18"
-        className="text-primary"
-        stroke="currentColor"
-        fill="hsl(var(--background))"
-        strokeWidth="1.5"
-      />
-      <text
-        x="82"
-        y="128"
-        className="text-primary"
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        06
-      </text>
 
       {/* 2×2の盤面。上段＝実際に不良だった側、左列＝不良と判定した側 */}
       <g stroke="currentColor" strokeWidth="1.5">
@@ -105,47 +84,8 @@ function Wide() {
       <g className="text-primary" stroke="currentColor" strokeWidth="3">
         <path d="M668 96H684V224H668" />
       </g>
-      <circle
-        cx="684"
-        cy="160"
-        r="18"
-        className="text-primary"
-        stroke="currentColor"
-        fill="hsl(var(--background))"
-        strokeWidth="1.5"
-      />
-      <text
-        x="684"
-        y="160"
-        className="text-primary"
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        05
-      </text>
 
       {/* 01〜04 象限番号 */}
-      <g stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.25">
-        <circle cx="340" cy="134" r="17" />
-        <circle cx="520" cy="134" r="17" />
-        <circle cx="340" cy="274" r="17" />
-        <circle cx="520" cy="274" r="17" />
-      </g>
-      <g
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        <text x="340" y="134">01</text>
-        <text x="520" y="134">02</text>
-        <text x="340" y="274">03</text>
-        <text x="520" y="274">04</text>
-      </g>
 
       {/* 盤面から新しい指標群への接続 */}
       <g stroke="currentColor" strokeWidth="1.25" opacity=".62">
@@ -164,18 +104,6 @@ function Wide() {
         <line x1="772" y1="130" x2="836" y2="130" />
         <path d="M774 104H802V128H774ZM806 104H834V128H806ZM774 132H802V156H774Z" fill="url(#h01-hatch)" />
       </g>
-      <circle cx="888" cy="130" r="18" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text
-        x="888"
-        y="130"
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        07
-      </text>
 
       {/* 08 ROC。4象限すべてを使う */}
       <g stroke="currentColor" strokeWidth="1.25">
@@ -189,18 +117,6 @@ function Wide() {
           fill="url(#h01-hatch)"
         />
       </g>
-      <circle cx="888" cy="230" r="18" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text
-        x="888"
-        y="230"
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        08
-      </text>
 
       {/* 09 AUC */}
       <g stroke="currentColor" strokeWidth="1.25">
@@ -214,18 +130,6 @@ function Wide() {
           fill="url(#h01-hatch)"
         />
       </g>
-      <circle cx="888" cy="330" r="18" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text
-        x="888"
-        y="330"
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        09
-      </text>
     </svg>
   )
 }
@@ -239,7 +143,7 @@ function Narrow() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
-      className="mx-auto w-full max-w-[320px] text-foreground sm:hidden"
+      className="absolute inset-0 h-full w-full text-foreground"
     >
       <defs>
         <pattern
@@ -272,27 +176,6 @@ function Narrow() {
         <path d="M86 214H106V206H128" markerEnd="url(#h01m-arrow)" />
         <path d="M86 276H106V284H128" markerEnd="url(#h01m-arrow)" />
       </g>
-      <circle
-        cx="28"
-        cy="172"
-        r="13"
-        className="text-primary"
-        stroke="currentColor"
-        fill="hsl(var(--background))"
-        strokeWidth="1.5"
-      />
-      <text
-        x="28"
-        y="172"
-        className="text-primary"
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        06
-      </text>
 
       {/* 盤面 */}
       <g stroke="currentColor" strokeWidth="1.5">
@@ -313,47 +196,8 @@ function Narrow() {
       <g className="text-primary" stroke="currentColor" strokeWidth="2.5">
         <path d="M288 174H300V241H288" />
       </g>
-      <circle
-        cx="300"
-        cy="207"
-        r="13"
-        className="text-primary"
-        stroke="currentColor"
-        fill="hsl(var(--background))"
-        strokeWidth="1.5"
-      />
-      <text
-        x="300"
-        y="207"
-        className="text-primary"
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        05
-      </text>
 
       {/* 01〜04 */}
-      <g stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.25">
-        <circle cx="154" cy="194" r="12.5" />
-        <circle cx="229" cy="194" r="12.5" />
-        <circle cx="154" cy="269" r="12.5" />
-        <circle cx="229" cy="269" r="12.5" />
-      </g>
-      <g
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        <text x="154" y="194">01</text>
-        <text x="229" y="194">02</text>
-        <text x="154" y="269">03</text>
-        <text x="229" y="269">04</text>
-      </g>
 
       {/* 指標群へ */}
       <g stroke="currentColor" strokeWidth="1.25" opacity=".62">
@@ -387,31 +231,45 @@ function Narrow() {
           fill="url(#h01m-hatch)"
         />
       </g>
-      <g stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5">
-        <circle cx="60" cy="478" r="13" />
-        <circle cx="160" cy="478" r="13" />
-        <circle cx="260" cy="478" r="13" />
-      </g>
-      <g
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        <text x="60" y="478">07</text>
-        <text x="160" y="478">08</text>
-        <text x="260" y="478">09</text>
-      </g>
     </svg>
   )
 }
 
+const WIDE: CalloutItem[] = [
+  { no: '05', label: '旧指標が見ていた範囲', x: 57, y: 13, accent: true },
+  { no: '06', label: '全品を不良と判定すると', x: 6.2, y: 22, align: 'left', accent: true },
+  { no: '01', label: '不良を検出', x: 39, y: 34.8 },
+  { no: '02', label: '見逃し', x: 57, y: 34.8 },
+  { no: '03', label: '過検出', x: 39, y: 65.2 },
+  { no: '04', label: '良品を通過', x: 57, y: 65.2 },
+  { no: '07', label: 'F1', x: 85, y: 28.3, align: 'left' },
+  { no: '08', label: 'ROC', x: 85, y: 50, align: 'left' },
+  { no: '09', label: 'AUC', x: 85, y: 71.7, align: 'left' },
+]
+
+const NARROW: CalloutItem[] = [
+  { no: '06', label: '全品を不良と判定', x: 2, y: 6.3, align: 'left', accent: true },
+  { no: '05', label: '旧指標が見た範囲', x: 98, y: 6.3, align: 'right', accent: true },
+  { no: '01', label: '検出', x: 52, y: 15 },
+  { no: '02', label: '見逃し', x: 75.6, y: 15 },
+  { no: '03', label: '過検出', x: 52, y: 36 },
+  { no: '04', label: '通過', x: 75.6, y: 36 },
+  { no: '07', label: 'F1', x: 18.75, y: 93.7 },
+  { no: '08', label: 'ROC', x: 50, y: 93.7 },
+  { no: '09', label: 'AUC', x: 81.25, y: 93.7 },
+]
+
 export function MetricBlindspot() {
   return (
     <div className="not-prose">
-      <Wide />
-      <Narrow />
+      <Overlay ratio="1000 / 460" className="hidden max-w-[900px] sm:block">
+        <Wide />
+        <Callouts items={WIDE} />
+      </Overlay>
+      <Overlay ratio="320 / 350" className="max-w-[320px] sm:hidden">
+        <Narrow />
+        <Callouts items={NARROW} />
+      </Overlay>
     </div>
   )
 }

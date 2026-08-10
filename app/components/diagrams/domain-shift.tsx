@@ -1,3 +1,5 @@
+import { Callouts, Overlay, type CalloutItem } from '../schematic'
+
 /**
  * ドメインシフト（H-03）。GPTから受け取った草案（claudedocs/received/）を元に実装した。
  *
@@ -14,8 +16,6 @@
  * - モバイルはレールを縦に倒す。横組みのまま縮めると番号が読めない
  */
 
-const MONO = 'ui-monospace,monospace'
-
 /** レール（x 116〜884）は 0.18〜0.82 のスコア窓。両端に目盛の表示はない */
 const RAIL_FROM = 0.182
 const RAIL_SPAN = 0.634
@@ -31,7 +31,7 @@ function Rail() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
-      className="hidden w-full text-foreground sm:block"
+      className="absolute inset-0 h-full w-full text-foreground"
     >
       <defs>
         <pattern
@@ -96,10 +96,6 @@ function Rail() {
         <path d={`M${GOOD_MAX} 166V290`} />
         <path d={`M${GOOD_MAX - 12} 178H${GOOD_MAX + 12}M${GOOD_MAX - 12} 278H${GOOD_MAX + 12}`} />
       </g>
-      <circle cx={GOOD_MAX} cy="146" r="18" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text x={GOOD_MAX} y="146" fill="currentColor" fontSize="11" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        01
-      </text>
 
       {/* 学習時の不良品ラック。位置分布は描かない */}
       <g stroke="currentColor" strokeWidth="1.5">
@@ -114,10 +110,6 @@ function Rail() {
         <path d="M400 206V270M452 206V270M506 206V270" strokeDasharray="4 5" />
         <path d={`M${GOOD_MAX + 26} 190V180H${SHIFTED_MIN - 26}V190`} />
       </g>
-      <circle cx="452" cy="296" r="18" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text x="452" y="296" fill="currentColor" fontSize="11" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        04
-      </text>
 
       {/* 02 学習時には成立していた閾値のゲート */}
       <g stroke="currentColor" strokeWidth="1.75">
@@ -126,10 +118,6 @@ function Rail() {
         <circle cx="488" cy="238" r="8" />
         <path d="M488 188V170" />
       </g>
-      <circle cx="488" cy="152" r="18" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text x="488" y="152" fill="currentColor" fontSize="11" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        02
-      </text>
 
       {/* 03 別セッションの良品100枚。最小値が01より右へ出た */}
       <g stroke="hsl(var(--primary))" strokeWidth="2.25">
@@ -141,17 +129,6 @@ function Rail() {
         <path d={`M${SHIFTED_MIN} 330H576`} />
         <path d={`M${GOOD_MAX} 318H${SHIFTED_MIN - 26}`} markerEnd="url(#h03-arrow)" />
       </g>
-      <circle
-        cx={SHIFTED_MIN}
-        cy="310"
-        r="18"
-        stroke="hsl(var(--primary))"
-        fill="hsl(var(--background))"
-        strokeWidth="1.5"
-      />
-      <text x={SHIFTED_MIN} y="310" fill="hsl(var(--primary))" fontSize="11" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        03
-      </text>
 
       {/* 05 撮像条件を固定する側へ舵を切る */}
       <g stroke="currentColor" strokeWidth="1.5">
@@ -161,10 +138,6 @@ function Rail() {
         <circle cx="190" cy="339" r="13" />
         <path d="M128 304V290M252 304V290M118 290H138M242 290H262" />
       </g>
-      <circle cx="108" cy="294" r="18" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text x="108" y="294" fill="currentColor" fontSize="11" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        05
-      </text>
     </svg>
   )
 }
@@ -181,7 +154,7 @@ function Column() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
-      className="mx-auto w-full max-w-[320px] text-foreground sm:hidden"
+      className="absolute inset-0 h-full w-full text-foreground"
     >
       <defs>
         <pattern
@@ -236,19 +209,11 @@ function Column() {
         <path d={`M104 ${good}H176`} />
         <path d={`M104 ${good - 9}V${good + 9}M176 ${good - 9}V${good + 9}`} />
       </g>
-      <circle cx="96" cy={good} r="13" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text x="96" y={good} fill="currentColor" fontSize="10.5" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        01
-      </text>
 
       {/* 04 両立しない閾値の帯 */}
       <g stroke="currentColor" strokeWidth="1.25">
         <path d={`M112 ${good}H168V${shifted}H112Z`} fill="url(#h03m-band)" />
       </g>
-      <circle cx="192" cy="222" r="13" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text x="192" y="222" fill="currentColor" fontSize="10.5" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        04
-      </text>
 
       {/* 02 学習時に成立していた閾値のゲート */}
       <g stroke="currentColor" strokeWidth="1.5">
@@ -257,10 +222,6 @@ function Column() {
         <circle cx="140" cy="236" r="5" />
         <path d="M124 236H88" />
       </g>
-      <circle cx="75" cy="236" r="13" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text x="75" y="236" fill="currentColor" fontSize="10.5" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        02
-      </text>
 
       {/* 学習時の不良品ラック。別セッション良品と縦方向で重なる */}
       <g stroke="currentColor" strokeWidth="1.25">
@@ -278,10 +239,6 @@ function Column() {
         <path d={`M160 ${shifted}H176`} />
         <path d={`M140 ${good + 14}V${shifted - 6}`} markerEnd="url(#h03m-arrow)" />
       </g>
-      <circle cx="192" cy={shifted} r="13" stroke="hsl(var(--primary))" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text x="192" y={shifted} fill="hsl(var(--primary))" fontSize="10.5" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        03
-      </text>
 
       {/* 05 撮像条件の固定 */}
       <g stroke="currentColor" strokeWidth="1.25">
@@ -290,19 +247,37 @@ function Column() {
         <path d="M54 435H70" />
         <circle cx="62" cy="435" r="9" />
       </g>
-      <circle cx="122" cy="450" r="13" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text x="122" y="450" fill="currentColor" fontSize="10.5" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        05
-      </text>
     </svg>
   )
 }
 
+const WIDE: CalloutItem[] = [
+  { no: '01', label: '学習時の良品の上端 0.38', x: 21.7, y: 22 },
+  { no: '02', label: '当時の閾値', x: 48.8, y: 30 },
+  { no: '04', label: 'どこへ動かしても両立しない', x: 45.2, y: 39.5 },
+  { no: '03', label: '別セッション良品の下端 0.5385', x: 72.5, y: 60, accent: true },
+  { no: '05', label: '撮像条件を固定する', x: 9.2, y: 62 },
+]
+
+const NARROW: CalloutItem[] = [
+  { no: '01', label: '学習時の上端 0.38', x: 2, y: 39, align: 'left' },
+  { no: '02', label: '当時の閾値', x: 2, y: 49, align: 'left' },
+  { no: '04', label: '両立しない帯', x: 98, y: 44, align: 'right' },
+  { no: '03', label: '別日の下端 0.5385', x: 98, y: 55, align: 'right', accent: true },
+  { no: '05', label: '撮像条件を固定', x: 2, y: 94, align: 'left' },
+]
+
 export function DomainShift() {
   return (
     <div className="not-prose">
-      <Rail />
-      <Column />
+      <Overlay ratio="1000 / 460" className="hidden max-w-[900px] sm:block">
+        <Rail />
+        <Callouts items={WIDE} />
+      </Overlay>
+      <Overlay ratio="320 / 480" className="max-w-[320px] sm:hidden">
+        <Column />
+        <Callouts items={NARROW} />
+      </Overlay>
     </div>
   )
 }

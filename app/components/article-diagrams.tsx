@@ -1,4 +1,5 @@
 import { DomainShift } from './diagrams/domain-shift'
+import { GateCoverage } from './diagrams/gate-coverage'
 import { MailCompare } from './diagrams/mail-compare'
 import { Legend, Schematic } from './schematic'
 import { MaskPosition } from './diagrams/mask-position'
@@ -279,10 +280,67 @@ function GaikanShift() {
   )
 }
 
+function FusionGate() {
+  return (
+    <Schematic
+      label="FIG. 02"
+      title="門は、門が見ている対象しか守らない"
+      note="検査ゲートは全部合格した。合格したのに加工できなかったのは、ゲートが見ている範囲と、図面として成立するのに必要な範囲がずれていたから。抜けた項目はすべて、その差の領域に落ちている。"
+    >
+      <GateCoverage />
+      <Legend
+        items={[
+          {
+            no: '01',
+            title: '図面として成立するために必要な範囲',
+            body: '加工する人が手を動かせる図面になっているか、という条件の全体。',
+          },
+          {
+            no: '02',
+            title: '検査ゲートが見ていた範囲',
+            body: '寸法も表題欄も図枠も、ここは全部通った。通ったのに図面は成立していなかった。',
+          },
+          {
+            no: '03',
+            title: '投影図の数',
+            body: '投影図が1面しかなく、二面幅があるのかないのかを確かめる手段がなかった。なお「その図面に投影図が何個あるか」を機械で正しく数える方法は現在も見つかっておらず、この項目だけは追加ゲートでも拾えていない。',
+          },
+          {
+            no: '04',
+            title: '一般公差',
+            body: '図面全体に適用する公差の注記が抜けていた。',
+          },
+          {
+            no: '05',
+            title: '面粗さ',
+            body: '加工面に必要な表面性状の指示が抜けていた。',
+          },
+          {
+            no: '06',
+            title: '面取り',
+            body: '角部の面取り指示が抜けていた。',
+          },
+          {
+            no: '07',
+            title: '外形線',
+            body: '同じ構造の失敗がもう一度起きた箇所。寸法も表題欄も図枠も通るのに、描いた形そのものを見る門がなかった。',
+          },
+          {
+            no: '08',
+            title: '後から足した、原本と同じ物差しで測るゲート',
+            body: '既存ゲートの外側まで走査し、原本にあってこちらに無い項目を違反として検出する。実際の図面21枚から616個の寸法要素を、366枚から自社の作図の流儀を実測してつくった。',
+          },
+        ]}
+      />
+    </Schematic>
+  )
+}
+
 export const articleDiagrams: Record<string, () => React.JSX.Element> = {
   'work-hub-map': WorkHubMap,
   'work-hub-mail': WorkHubMail,
   'fusion-rework': FusionRework,
+  'fusion-gate': FusionGate,
   'gaikan-metric': GaikanMetric,
   'gaikan-mask': GaikanMask,
   'gaikan-shift': GaikanShift,

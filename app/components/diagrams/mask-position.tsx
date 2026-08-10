@@ -1,3 +1,5 @@
+import { Callouts, Overlay, type CalloutItem } from '../schematic'
+
 /**
  * マスクをかける場所で結果が逆転する（H-02）。
  * GPTから受け取った草案（claudedocs/received/）をほぼそのまま採用している。
@@ -11,8 +13,6 @@
  *   2列は朱の帯の高さだけが違う＝「同じ流れ、挿す場所だけが違う」がそのまま出る
  */
 
-const MONO = 'ui-monospace,monospace'
-
 /** 横組み（デスクトップ）。工程は左→右、レーンは上下 */
 function Lanes() {
   return (
@@ -21,7 +21,7 @@ function Lanes() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
-      className="hidden w-full text-foreground sm:block"
+      className="absolute inset-0 h-full w-full text-foreground"
     >
       <defs>
         <pattern
@@ -71,10 +71,6 @@ function Lanes() {
         <circle cx="74" cy="182" r="3" />
         <circle cx="168" cy="182" r="3" />
       </g>
-      <circle cx="78" cy="72" r="17" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.25" />
-      <text x="78" y="72" fill="currentColor" fontSize="11" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        01
-      </text>
 
       {/* 02 入力側マスク。欠陥の位置まで覆ってしまう */}
       <g stroke="hsl(var(--primary))" strokeWidth="2">
@@ -83,10 +79,6 @@ function Lanes() {
         <path d="M239 100H248V126H239Z" fill="url(#h02-mask)" />
         <path d="M180 138H204M258 138H294" />
       </g>
-      <circle cx="231" cy="72" r="17" stroke="hsl(var(--primary))" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text x="231" y="72" fill="hsl(var(--primary))" fontSize="11" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        02
-      </text>
 
       {/* 03 前処理の結果。欠陥の線が消えている */}
       <g stroke="currentColor" strokeWidth="1.5">
@@ -95,10 +87,6 @@ function Lanes() {
         <circle cx="341" cy="138" r="9" />
         <path d="M364 117L377 107V129Z" fill="url(#h02-neutral)" />
       </g>
-      <circle cx="308" cy="88" r="17" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.25" />
-      <text x="308" y="88" fill="currentColor" fontSize="11" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        03
-      </text>
 
       {/* 04 モデル。上下で同じもの */}
       <g stroke="currentColor" strokeWidth="1.5">
@@ -106,10 +94,6 @@ function Lanes() {
         <path d="M440 108H500V122H440ZM440 132H500V146H440ZM440 156H500V170H440Z" />
         <path d="M388 138H428M512 138H550" markerEnd="url(#h02-arrow)" />
       </g>
-      <circle cx="442" cy="82" r="17" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.25" />
-      <text x="442" y="82" fill="currentColor" fontSize="11" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        04
-      </text>
 
       {/* 05 異常マップ。山が立たない */}
       <g stroke="currentColor" strokeWidth="1.5">
@@ -117,10 +101,6 @@ function Lanes() {
         <path d="M566 166C580 150 592 152 603 158C614 164 626 160 638 148" />
         <path d="M566 166H638" opacity=".28" />
       </g>
-      <circle cx="568" cy="84" r="17" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.25" />
-      <text x="568" y="84" fill="currentColor" fontSize="11" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        05
-      </text>
 
       {/* 06 上段の結果 */}
       <g stroke="currentColor" strokeWidth="1.5">
@@ -133,10 +113,6 @@ function Lanes() {
         <path d="M836 106H930V170H836Z" />
         <path d="M850 122H916V154H850Z" fill="url(#h02-neutral)" />
       </g>
-      <circle cx="854" cy="96" r="17" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.25" />
-      <text x="854" y="96" fill="currentColor" fontSize="11" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        06
-      </text>
 
       {/* ── 下段：推論後の異常マップにマスクを挿す ── */}
       <g stroke="currentColor" strokeWidth="1.5">
@@ -158,10 +134,6 @@ function Lanes() {
         <path d="M297 297L309 289M303 303L315 295" />
         <path d="M180 318H220M328 318H370" markerEnd="url(#h02-arrow)" />
       </g>
-      <circle cx="238" cy="268" r="17" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.25" />
-      <text x="238" y="268" fill="currentColor" fontSize="11" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        07
-      </text>
 
       <g stroke="currentColor" strokeWidth="1.5">
         <path d="M370 272H454V364H370Z" />
@@ -183,10 +155,6 @@ function Lanes() {
         <circle cx="643" cy="318" r="9" fill="hsl(var(--background))" />
         <path d="M592 318H616M670 318H704" />
       </g>
-      <circle cx="643" cy="258" r="17" stroke="hsl(var(--primary))" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text x="643" y="258" fill="hsl(var(--primary))" fontSize="11" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        08
-      </text>
 
       {/* 09 下段の結果 */}
       <g stroke="currentColor" strokeWidth="1.5">
@@ -198,10 +166,6 @@ function Lanes() {
         <path d="M836 286H930V350H836Z" />
         <path d="M850 302H916V334H850Z" />
       </g>
-      <circle cx="854" cy="276" r="17" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.25" />
-      <text x="854" y="276" fill="currentColor" fontSize="11" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        09
-      </text>
     </svg>
   )
 }
@@ -225,7 +189,7 @@ function Columns() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
-      className="mx-auto w-full max-w-[320px] text-foreground sm:hidden"
+      className="absolute inset-0 h-full w-full text-foreground"
     >
       <defs>
         <pattern
@@ -325,47 +289,45 @@ function Columns() {
       </g>
 
       {/* 番号バルーン。左列は左端、右列は右端に寄せる */}
-      <g stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.25">
-        <circle cx="14" cy="63" r="12" />
-        <circle cx="14" cy="137" r="12" />
-        <circle cx="14" cy="211" r="12" />
-        <circle cx="14" cy="285" r="12" />
-        <circle cx="14" cy="359" r="12" />
-        <circle cx="306" cy="137" r="12" />
-        <circle cx="306" cy="359" r="12" />
-      </g>
-      <g fill="currentColor" fontSize="10.5" fontFamily={MONO} textAnchor="middle" dominantBaseline="central">
-        <text x="14" y="63">01</text>
-        <text x="14" y="137">03</text>
-        <text x="14" y="211">04</text>
-        <text x="14" y="285">05</text>
-        <text x="14" y="359">06</text>
-        <text x="306" y="137">07</text>
-        <text x="306" y="359">09</text>
-      </g>
-      <g stroke="hsl(var(--primary))" fill="hsl(var(--background))" strokeWidth="1.5">
-        <circle cx="14" cy="100" r="12" />
-        <circle cx="306" cy="322" r="12" />
-      </g>
-      <g
-        fill="hsl(var(--primary))"
-        fontSize="10.5"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        <text x="14" y="100">02</text>
-        <text x="306" y="322">08</text>
-      </g>
     </svg>
   )
 }
 
+const WIDE: CalloutItem[] = [
+  { no: '01', label: '入力画像', x: 12.1, y: 12 },
+  { no: '02', label: '入力側マスク', x: 23.1, y: 5, accent: true },
+  { no: '03', label: '欠陥が消える', x: 34.1, y: 16 },
+  { no: '04', label: 'モデル', x: 47, y: 12 },
+  { no: '05', label: '山が立たない', x: 60, y: 15 },
+  { no: '06', label: '過検出 72.4%', x: 88.3, y: 15 },
+  { no: '07', label: '欠陥が残る', x: 27.4, y: 51 },
+  { no: '08', label: '推論後マスク', x: 64.3, y: 51, accent: true },
+  { no: '09', label: '過検出 20.8%', x: 88.3, y: 54 },
+]
+
+const NARROW: CalloutItem[] = [
+  { no: '01', label: '入力画像', x: 50, y: 4 },
+  { no: '02', label: '入力側マスク', x: 2, y: 25, align: 'left', accent: true },
+  { no: '08', label: '推論後マスク', x: 98, y: 80.5, align: 'right', accent: true },
+  { no: '03', label: '欠陥が消える', x: 2, y: 39, align: 'left' },
+  { no: '07', label: '欠陥が残る', x: 98, y: 39, align: 'right' },
+  { no: '04', label: 'モデル', x: 2, y: 57, align: 'left' },
+  { no: '05', label: '山が立たない', x: 2, y: 71, align: 'left' },
+  { no: '06', label: '72.4%', x: 2, y: 92, align: 'left' },
+  { no: '09', label: '20.8%', x: 98, y: 92, align: 'right' },
+]
+
 export function MaskPosition() {
   return (
     <div className="not-prose">
-      <Lanes />
-      <Columns />
+      <Overlay ratio="1000 / 460" className="hidden max-w-[900px] sm:block">
+        <Lanes />
+        <Callouts items={WIDE} />
+      </Overlay>
+      <Overlay ratio="320 / 400" className="max-w-[320px] sm:hidden">
+        <Columns />
+        <Callouts items={NARROW} />
+      </Overlay>
     </div>
   )
 }

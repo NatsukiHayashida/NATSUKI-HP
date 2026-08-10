@@ -1,3 +1,5 @@
+import { Callouts, Overlay, type CalloutItem } from '../schematic'
+
 /**
  * 19.6時間の内訳（H-04）。GPTから受け取った草案（claudedocs/received/）を元に実装した。
  *
@@ -7,10 +9,9 @@
  *   全区間にかかっていることを示すため（一部の区間だけ欠損したのではない）
  * - モバイルは帯を縦に倒す。横組みのまま縮めると番号バルーンが5px以下になって読めない。
  *   縦組みでは厚み方向が横になるので、ハッチングは右25%へ回る（意味は同じ）
- * - SVGに文字は入れない（番号バルーンのみ）。名称と説明は Legend 側に持たせる
+ * - **名前はHTMLでSVGに重ねる**（Callouts）。番号だけだと図と凡例を往復することになり、
+ *   図を読むのに一手間かかる。Legend は補足の説明に徹する
  */
-
-const MONO = 'ui-monospace,monospace'
 
 /** 横組み（デスクトップ）。時間軸は左→右 */
 function Horizontal() {
@@ -20,7 +21,7 @@ function Horizontal() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
-      className="hidden w-full text-foreground sm:block"
+      className="absolute inset-0 h-full w-full text-foreground"
     >
       <defs>
         <pattern
@@ -59,18 +60,6 @@ function Horizontal() {
         <path d="M100 88H800M100 78V98M800 78V98" />
         <path d="M100 88L116 83V93ZM800 88L784 83V93Z" fill="currentColor" />
       </g>
-      <circle cx="450" cy="88" r="18" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.25" />
-      <text
-        x="450"
-        y="88"
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        05
-      </text>
 
       {/* 帯本体。分割線 x=593 が 70.4% にあたる */}
       <g stroke="currentColor" strokeWidth="1.5">
@@ -100,27 +89,6 @@ function Horizontal() {
         <circle cx="454" cy="205" r="8" />
         <path d="M280 205H316M384 205H420" />
       </g>
-      <circle
-        cx="128"
-        cy="154"
-        r="18"
-        className="text-primary"
-        stroke="currentColor"
-        fill="hsl(var(--background))"
-        strokeWidth="1.5"
-      />
-      <text
-        x="128"
-        y="154"
-        className="text-primary"
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        01
-      </text>
 
       {/* 02 正味の作業 */}
       <g stroke="currentColor" strokeWidth="1.5">
@@ -129,33 +97,9 @@ function Horizontal() {
         <path d="M766 205L750 197V213Z" fill="currentColor" />
         <path d="M640 176H750V234H640ZM658 188V222M732 188V222" />
       </g>
-      <circle cx="620" cy="154" r="18" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text
-        x="620"
-        y="154"
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        02
-      </text>
 
       {/* 03 計測欠損。帯の厚みの25%を全区間に通す */}
       <path d="M100 246H800V286H100Z" fill="url(#h04-missing)" stroke="currentColor" strokeWidth="1" />
-      <circle cx="816" cy="266" r="18" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text
-        x="816"
-        y="266"
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        03
-      </text>
 
       {/* 04 発端になった穴あけ1つ */}
       <g stroke="currentColor" strokeWidth="1.25">
@@ -167,18 +111,6 @@ function Horizontal() {
         <path d="M910 148H948V162H916V176H948V190H916V204H948V218H910Z" fill="url(#h04-record)" />
         <path d="M838 178H902M870 146V210" opacity=".35" />
       </g>
-      <circle cx="844" cy="124" r="18" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text
-        x="844"
-        y="124"
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        04
-      </text>
 
       {/* 目盛 */}
       <g stroke="currentColor" strokeWidth="1" opacity=".28">
@@ -196,7 +128,7 @@ function Vertical() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
-      className="mx-auto w-full max-w-[320px] text-foreground sm:hidden"
+      className="absolute inset-0 h-full w-full text-foreground"
     >
       <defs>
         <pattern
@@ -231,18 +163,6 @@ function Vertical() {
         <path d="M62 40V360M52 40H72M52 360H72" />
         <path d="M62 40L57 56H67ZM62 360L57 344H67Z" fill="currentColor" />
       </g>
-      <circle cx="62" cy="200" r="14" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.25" />
-      <text
-        x="62"
-        y="200"
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        05
-      </text>
 
       {/* 帯本体。分割線 y=265 が 70.4% にあたる */}
       <g stroke="currentColor" strokeWidth="1.5">
@@ -272,27 +192,6 @@ function Vertical() {
         <circle cx="143" cy="204" r="4.5" />
         <path d="M143 129V141M143 175V187" />
       </g>
-      <circle
-        cx="110"
-        cy="60"
-        r="14"
-        className="text-primary"
-        stroke="currentColor"
-        fill="hsl(var(--background))"
-        strokeWidth="1.5"
-      />
-      <text
-        x="110"
-        y="60"
-        className="text-primary"
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        01
-      </text>
 
       {/* 02 正味の作業 */}
       <g stroke="currentColor" strokeWidth="1.5">
@@ -301,33 +200,9 @@ function Vertical() {
         <path d="M143 344L135 328H151Z" fill="currentColor" />
         <path d="M118 302H168V334H118ZM118 312H168M118 324H168" opacity=".9" />
       </g>
-      <circle cx="106" cy="285" r="14" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text
-        x="106"
-        y="285"
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        02
-      </text>
 
       {/* 03 計測欠損。厚みの25%を全区間に通す */}
       <path d="M195 40H230V360H195Z" fill="url(#h04m-missing)" stroke="currentColor" strokeWidth="1" />
-      <circle cx="252" cy="200" r="14" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text
-        x="252"
-        y="200"
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        03
-      </text>
 
       {/* 04 発端になった穴あけ1つ */}
       <g stroke="currentColor" strokeWidth="1.25">
@@ -336,27 +211,38 @@ function Vertical() {
         <circle cx="132" cy="428" r="4" />
         <path d="M112 428H152M132 408V448" opacity=".35" />
       </g>
-      <circle cx="190" cy="400" r="14" stroke="currentColor" fill="hsl(var(--background))" strokeWidth="1.5" />
-      <text
-        x="190"
-        y="400"
-        fill="currentColor"
-        fontSize="11"
-        fontFamily={MONO}
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        04
-      </text>
     </svg>
   )
 }
 
+/** 図に重ねる名前。長い説明は Legend 側 */
+const WIDE: CalloutItem[] = [
+  { no: '05', label: '合計 19.6時間', x: 45, y: 19 },
+  { no: '01', label: '手戻り・是正・復旧 13.8h', x: 34.6, y: 78, accent: true },
+  { no: '02', label: '正味の作業 5.8h', x: 69.6, y: 78 },
+  { no: '03', label: '計測の欠損 25%', x: 81.6, y: 57.8, align: 'left' },
+  { no: '04', label: '発端の作業', x: 88, y: 20 },
+]
+
+const NARROW: CalloutItem[] = [
+  { no: '05', label: '合計 19.6h', x: 50, y: 3 },
+  { no: '01', label: '手戻り 13.8h', x: 73, y: 20, align: 'left', accent: true },
+  { no: '03', label: '欠損 25%', x: 73, y: 45, align: 'left' },
+  { no: '02', label: '正味 5.8h', x: 73, y: 68, align: 'left' },
+  { no: '04', label: '発端', x: 60, y: 89, align: 'left' },
+]
+
 export function ReworkBreakdown() {
   return (
     <div className="not-prose">
-      <Horizontal />
-      <Vertical />
+      <Overlay ratio="1000 / 460" className="hidden max-w-[880px] sm:block">
+        <Horizontal />
+        <Callouts items={WIDE} />
+      </Overlay>
+      <Overlay ratio="320 / 470" className="max-w-[320px] sm:hidden">
+        <Vertical />
+        <Callouts items={NARROW} />
+      </Overlay>
     </div>
   )
 }
