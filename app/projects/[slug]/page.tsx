@@ -4,7 +4,7 @@ import Image from 'next/image'
 import ReactMarkdown from 'react-markdown'
 import { getProjectBySlug, getProjectSlugs } from '@/lib/projects'
 import { Metadata } from 'next'
-import { ExternalLink, Github } from 'lucide-react'
+import { ExternalLink, Code2 } from 'lucide-react'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import rehypeRaw from 'rehype-raw'
@@ -122,7 +122,7 @@ export default async function ProjectPage({ params }: Props) {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors"
                 >
-                  <Github className="w-4 h-4" />
+                  <Code2 className="w-4 h-4" />
                   View Code
                 </Link>
               )}
@@ -191,7 +191,7 @@ export default async function ProjectPage({ params }: Props) {
                 )
               },
               img: ({ node, ...props }) => {
-                const src = props.src || ''
+                const src = typeof props.src === 'string' ? props.src : ''
                 const alt = props.alt || ''
 
                 // 画像サイズの推定（4:3アスペクト比）
