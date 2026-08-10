@@ -4,13 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## プロジェクト概要
 
-Natsukiの個人ポートフォリオサイト（Next.js 14 App Router）：
+Natsukiの個人ポートフォリオサイト（Next.js 16 App Router）：
 - ポートフォリオページ（About、Projects、接続ノート、Contact）
 - MDXファイルベースの接続ノート・プロジェクト管理
 - EmailJS統合のお問合せフォーム（多層スパム対策、稼働中）
 - ダーク/ライトテーマ対応（next-themes）
-- Three.jsハートビートアニメーション（@react-three/fiber）
 - モバイルファーストレスポンシブデザイン
+- デザイン: ミニマル・エディトリアル（2026-08リニューアル。白/黒基調＋朱アクセント、罫線と番号で構造化。`claudedocs/RENEWAL_PLAN_2026.md`参照）
 
 ## 開発コマンド
 
@@ -23,18 +23,19 @@ npm run lint     # リント実行
 
 ## 技術スタック
 
-- **フレームワーク**: Next.js 14.2.11（App Router、Server Components）
-- **React**: 18.2.0
+- **フレームワーク**: Next.js 16.x（App Router、Server Components、Turbopack）
+- **React**: 19.x
 - **言語**: TypeScript 5.x（strict mode）
-- **スタイリング**: Tailwind CSS 3.4 + shadcn/ui（Radix UI）
-- **3D**: @react-three/fiber 8.15.19 + three 0.160.0 + @react-three/drei 9.105.6
+- **スタイリング**: Tailwind CSS 4.x（`@config`で`tailwind.config.ts`を継続利用）+ shadcn/ui（Radix UI）
+- **フォント**: Noto Sans JP（本文）+ IBM Plex Mono（番号・ラベル・メタ情報）
 - **コンテンツ管理**: MDXファイルシステム（`content/connections/`, `content/projects/`）
 - **フォーム**: EmailJS（スパム対策：ハニーポット、日本語必須、レート制限）
 - **テーマ**: next-themes（ダーク/ライトモード、suppressHydrationWarning設定済み）
 - **Markdown**: react-markdown + rehype/remark（シンタックスハイライト、KaTeX数式）
+- **Lint**: ESLint 9（flat config `eslint.config.mjs`、`next lint`は廃止済み）
 
-> **注意**: Next.js 14 + React 18の組み合わせは@react-three/fiber互換性のため。
-> React 19へのアップグレードにはNext.js 15が必要。詳細は`claudedocs/NEXTJS14_DOWNGRADE_FIX.md`を参照。
+> **注意**: Three.js関連（@react-three/fiber等）は2026-08のリニューアルで撤去済み。
+> `content/projects/`内の`backup`を含むファイル名は一覧から除外される（`lib/projects.ts`）。
 
 ## ディレクトリ構造
 
@@ -155,13 +156,15 @@ export function getAllConnectionTags(): string[]
 - **タイムゾーン**: `Asia/Tokyo`
 - **フォーマット**: `year: 'numeric', month: 'short', day: 'numeric'`
 
-### レイアウト統一
-- **ヘッダー幅**: `max-w-5xl`
-- **トップページコンテナ幅**: `max-w-5xl`（全セクション統一）
+### レイアウト統一（2026-08リニューアル後）
+- **ヘッダー幅**: `max-w-5xl`（罫線`border-b`付き）
+- **トップページ・Projects一覧コンテナ幅**: `max-w-5xl`
 - **コンテンツ幅**: `max-w-4xl`（接続ノート、About、Projects詳細ページ）
 - **フォーム幅**: `max-w-2xl`（Contact）
-- **セクションパディング**: `py-8`（モバイル）、一部 `md:py-12`（デスクトップ）
-- **ヘッダー下余白**: `pt-20`（全ページ共通）
+- **ページパディング**: `py-14 md:py-20`
+- **セクション区切り**: `border-t`（罫線）。カード・背景色ボックスは使わない
+- **番号・日付・ラベル・ナビ**: `font-mono`＋`tracking-[0.15em]`〜`[0.2em]`＋`uppercase`
+- **ページヘッダー**: モノスペースのオーバーライン（`text-primary`）→ 大タイポH1 → リード文の順
 - **モバイル左右余白**: `px-4`（必須）
 - **セマンティックHTML**: `<main>`要素必須
 
