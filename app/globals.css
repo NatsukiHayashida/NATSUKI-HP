@@ -117,3 +117,45 @@
     font-family: var(--font-plex-mono), 'Courier New', Courier, monospace;
   }
 }
+
+/* 方眼紙のような下地。周囲へ向かって消える */
+.blueprint-grid {
+  background-image:
+    linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px);
+  background-size: 36px 36px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 65% 45%, #000 20%, transparent 80%);
+  mask-image: radial-gradient(ellipse 80% 70% at 65% 45%, #000 20%, transparent 80%);
+}
+
+/* 製図モチーフの描き起こしアニメーション */
+@keyframes ds-draw {
+  from { stroke-dashoffset: 1400; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes ds-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 既定は描画済みの状態。アニメーションは fill-mode: both で入りだけ演出する */
+.ds-draw {
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 0;
+  animation: ds-draw 1.8s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.ds-fade {
+  opacity: 1;
+  animation: ds-fade 0.9s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-draw,
+  .ds-fade {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}

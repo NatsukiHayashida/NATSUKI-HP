@@ -37,6 +37,7 @@ export function getAllProjects(): Project[] {
         outcomes: data.outcomes,
         challenges: data.challenges,
         learnings: data.learnings,
+        metric: data.metric,
       } as Project
     })
 
@@ -67,6 +68,7 @@ export function getProjectBySlug(slug: string): Project | null {
       outcomes: data.outcomes,
       challenges: data.challenges,
       learnings: data.learnings,
+      metric: data.metric,
     } as Project
   } catch (error) {
     return null

@@ -41,9 +41,10 @@ export default function ProjectsPage() {
             <Link
               key={project.slug}
               href={`/projects/${project.slug}`}
-              className="group grid grid-cols-[auto_1fr] md:grid-cols-[auto_1fr_auto] items-baseline gap-x-5 md:gap-x-8 py-6 md:py-8"
+              className="group relative grid grid-cols-[auto_1fr] md:grid-cols-[auto_1fr_auto] items-start gap-x-5 md:gap-x-10 gap-y-3 py-6 md:py-8"
             >
-              <span className="font-mono text-sm md:text-base text-primary tabular-nums">
+              <span className="absolute left-0 top-0 bottom-0 w-px bg-primary scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-300" />
+              <span className="font-mono text-sm md:text-base text-primary tabular-nums pt-1">
                 {String(index + 1).padStart(2, '0')}
               </span>
               <div>
@@ -67,9 +68,29 @@ export default function ProjectsPage() {
                   )}
                 </div>
               </div>
-              <span className="hidden md:block font-mono text-xs tracking-wider uppercase text-muted-foreground whitespace-nowrap">
-                {project.category} · {project.date ? project.date.slice(0, 4) : ''}
-              </span>
+              <div className="col-start-2 md:col-start-3 md:text-right md:pt-1">
+                {project.metric && (
+                  <>
+                    <p className="font-mono text-lg md:text-2xl tabular-nums whitespace-nowrap">
+                      {project.metric.from && (
+                        <>
+                          <span className="text-muted-foreground/60 line-through decoration-1">
+                            {project.metric.from}
+                          </span>
+                          <span className="text-muted-foreground/40 mx-2">→</span>
+                        </>
+                      )}
+                      <span className="text-primary font-medium">{project.metric.to}</span>
+                    </p>
+                    <p className="mt-1 font-mono text-[11px] text-muted-foreground/70">
+                      {project.metric.label}
+                    </p>
+                  </>
+                )}
+                <p className="mt-2 font-mono text-[11px] tracking-wider uppercase text-muted-foreground/70 whitespace-nowrap">
+                  {project.category} · {project.date ? project.date.slice(0, 4) : ''}
+                </p>
+              </div>
             </Link>
           ))}
         </div>

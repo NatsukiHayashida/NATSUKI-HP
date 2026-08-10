@@ -2,6 +2,25 @@ import Link from 'next/link'
 import { getAllConnections } from '@/lib/connections'
 import { getAllProjects } from '@/lib/projects'
 import { ArrowRight } from 'lucide-react'
+import DieSection from './components/die-section'
+
+const pillars = [
+  {
+    no: '01',
+    title: '金型設計',
+    body: '冷間鍛造の金型を設計・製造。素材が形になる工程の上流を担当しています。',
+  },
+  {
+    no: '02',
+    title: 'AI開発',
+    body: '画像による異常検知、業務の自動化。現場で本当に使えるかを基準に組み立てます。',
+  },
+  {
+    no: '03',
+    title: 'Web開発',
+    body: 'Next.jsを中心に、業務アプリからECまで。課題の発見から実装まで一人で通します。',
+  },
+]
 
 export default function Home() {
   const recentNotes = getAllConnections().slice(0, 5)
@@ -10,22 +29,60 @@ export default function Home() {
   return (
     <main>
       {/* Hero */}
-      <section className="py-20 md:py-32">
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 blueprint-grid pointer-events-none" aria-hidden="true" />
+        <div className="container max-w-5xl relative py-16 md:py-24">
+          <div className="grid md:grid-cols-2 gap-10 md:gap-12 items-center">
+            <div>
+              <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-6">
+                Portfolio &amp; Notes
+              </p>
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.05] mb-8">
+                Natsuki
+                <br />
+                Hayashida
+              </h1>
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-lg mb-8">
+                冷間鍛造の金型設計を本業に、AIとWebアプリケーションの開発に取り組んでいます。
+                現場で見つけた課題を、自分の手でプロダクトに変えていく過程を記録しているサイトです。
+              </p>
+              <div className="flex flex-wrap items-center gap-3">
+                <Link
+                  href="/projects"
+                  className="group inline-flex items-center gap-2 border border-primary text-primary px-5 py-2.5 font-mono text-xs tracking-[0.15em] uppercase hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
+                  View work
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                </Link>
+                <Link
+                  href="/about"
+                  className="inline-flex items-center gap-2 border px-5 py-2.5 font-mono text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+                >
+                  About
+                </Link>
+              </div>
+            </div>
+
+            <DieSection className="w-56 sm:w-64 md:w-full md:max-w-[360px] h-auto mx-auto md:mx-0 md:justify-self-end text-foreground/80" />
+          </div>
+        </div>
+      </section>
+
+      {/* Pillars */}
+      <section className="border-t">
         <div className="container max-w-5xl">
-          <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-6">
-            Portfolio &amp; Notes
-          </p>
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.05] mb-8">
-            Natsuki
-            <br />
-            Hayashida
-          </h1>
-          <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl mb-10">
-            冷間鍛造の金型設計を本業に、AIとWebアプリケーションの開発に取り組んでいます。
-            現場で見つけた課題を、自分の手でプロダクトに変えていく過程を記録しているサイトです。
-          </p>
-          <div className="font-mono text-xs tracking-[0.15em] uppercase text-muted-foreground">
-            金型設計 / AI開発 / Web開発
+          <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x">
+            {pillars.map((pillar) => (
+              <div key={pillar.no} className="py-8 md:py-10 md:px-8 md:first:pl-0 md:last:pr-0">
+                <div className="flex items-baseline gap-3 mb-3">
+                  <span className="font-mono text-xs text-primary tabular-nums">{pillar.no}</span>
+                  <h2 className="text-base md:text-lg font-semibold">{pillar.title}</h2>
+                </div>
+                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
+                  {pillar.body}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -48,22 +105,41 @@ export default function Home() {
               <Link
                 key={project.slug}
                 href={`/projects/${project.slug}`}
-                className="group grid grid-cols-[auto_1fr] md:grid-cols-[auto_1fr_auto] items-baseline gap-x-5 md:gap-x-8 py-6 md:py-8"
+                className="group relative grid grid-cols-[auto_1fr] md:grid-cols-[auto_1fr_auto] items-start gap-x-5 md:gap-x-10 gap-y-3 py-6 md:py-8"
               >
-                <span className="font-mono text-sm md:text-base text-primary tabular-nums">
+                <span className="absolute left-0 top-0 bottom-0 w-px bg-primary scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-300" />
+                <span className="font-mono text-sm md:text-base text-primary tabular-nums pt-1">
                   {String(index + 1).padStart(2, '0')}
                 </span>
                 <div>
                   <h3 className="text-lg md:text-2xl font-semibold leading-snug group-hover:text-primary transition-colors">
                     {project.title.split('―')[0].trim()}
                   </h3>
-                  <p className="mt-1.5 text-xs md:text-sm text-muted-foreground line-clamp-2 max-w-2xl">
+                  <p className="mt-1.5 text-xs md:text-sm text-muted-foreground line-clamp-2 max-w-xl leading-relaxed">
                     {project.excerpt}
                   </p>
+                  <p className="mt-3 font-mono text-[11px] tracking-wider uppercase text-muted-foreground/70">
+                    {project.category} · {project.date ? project.date.slice(0, 4) : ''}
+                  </p>
                 </div>
-                <span className="hidden md:block font-mono text-xs tracking-wider uppercase text-muted-foreground whitespace-nowrap">
-                  {project.category} · {project.date ? project.date.slice(0, 4) : ''}
-                </span>
+                {project.metric && (
+                  <div className="col-start-2 md:col-start-3 md:text-right md:pt-1">
+                    <p className="font-mono text-lg md:text-2xl tabular-nums whitespace-nowrap">
+                      {project.metric.from && (
+                        <>
+                          <span className="text-muted-foreground/60 line-through decoration-1">
+                            {project.metric.from}
+                          </span>
+                          <span className="text-muted-foreground/40 mx-2">→</span>
+                        </>
+                      )}
+                      <span className="text-primary font-medium">{project.metric.to}</span>
+                    </p>
+                    <p className="mt-1 font-mono text-[11px] text-muted-foreground/70">
+                      {project.metric.label}
+                    </p>
+                  </div>
+                )}
               </Link>
             ))}
           </div>
@@ -93,7 +169,7 @@ export default function Home() {
               <Link
                 key={note.slug}
                 href={`/connections/${note.slug}`}
-                className="group flex flex-col md:flex-row md:items-baseline gap-1 md:gap-8 py-5"
+                className="group flex flex-col md:flex-row md:items-baseline gap-1.5 md:gap-8 py-5"
               >
                 <time className="font-mono text-xs text-muted-foreground tabular-nums shrink-0">
                   {new Date(note.date).toLocaleDateString('ja-JP', {
@@ -103,9 +179,16 @@ export default function Home() {
                     timeZone: 'Asia/Tokyo',
                   })}
                 </time>
-                <h3 className="text-sm md:text-base font-medium group-hover:text-primary transition-colors">
-                  {note.title}
-                </h3>
+                <div className="min-w-0">
+                  <h3 className="text-sm md:text-base font-medium group-hover:text-primary transition-colors">
+                    {note.title}
+                  </h3>
+                  {note.tags.length > 0 && (
+                    <p className="mt-1 font-mono text-[11px] text-muted-foreground/60 truncate">
+                      {note.tags.slice(0, 4).map((tag) => `#${tag}`).join('  ')}
+                    </p>
+                  )}
+                </div>
               </Link>
             ))}
           </div>
@@ -113,10 +196,11 @@ export default function Home() {
       </section>
 
       {/* Contact CTA */}
-      <section className="border-t">
-        <div className="container max-w-5xl py-16 md:py-24">
+      <section className="border-t relative overflow-hidden">
+        <div className="absolute inset-0 blueprint-grid pointer-events-none" aria-hidden="true" />
+        <div className="container max-w-5xl relative py-16 md:py-24">
           <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-4">Contact</p>
-          <p className="text-xl md:text-2xl font-semibold tracking-tight mb-6">
+          <p className="text-xl md:text-3xl font-semibold tracking-tight mb-6 max-w-xl leading-snug">
             お仕事のご相談・技術の話、お気軽にどうぞ。
           </p>
           <Link

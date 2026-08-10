@@ -15,4 +15,6 @@ export interface Project {
   outcomes?: string[]
   challenges?: string[]
   learnings?: string[]
+  /** 一覧で大きく見せる代表値。before/after の2値、または単値 */
+  metric?: { label: string; from?: string; to: string }
 }

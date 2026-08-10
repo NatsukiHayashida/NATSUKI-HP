@@ -101,6 +101,25 @@ export default async function ProjectPage({ params }: Props) {
 
           <p className="text-sm md:text-lg text-muted-foreground mb-4 md:mb-6 leading-relaxed">{project.excerpt}</p>
 
+          {project.metric && (
+            <div className="border-y py-5 mb-6 md:mb-8">
+              <p className="font-mono text-2xl md:text-4xl tabular-nums">
+                {project.metric.from && (
+                  <>
+                    <span className="text-muted-foreground/60 line-through decoration-1">
+                      {project.metric.from}
+                    </span>
+                    <span className="text-muted-foreground/40 mx-3">→</span>
+                  </>
+                )}
+                <span className="text-primary font-medium">{project.metric.to}</span>
+              </p>
+              <p className="mt-2 font-mono text-xs text-muted-foreground">
+                {project.metric.label}
+              </p>
+            </div>
+          )}
+
           {/* External Links */}
           {(project.demoUrl || project.githubUrl) && (
             <div className="flex gap-4">
