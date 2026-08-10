@@ -48,7 +48,7 @@ def parse_sections(md: str) -> tuple[str, list[dict]]:
         if head.startswith('共通の前提'):
             common = body
             continue
-        m = re.match(r'(H-\d+)\.\s*(.+)', head)
+        m = re.match(r'(H-\d+R?)\.\s*(.+)', head)
         if m:
             figures.append({'id': m.group(1), 'title': m.group(2).strip(), 'body': body})
     return common, figures
@@ -185,7 +185,8 @@ function fallback(t) {
 }"""
 
 ARTICLE = {
-    'H-01': '外観検査AIの内製開発', 'H-02': '外観検査AIの内製開発', 'H-03': '外観検査AIの内製開発',
+    'H-01': '外観検査AIの内製開発', 'H-01R': '外観検査AIの内製開発（修正依頼）',
+    'H-02': '外観検査AIの内製開発', 'H-03': '外観検査AIの内製開発',
     'H-04': 'CAD操作のAI自動化', 'H-05': 'CAD操作のAI自動化',
 }
 

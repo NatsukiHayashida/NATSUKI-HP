@@ -1,0 +1,76 @@
+<svg viewBox="0 0 1000 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="旧評価指標が混同行列の一部しか参照していなかったことを示す概念図" fill="none">
+  <defs>
+    <pattern id="hatch-h01" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="10" stroke="currentColor" stroke-width="1" opacity="0.24"/>
+    </pattern>
+    <marker id="arrow-h01" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 1L9 5L0 9Z" fill="hsl(var(--vermilion))" stroke="none"/>
+    </marker>
+  </defs>
+
+  <g stroke="currentColor" stroke-width="1" opacity="0.28" vector-effect="non-scaling-stroke">
+    <line x1="110" y1="54" x2="890" y2="54"/><line x1="110" y1="346" x2="890" y2="346"/>
+    <line x1="500" y1="42" x2="500" y2="66"/><line x1="500" y1="334" x2="500" y2="358"/>
+  </g>
+
+  <g stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke">
+    <path d="M112 128H220V218H112Z"/><path d="M112 238H220V328H112Z"/>
+    <path d="M128 146H204V200H128Z" fill="url(#hatch-h01)"/><path d="M128 256H204V310H128Z"/>
+    <circle cx="122" cy="138" r="3"/><circle cx="210" cy="138" r="3"/>
+    <circle cx="122" cy="248" r="3"/><circle cx="210" cy="248" r="3"/>
+  </g>
+
+  <g stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke">
+    <rect x="310" y="108" width="380" height="220"/>
+    <line x1="500" y1="108" x2="500" y2="328"/><line x1="310" y1="218" x2="690" y2="218"/>
+    <circle cx="322" cy="120" r="3"/><circle cx="678" cy="120" r="3"/>
+    <circle cx="322" cy="316" r="3"/><circle cx="678" cy="316" r="3"/>
+    <path d="M336 136H474V190H336Z" fill="url(#hatch-h01)"/>
+    <path d="M526 136H664V190H526Z"/><path d="M336 246H474V300H336Z"/><path d="M526 246H664V300H526Z"/>
+  </g>
+
+  <g stroke="currentColor" fill="hsl(var(--background))" stroke-width="1.25" vector-effect="non-scaling-stroke">
+    <circle cx="354" cy="150" r="17"/><circle cx="544" cy="150" r="17"/>
+    <circle cx="354" cy="260" r="17"/><circle cx="544" cy="260" r="17"/>
+  </g>
+  <g fill="currentColor" font-size="11" font-family="ui-monospace,monospace" text-anchor="middle" dominant-baseline="central">
+    <text x="354" y="150">01</text><text x="544" y="150">02</text>
+    <text x="354" y="260">03</text><text x="544" y="260">04</text>
+  </g>
+
+  <g stroke="hsl(var(--vermilion))" stroke-width="3" vector-effect="non-scaling-stroke">
+    <path d="M302 96V82H698V96"/><line x1="500" y1="82" x2="500" y2="96"/>
+  </g>
+  <circle cx="500" cy="82" r="18" stroke="hsl(var(--vermilion))" fill="hsl(var(--background))" stroke-width="1.5"/>
+  <text x="500" y="82" fill="hsl(var(--vermilion))" font-size="11" font-family="ui-monospace,monospace" text-anchor="middle" dominant-baseline="central">05</text>
+
+  <g stroke="hsl(var(--vermilion))" stroke-width="3" vector-effect="non-scaling-stroke">
+    <path d="M220 173H258M220 283H258M258 173V283"/>
+    <path d="M258 218H286V163H326" marker-end="url(#arrow-h01)"/>
+    <path d="M286 218V273H326" marker-end="url(#arrow-h01)"/>
+    <circle cx="338" cy="163" r="6" fill="hsl(var(--background))"/>
+    <circle cx="338" cy="273" r="6" fill="hsl(var(--background))"/>
+  </g>
+  <circle cx="258" cy="218" r="18" stroke="hsl(var(--vermilion))" fill="hsl(var(--background))" stroke-width="1.5"/>
+  <text x="258" y="218" fill="hsl(var(--vermilion))" font-size="11" font-family="ui-monospace,monospace" text-anchor="middle" dominant-baseline="central">06</text>
+
+  <g stroke="currentColor" stroke-width="1.25" opacity="0.7" vector-effect="non-scaling-stroke">
+    <path d="M405 328V366H760M595 218V354H760M405 218V342H760" stroke-dasharray="5 5"/>
+    <path d="M690 122H734V392H820M690 314H734"/>
+    <path d="M298 104V332H704V104M704 328V418H880" stroke-dasharray="2 6"/>
+    <circle cx="405" cy="218" r="4" fill="hsl(var(--background))"/>
+    <circle cx="595" cy="218" r="4" fill="hsl(var(--background))"/>
+    <circle cx="405" cy="328" r="4" fill="hsl(var(--background))"/>
+    <circle cx="690" cy="122" r="4" fill="hsl(var(--background))"/>
+    <circle cx="690" cy="314" r="4" fill="hsl(var(--background))"/>
+  </g>
+
+  <g stroke="currentColor" fill="hsl(var(--background))" stroke-width="1.5" vector-effect="non-scaling-stroke">
+    <path d="M748 350H792V382H748Z"/><circle cx="770" cy="366" r="18"/><path d="M770 366L779 358"/>
+    <path d="M808 376H852V408H808Z"/><circle cx="830" cy="392" r="18"/><path d="M830 392L838 383"/>
+    <path d="M868 402H912V434H868Z"/><circle cx="890" cy="418" r="18"/><path d="M890 418L900 414"/>
+  </g>
+  <g fill="currentColor" font-size="11" font-family="ui-monospace,monospace" text-anchor="middle" dominant-baseline="central">
+    <text x="770" y="366">07</text><text x="830" y="392">08</text><text x="890" y="418">09</text>
+  </g>
+</svg>
