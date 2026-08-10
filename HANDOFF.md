@@ -58,6 +58,13 @@ feca255 docs: セッション引き継ぎ用のHANDOFF.mdを追加
 `claudedocs/DIAGRAM_BRIEF_GPT_GEMINI.md` に用意済み（共通の前提＋1図分を貼って使う）。
 返ってきた草案の React 化・規約適合・組み込み・表示検証は CC が行う。
 
+**受け渡しの経路（gpt-handoff スキル、2026-08-11整備）**：
+- CC→GPT：依頼文をコピー用HTMLにして `_handoff/`（git管理外）に置く → report-hub
+  （`https://node.taile73628.ts.net:8443/`）からスマホで開き、全文コピーして ChatGPT / Gemini へ。
+  **H-01 の依頼ページは `_handoff/gpt-brief-h01.html` に作成済み**
+- GPT→CC：返答テキストはそのままCCのチャットへ貼る。PCでのファイルは Downloads 経由（from-q と同様）
+- devサーバーのスマホ確認は `https://node.taile73628.ts.net:8445/`（Tailscale served、設定済み）
+
 ### 2. push（ユーザーの明示的な指示を待つこと）
 
 21コミットが手元に残っている。push すると Vercel で本番公開される。
