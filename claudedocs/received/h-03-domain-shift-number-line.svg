@@ -1,0 +1,78 @@
+<svg viewBox="0 0 1000 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="学習時良品の最大値より別セッション良品の最小値が高く、単一の閾値では分離できないことを示す数直線" fill="none">
+  <defs>
+    <pattern id="shift-hatch-h03" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" stroke="hsl(var(--primary))" stroke-width="1" opacity=".46"/></pattern>
+    <pattern id="band-hatch-h03" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="12" stroke="currentColor" stroke-width="1" opacity=".24"/></pattern>
+    <marker id="shift-arrow-h03" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1L9 5L0 9Z" fill="hsl(var(--primary))"/></marker>
+  </defs>
+
+  <!-- 製図基準線 -->
+  <g stroke="currentColor" stroke-width="1" opacity=".22" vector-effect="non-scaling-stroke"><path d="M54 54H946M54 400H946"/><path d="M70 42V66M930 42V66M70 388V412M930 388V412"/></g>
+
+  <!-- スコア数直線を測定レールとして表現 -->
+  <g stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke">
+    <path d="M92 218H908V258H92Z"/>
+    <path d="M116 238H884"/>
+    <path d="M116 228V248M884 228V248"/>
+    <path d="M180 232V244M244 232V244M308 232V244M372 228V248M436 232V244M500 232V244M564 228V248M628 232V244M692 232V244M756 232V244M820 232V244" opacity=".42"/>
+    <circle cx="104" cy="230" r="3"/><circle cx="896" cy="230" r="3"/><circle cx="104" cy="246" r="3"/><circle cx="896" cy="246" r="3"/>
+  </g>
+
+  <!-- 01 学習時良品の最大端 0.38 -->
+  <g stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke">
+    <path d="M356 166V290"/><path d="M344 178H368M344 278H368"/>
+    <!-- 良品標本ラック。分布形状ではなく終端標本のみ -->
+    <path d="M104 116H330V184H104Z"/><path d="M126 132H174V168H126ZM190 132H238V168H190ZM254 132H302V168H254Z"/>
+    <circle cx="150" cy="150" r="11"/><circle cx="214" cy="150" r="11"/><circle cx="278" cy="150" r="11"/>
+    <path d="M330 150H356"/>
+  </g>
+  <g stroke="currentColor" fill="hsl(var(--background))" stroke-width="1.5"><circle cx="356" cy="146" r="18"/></g>
+  <text x="356" y="146" fill="currentColor" font-size="11" font-family="ui-monospace,monospace" text-anchor="middle" dominant-baseline="central">01</text>
+
+  <!-- 学習時不良品側の標本ラック。位置分布は描かない -->
+  <g stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke">
+    <path d="M660 116H892V184H660Z"/><path d="M684 132H732V168H684ZM748 132H796V168H748ZM812 132H860V168H812Z" fill="url(#band-hatch-h03)"/>
+    <path d="M696 142L720 158M760 142L784 158M824 142L848 158"/>
+  </g>
+
+  <!-- 02 学習時に成立していた閾値ゲート -->
+  <g stroke="currentColor" stroke-width="1.75" vector-effect="non-scaling-stroke">
+    <path d="M470 188H506V288H470Z" fill="hsl(var(--background))"/>
+    <path d="M478 202V274M498 202V274"/>
+    <circle cx="488" cy="238" r="8"/>
+    <path d="M488 188V170"/>
+  </g>
+  <g stroke="currentColor" fill="hsl(var(--background))" stroke-width="1.5"><circle cx="488" cy="152" r="18"/></g>
+  <text x="488" y="152" fill="currentColor" font-size="11" font-family="ui-monospace,monospace" text-anchor="middle" dominant-baseline="central">02</text>
+
+  <!-- 03 別セッション良品100枚の最小端 0.5385 -->
+  <g stroke="hsl(var(--primary))" stroke-width="2.25" vector-effect="non-scaling-stroke">
+    <path d="M548 166V290"/><path d="M536 178H560M536 278H560"/>
+    <!-- 100枚を示す積層標本。個数そのものは凡例側 -->
+    <path d="M576 294H874V366H576Z" fill="url(#shift-hatch-h03)"/>
+    <path d="M590 306H846V350H590Z" fill="hsl(var(--background))"/>
+    <path d="M602 316H834M602 326H834M602 336H834M602 346H834"/>
+    <path d="M548 330H576"/>
+    <!-- 元の良品終端から右へ移動した事実 -->
+    <path d="M356 318H536" marker-end="url(#shift-arrow-h03)"/>
+  </g>
+  <g stroke="hsl(var(--primary))" fill="hsl(var(--background))" stroke-width="1.5"><circle cx="548" cy="310" r="18"/></g>
+  <text x="548" y="310" fill="hsl(var(--primary))" font-size="11" font-family="ui-monospace,monospace" text-anchor="middle" dominant-baseline="central">03</text>
+
+  <!-- 04 両立しない閾値の移動帯 -->
+  <g stroke="currentColor" stroke-width="1.25" vector-effect="non-scaling-stroke">
+    <path d="M370 198H534V278H370Z" fill="url(#band-hatch-h03)"/>
+    <path d="M398 206V270M452 206V270M506 206V270" stroke-dasharray="4 5"/>
+    <path d="M382 190V180H522V190"/>
+  </g>
+  <g stroke="currentColor" fill="hsl(var(--background))" stroke-width="1.5"><circle cx="452" cy="296" r="18"/></g>
+  <text x="452" y="296" fill="currentColor" font-size="11" font-family="ui-monospace,monospace" text-anchor="middle" dominant-baseline="central">04</text>
+
+  <!-- 05 撮像条件を固定する方向への治具モチーフ -->
+  <g stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke">
+    <path d="M92 304H288V374H92Z"/><path d="M112 320H162V358H112ZM218 320H268V358H218Z"/>
+    <path d="M162 339H218"/><circle cx="190" cy="339" r="13"/>
+    <path d="M128 304V290M252 304V290M118 290H138M242 290H262"/>
+  </g>
+  <g stroke="currentColor" fill="hsl(var(--background))" stroke-width="1.5"><circle cx="108" cy="294" r="18"/></g>
+  <text x="108" y="294" fill="currentColor" font-size="11" font-family="ui-monospace,monospace" text-anchor="middle" dominant-baseline="central">05</text>
+</svg>

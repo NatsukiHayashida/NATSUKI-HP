@@ -1,3 +1,4 @@
+import { DomainShift } from './diagrams/domain-shift'
 import { MailCompare } from './diagrams/mail-compare'
 import { Legend, Schematic } from './schematic'
 import { MaskPosition } from './diagrams/mask-position'
@@ -237,10 +238,52 @@ function GaikanMask() {
   )
 }
 
+function GaikanShift() {
+  return (
+    <Schematic
+      label="FIG. 03"
+      title="実験室では勝てるが、現場では負ける ― 分離できないという事実"
+      note="分布の形は記録に残っていないため描いていない。分かっているのは両端の位置だけで、それだけで結論は出る。学習時に成立していた閾値は、この帯のどこへ動かしても両立しない。"
+    >
+      <DomainShift />
+      <Legend
+        items={[
+          {
+            no: '01',
+            title: '学習時の良品の上端 ― 0.38',
+            body: '学習と同じ条件で撮影した良品が到達した異常スコアの最大値。ここより下なら良品と判定できていた。',
+          },
+          {
+            no: '02',
+            title: '学習時に成立していた閾値',
+            body: '同じ撮像条件のテストではAUC 0.999。良品と不良品をほぼ完全に分けられていた。',
+          },
+          {
+            no: '03',
+            title: '別セッションの良品100枚の下端 ― 0.5385',
+            body: '別の日に撮影した無選別の良品。その最小値でさえ、学習時の良品の最大値を上回った。100枚すべてが誤検出になっている。',
+          },
+          {
+            no: '04',
+            title: 'どこへ動かしても両立しない帯',
+            body: '閾値を上げれば不良品を見逃し、下げれば別セッションの良品を弾く。0.38と0.5385の位置関係そのものが結論で、調整では抜けられない。',
+          },
+          {
+            no: '05',
+            title: '撮像条件を固定する側へ',
+            body: 'データ側で吸収する実験も3通り行ったが、誤検出率は52%までしか下がらず、同一セッションの過検出は逆に悪化した。閾値ではなく入力の条件を固定する方向へ切り替えた。',
+          },
+        ]}
+      />
+    </Schematic>
+  )
+}
+
 export const articleDiagrams: Record<string, () => React.JSX.Element> = {
   'work-hub-map': WorkHubMap,
   'work-hub-mail': WorkHubMail,
   'fusion-rework': FusionRework,
   'gaikan-metric': GaikanMetric,
   'gaikan-mask': GaikanMask,
+  'gaikan-shift': GaikanShift,
 }
