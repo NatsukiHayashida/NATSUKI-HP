@@ -1,7 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { WorkCycle } from '../components/diagrams/work-cycle'
 
 export const metadata: Metadata = {
   title: 'About',
@@ -80,12 +79,11 @@ export default function About() {
           <span className="inline-block">技術で形にして、</span>
           <span className="inline-block">現場で確かめる</span>
         </h2>
-        <p className="mb-10 md:mb-14 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
+        <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
           冷間鍛造の金型設計から始めて、いまはAIとWebが加わりました。
           増えたのは手段のほうで、進め方はずっとこの形です。
           見つける・作る・確かめるを現場の中の一人で回すので、あいだに仕様書も翻訳も挟まりません。
         </p>
-        <WorkCycle />
       </section>
 
       {/* いまの手段（Approach の 02 の中身） */}
@@ -94,7 +92,7 @@ export default function About() {
           Current Means
         </h2>
         <p className="mb-6 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
-          上の 02「技術で形にする」の中身です。ここは時期によって入れ替わります。
+          「技術で形にする」の中身です。ここは時期によって入れ替わります。
         </p>
         <div className="divide-y border-t border-b">
           {pillars.map((pillar) => (

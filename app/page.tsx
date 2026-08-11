@@ -3,7 +3,6 @@ import { getAllConnections } from '@/lib/connections'
 import { getAllProjects } from '@/lib/projects'
 import { ArrowRight } from 'lucide-react'
 import DieSection from './components/die-section'
-import { WorkCycle } from './components/diagrams/work-cycle'
 
 export default function Home() {
   const recentNotes = getAllConnections().slice(0, 5)
@@ -60,11 +59,10 @@ export default function Home() {
             <span className="inline-block">技術で形にして、</span>
             <span className="inline-block">現場で確かめる</span>
           </h2>
-          <p className="mt-4 mb-10 md:mb-14 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
+          <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
             持っている技術の一覧ではなく、回し方の話です。課題は現場で見つかり、打ち手はAIを軸に
             現場の外の最新まで取りに行き、確かめる場所もまた現場になります。
           </p>
-          <WorkCycle />
         </div>
       </section>
 
@@ -82,7 +80,7 @@ export default function Home() {
             </Link>
           </div>
           <p className="mb-8 md:mb-12 text-sm md:text-base text-muted-foreground">
-            上の循環を、実際に回した記録です。
+            実際に回した記録です。
           </p>
           <div className="divide-y border-t border-b">
             {recentProjects.map((project, index) => (

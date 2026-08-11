@@ -8,9 +8,12 @@ import { cn } from '@/lib/utils'
  * SVGの中に文字を書くと、viewBoxの縮尺で潰れるため使えない。
  * かといって番号バルーンだけにすると、読者が図と凡例を往復することになり
  * 「図を読むのに一手間かかる」状態になる（本人からの指摘）。
- * そこで **名前はHTMLでSVGの上に重ねる**（`Callouts`）。トップの循環図
- * `diagrams/work-cycle.tsx` と同じ作法で、位置は％指定、`bg-background` で線を切る。
- * 図だけで意味が取れるようにし、Legend は補足の説明に徹する。
+ * そこで **名前はHTMLでSVGの上に重ねる**（`Callouts`）。位置は％指定、
+ * `bg-background` で線を切る。図だけで意味が取れるようにし、Legend は補足の説明に徹する。
+ *
+ * **2026-08-11：図はすべて撤去した。ここに残っているのは枠だけ。**
+ * 作り直しを重ねても「名称を隠すと何の比較か分からない」水準を越えられなかったため。
+ * 次に作るときの基準は CLAUDE.md「記事本文への模式図の差し込み」を読むこと。
  */
 
 export type LegendItem = { no: string; title: string; body: string }

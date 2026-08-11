@@ -1,141 +1,95 @@
 # HANDOFF — サイトリニューアル 2026-08
 
-**最終更新**: 2026-08-11（第4セッション後） / まずこのファイルだけ読めば再開できる。
+**最終更新**: 2026-08-11（第5セッション後・図を全撤去） / まずこのファイルだけ読めば再開できる。
 
 ---
 
 ## 現在地
 
 2026年8月10日に**フルリニューアルを実施し、Phase 1〜5まで完了**。
-第2セッションで保留事項を4件片付け、第3セッションで**サイト全体の図解計画（DDS）を策定し、
-その基準実装として H-08 を1枚仕上げた**。
+その後、第3〜第5セッションでサイト全体の図解に取り組んだが、
+**2026-08-11 に図を1枚残らず撤去した**（記事の模式図7枚＋トップ／Aboutの循環図）。
+理由と受け入れ基準は下の「図解 — 全部やめた」に書いた。
 
-ローカルでビルド・リント・表示確認まで通っているが、**まだ push していない**（22コミットが未push）。
+いまサイトに残っている図版は、ヒーローの金型断面図モチーフ（`die-section.tsx`）だけ。
+これは模式図ではなくサイトのモチーフなので対象外。OGP生成もここから拾っている。
 
-```
-a2b3aa8 docs: 第3セッションの成果を HANDOFF に反映
-9a780f7 docs: H-08の実装結果を図解計画に反映
-de4ceed design: 3本柱を「現場→技術→現場」の循環図に置き換える（H-08）
-e2b1808 docs: 図解計画とDiagram Design Systemを分析としてまとめる
-fcad7d1 docs: 図の作り方を規約として明文化
-e289002 design: 記事の図を矢印と文字の羅列から絵に描き直す
-5aab800 docs: 第2セッションの作業内容を HANDOFF / CLAUDE.md に反映
-8926525 content: 接続ノートを点検し、趣旨と規約に合わない箇所を是正
-4d12128 chore: public/image を棚卸しし、22MBから672KBへ削減
-7f01dc9 design: OGP画像を新デザインで作り直す
-642fad2 design: 記事本文に模式図を差し込める仕組みを追加
-49eb6fd content: 花製作所の記事から新規購入者の減少率を削除
-feca255 docs: セッション引き継ぎ用のHANDOFF.mdを追加
-（以下、第1セッション分9件は省略。git log で辿れる）
-```
-
-詳細な経緯は `claudedocs/RENEWAL_PLAN_2026.md`、
-図解の全体計画は `claudedocs/DIAGRAM_PLAN_2026.md` に記録済み。
+ローカルでビルド・リント・表示確認まで通っているが、**まだ push していない**（40コミットが未push）。
+詳細な経緯は `claudedocs/RENEWAL_PLAN_2026.md`。
 
 ---
 
-## ★ 次にやること（第5セッションの入口）
+## ★ 次にやること（第6セッションの入口）
 
-### 0. 実プロジェクトの記録を見て図を作り直す ← 第5セッションで着手済み
+### 0. GPTからの図案（H-07R）の返答待ち ← いまここ
 
-`~/work/iidzka-inspection/docs/diagram-design-review-for-cc.md`（GPTのレビュー）を受け、
-**実データを確認したうえで H-01 / H-02 / H-03 を作り直した**。
+**サイトの図は全撤去済み**（下の「図解 — 全部やめた」）。そのうえで、
+外観検査AIの「マスクの適用位置」の図を1枚だけ作り直す試みをGPTと進めている。
 
-回答と実施内容は **`claudedocs/DIAGRAM_REVIEW_RESPONSE_2026-08.md`**（まずこれを読む）。
-要点だけ：
+**現行の依頼書は `claudedocs/DIAGRAM_BRIEF_2026-08-11.md`。**
+（`DIAGRAM_BRIEF_GPT_GEMINI.md` は前提が古い。冒頭に警告済み）
 
-- **H-03 は実測の分布が残っていた**（`iidzka-inspection/results/b7_cpu_rebuild/scores_all.csv`、519枚）。
-  旧版の注記「分布の形は記録に残っていない」は誤りだったので削除。
-  実測ヒストグラム3群のリッジラインに描き直した
-- **H-01** は F1 / ROC / AUC を外し、同じ盤面の before / after 2枚に。番号9→2
-- **H-02** は図の中に名前が出ているので番号を全廃。凡例9→2（因果だけ書く）
-- **`Readout`**（図の直近に大きな数字を出す部品）を `schematic.tsx` に新設。3枚とも使っている
-- レビューのP0「モバイルで横長SVGが縮小されている」は**成立しない**（縦組みは実装済み）。
-  計測方法の問題。実寸確認は必ずCDPの `Emulation.setDeviceMetricsOverride` を使うこと
+これまでの経緯：
 
-**次にやること**：
-1. **H-02の見出しの扱いをユーザーに確認**（回答文書 §4-1）。
-   記録上、入力側マスク（固定80pxボーダー）と推論後マスク（動的ワーク領域）は同じ処理ではない。
-   「同じマスクでも、かける場所で結果が逆転する」を残すか、正確な言い方へ変えるか
-2. 決まったら H-02 のSVG本体を作り直す（いまは凡例と本文だけ直してある）
-3. その後 H-04 / H-05（CAD自動化の記事）へ。**記事1本ずつ完成させる**約束は維持
-
-### 1. 図解計画の High を順に実装する
-
-`claudedocs/DIAGRAM_PLAN_2026.md` に候補19件・優先度つきで整理済み。
-**H-08 は完了**。ユーザー合意済みの着手順は次のとおり。
-
-| 順 | ID | 内容 | 状態 |
-|---|---|---|---|
-| 1 | H-08 | 3本柱 → 現場/技術/現場の循環図 | **完了**（第4セッションで主題を改訂） |
-| 2 | H-01 | 外観検査AI：評価指標の欠陥（混同行列） | **完了** |
-| 3 | H-02 | 外観検査AI：マスクの位置で結果が逆転 | **完了** |
-| 4 | H-03 | 外観検査AI：ドメインシフトの分布 | **完了** |
-| 5 | H-04 | Fusion：19.6時間の内訳 | **完了** |
-| 6 | H-05 | Fusion：門は、門が見ている対象しか守らない | **完了** |
-
-**High 6件はすべて実装済み**。外観検査AIの記事に3枚、CAD自動化の記事に2枚、
-トップとAboutに循環図が入った。
-
-### ★ 次セッションの入口：実プロジェクトの図を参照して描き直す（ユーザー指示・2026-08-11）
-
-**`~/work/iidzka-inspection/` に、記事の題材そのものの図が実物で残っている。**
-いまサイトに入っている図は「本文の記述だけ」から起こしたため、実際の分布や
-異常マップの見た目とは無関係な模式図になっている。**先にこれらを見ること。**
-
-| 参照 | 場所 | 対応する図 |
+| 回 | 受領物 | 判定 |
 |---|---|---|
-| 混同行列 | `outputs/test_eval/confusion_matrix.png` | H-01 |
-| ROC曲線・閾値分析 | `outputs/test_eval/roc_curve.png` / `threshold_analysis.png` | H-01 |
-| 異常スコアの分布 | `outputs/test_eval/score_distribution.png` | **H-03（重要）** |
-| マスクの比較・生成過程 | `results/analysis/roi_mask_comparison.png` ほか `roi_*.png` 多数 | **H-02（重要）** |
-| 誤検出と正解の異常マップ | `results/analysis/fp_vs_tn_anomaly_maps.png` | H-02 / H-03 |
-| 分布の比較 | `results/analysis/b5_score_distribution_comparison.png` | H-03 |
-| 動画スライド | `docs/reports/video/deck.html` と `dist/*.mp4` | 全体の見せ方 |
+| H-06 | `h-06-mask-placement.svg` ＋凡例 | 不採用。事実誤り3点、対称的な描き方、結論が文章頼み |
+| H-07 | `h-07-mask-placement-pc/mobile.svg` ＋凡例 | 不採用。文字ゼロ・2構図・色3役・label-slot は達成。ただし事実誤りは未修正、粒が同数になり差が消失、×/✓記号が追加 |
 
-**とくに H-03**：いまの図には「分布の形は記録に残っていないため描いていない」と
-注記を入れているが、**`score_distribution.png` が実在する**。実物を見れば
-分布の形を根拠つきで描ける可能性が高い。まずここを確認すること。
+**H-07Rの修正依頼を渡したところ。返答を待っている状態。**
 
-**注意**：これらは社内の実データの画像。**そのまま公開しない**（伏字ルール）。
-形状・分布の傾向を参考にして、サイト側の図を描き直すために使う。
+**受け取ったら必ずやること**：描画して、`~/work/iidzka-inspection/results/analysis/roi_v1_report.md`
+と照合する。過去2回とも「外周80pxの帯・背景平均色で塗りつぶし」が
+「中央の黒い四角」になって返ってきている。**黒塗りは意図的に避けた手法**なので、
+図が実際と反対のことを描いていないか毎回確認すること。
 
-**図を実装するときに踏んだ落とし穴（必ず読む）**
+**受け入れ基準（これを通らないものは入れない）**：
+図から名称・ラベル・数値をすべて隠して、
+①何と何を比較しているか ②どこが問題か ③何が変化したか ④結論はどこか
+の4つが判別できること。文字を消すと意味がなくなる図は模式図ではない。
 
-1. **SVGの `marker` は参照元の `currentColor` を継承しない**。朱の矢印の先端だけが
-   黒く出る。marker内の `fill` は `hsl(var(--primary))` と直に書くこと
-2. **図の中に名前を出す（2026-08-11 方針転換）**。番号バルーンだけを置いて名称を凡例へ回すと
-   「図を読むのに一手間かかる」（本人指摘）。名前はHTMLでSVGに重ねる（`Callouts` / `Overlay`）
-3. **モバイル用の縦組みを別に作る**。横組み（viewBox 1000幅）のまま縮めると、
-   番号バルーンが5px以下・文字が読めなくなる。H-01/H-04とも `sm:` で出し分けている
-4. **viewBoxの空き領域をそのままにしない**。図が上に寄っていると、その分だけ
-   本文との間に空白が出る（H-01で3割の空白が出た。`viewBox="0 150 320 350"` で詰めた）
-5. **GPTの図は意味を必ず検証する**。H-01は「旧指標が見ていた象限」を取り違えていた。
-   凡例が無いと検証できないので、SVGと凡例は必ずセットで受け取ること
+**2巡して幾何が直らない場合の代案**（ユーザーに提示済み、未選択）：
+外周の帯の幅・欠陥印の位置・部品の輪郭を**こちらが数値で確定**してGPTへ渡し、
+見た目の仕上げだけ任せる。幾何は記録から決まるのでデザインの好みではない。
 
-**進め方の約束**：記事1本ずつ完成させる（横断で作ると記事内のバランスが崩れる）。
-1枚できたらスクリーンショットでユーザー確認を取ってから次へ。
+### 受け渡しの経路
 
-**図案の分業（2026-08-11 ユーザー決定）**：H-01以降の構図・SVG草案は
-**GPT / Gemini に依頼する**。依頼用の自己完結指示書を
-`claudedocs/DIAGRAM_BRIEF_GPT_GEMINI.md` に用意済み（共通の前提＋1図分を貼って使う）。
-返ってきた草案の React 化・規約適合・組み込み・表示検証は CC が行う。
+- **CC→GPT**：`python3 scripts/build-handoff.py` で `_handoff/`（git管理外）へコピー用HTMLを生成。
+  スマホの入口は `https://node.taile73628.ts.net:8443/NATSUKI-HP/_handoff/index.html`。
+  **依頼文を直すときはHTMLではなく `claudedocs/DIAGRAM_BRIEF_2026-08-11.md` を直して流し直す**
+- **GPT→CC**：受信箱は `/mnt/c/Users/林田夏樹/Downloads/gpt`
+  （Windows側は `C:\Users\林田夏樹\Downloads\gpt`）。ユーザーは貼り付け作業をしない方針
+- **監視はセッションを跨げない。次セッションで張り直すこと**：
 
-**受け渡しの経路（gpt-handoff スキル、2026-08-11整備）**：
-※ セッションを跨ぐと受信箱の監視は切れる。**次セッションで Monitor を張り直すこと**。
+  ```
+  Monitor({ command: "bash scripts/watch-gpt-inbox.sh", persistent: true })
+  ```
 
-- CC→GPT：`python3 scripts/build-handoff.py` で H-01〜H-05 の依頼ページ＋一覧を
-  `_handoff/`（git管理外）へ生成する。**スマホの入口は
-  `https://node.taile73628.ts.net:8443/NATSUKI-HP/_handoff/index.html`**。
-  依頼文の中身を直すときは HTML ではなく `claudedocs/DIAGRAM_BRIEF_GPT_GEMINI.md` を直して流し直す
-- GPT→CC：**受信箱は `C:\Users\林田夏樹\Downloads\gpt`**（ユーザーは貼り付け作業をしない方針）。
-  セッション中は Monitor ツールで5秒ポーリングし、届いたら自動で取り込む
-  （`/mnt/c` は inotify が効かないためポーリング必須）。**次セッションでも監視を張り直すこと**
-- devサーバーのスマホ確認は `https://node.taile73628.ts.net:8445/`（Tailscale served、設定済み）
+  **Monitorに多行スクリプトを直接渡すと改行が潰れて壊れる**（無音のまま空回りし、
+  状態は running・出力0バイト。実際に30分以上気づかなかった）。必ずファイルで渡すこと。
+  張ったら既知の変化を1回起こして、通知が来ることを確かめてから放置する
+- devサーバーのスマホ確認は `https://node.taile73628.ts.net:8445/`（Tailscale served）
 
-### 2. push（ユーザーの明示的な指示を待つこと）
+### 1. 記事末尾の重複を整理する
 
-**44コミットが手元に残っている。** push すると Vercel で本番公開される。
+各プロジェクト記事の末尾の `Outcomes & Results` / `Challenges Overcome` / `Key Learnings` は
+本文と重複している。2セクション程度への統合を検討する。
+**日本語の本文なのに末尾だけ英語見出し**な点も揃えたい。実体はフロントマターの
+`outcomes` / `challenges` / `learnings`。対象は5記事すべて。
+
+### 2. Approach の文言（本人の判断が要る）
+
+- 「見つける・作る・確かめるを現場の中の一人で回すので、あいだに仕様書も翻訳も挟まりません」は
+  分業・文書化・協働を否定しているようにも読める、という指摘がある
+- 「AIを軸に」が Problem First の主張と衝突しうる、という指摘もある
+- **本人の立ち位置の宣言なので、CCが勝手に薄めない**
+
+循環図の撤去でトップ／About の Approach は**見出し＋リード文だけ**になっている。
+ここに何を置くかも未決。
+
+### 3. push（ユーザーの明示的な指示を待つこと）
+
+**41コミットが手元に残っている。** push すると Vercel で本番公開される。
 
 ---
 
@@ -155,33 +109,34 @@ Next.js 14 → **16.3**、React 18 → **19.2**、Tailwind 3.4 → **4.3**、ESL
 断面図（ダイ＋パンチ）／端面図／詳細図B／表題欄で構成。
 **実在の設計値は使わず、寸法は記号（ø・R・C・H）のみ**。ここは今後も守ること。
 
-### 図解（第3セッションで方針を確立）
+### 図解 — 全部やめた（2026-08-11）
 
-サイト全体を「文章中心」から「視覚的に理解できるポートフォリオ」へ変えていく方針。
-**全体計画は `claudedocs/DIAGRAM_PLAN_2026.md`**（候補19件・優先度・DDS仕様）。
+**サイトから図を1枚残らず撤去した。** 記事の模式図7枚とトップ／Aboutの循環図（H-08）。
+第3〜第5セッションで作り、作り直しを重ねたが、次の水準を越えられなかった。
 
-**図の作り方で守ること（過去に一度やり直している）**
+> **名称をすべて隠した状態で、「何と何を比較しているか／どこが問題か／
+> 何が変化したか／結論はどこか」が判別できること。**
+> 文字を消すと意味がなくなる図は、模式図ではなくフローチャート。
 
-1. **矢印と文字を並べただけの図は作らない**。形のあるものを描く（一度作って却下された）
-2. **SVGの中に文字を置かない**（縮尺で潰れるため）。ただし**番号だけ打って名称を凡例へ
-   回すのも禁止**。名前はHTMLで重ねる（`Callouts`）。凡例は補足の説明に徹する
-3. **文言ブロックの幅は rem ではなく % で指定**。`max-w-5xl`（トップ）と `max-w-4xl`（About）で
-   コンテナ幅が違うため、固定幅だと狭いほうで要素が衝突する（H-08 で実際に起きた）
-4. 図のために新しい色を足さない。朱は1図につき1系統。グラデーション・紫は禁止
-5. 図に書く内容は本文で述べた範囲に限る。伏字ルールは図の中でも同じく適用する
+図の外の説明文を読まないと解読できない状態が、何度直しても残った。
+実データ（`~/work/iidzka-inspection/`）に当たって描き直した回でも越えられていない。
 
-**基準実装（新しい図はまずこれを読む）**: `app/components/diagrams/work-cycle.tsx`
-線はSVGで背景に敷き、文言はHTMLをパーセント座標で重ねて `bg-background` で線を切る。
+**残してあるもの（仕組みだけ）**
+- `app/components/schematic.tsx` — `Schematic` / `Callouts` / `Overlay` / `Legend` / `Readout`
+- `app/components/article-diagrams.tsx` — 登録表。**中身は空**
+- `app/projects/[slug]/page.tsx` の `figure` レンダラ。未登録キーは素の `<figure>` へ
 
-実装済みの図（すべて `app/components/diagrams/`）：
-- `work-cycle.tsx` — トップ／About の「現場→技術→現場」の循環（H-08）
-- `metric-blindspot.tsx` — 外観検査AI FIG.01（評価指標の欠陥・H-01）
-- `mask-position.tsx` — 外観検査AI FIG.02（マスクの位置・H-02）
-- `domain-shift.tsx` — 外観検査AI FIG.03（ドメインシフト・H-03）
-- `rework-breakdown.tsx` — CAD自動化 FIG.01（19.6時間の内訳・H-04）
-- `gate-coverage.tsx` — CAD自動化 FIG.02（門の話・H-05）
-- `system-map.tsx` — work-hub-tools FIG.01（スマホ中心の同心円）
-- `mail-compare.tsx` — work-hub-tools FIG.02（メール改善の前後）
+**次に図を作るなら**、まず上の受け入れ基準を通せるか机上で確かめること。
+作り方の規約は `CLAUDE.md`「記事本文への模式図の差し込み」に集約した（撤去後に更新済み）。
+経緯と、GPTレビューへの回答は `claudedocs/DIAGRAM_REVIEW_RESPONSE_2026-08.md`。
+`claudedocs/DIAGRAM_PLAN_2026.md`（候補19件）は記録として残してあるが、**未着手扱いに戻った**。
+
+**撤去に伴って直したところ**
+- トップ：Approach は見出し＋リード文だけになった。Projects のリード文から「上の循環を、」を削除
+- About：Approach 同上。Current Means のリード文から「上の 02」を削除
+- 外観検査AIの記事：図が消えて重複が露出した段落を1つ統合
+- **循環図の中にあった 01/02/03 のステーション本文は、図と一緒にサイトから消えている**。
+  テキストとして復活させたい場合は書き起こしが要る（`git show` で旧 `work-cycle.tsx` から拾える）
 
 ### コンテンツ
 Projects は5件。SavvyBot 関連7ファイルは**全削除済み**（サイト内に参照ゼロ）。
@@ -224,7 +179,9 @@ Projects は5件。SavvyBot 関連7ファイルは**全削除済み**（サイ�
 ### 4. サイトの中心概念（ユーザー決定・2026-08-11）
 
 **「現場で見つけて、技術で形にして、現場で確かめる」**。
-トップとAboutの両方に同じ循環図を置いており、ポートフォリオ全体の骨格として扱ってよい。
+ポートフォリオ全体の骨格として扱ってよい。
+**この概念を図にしたもの（循環図・H-08）は2026-08-11に撤去した**が、概念自体は生きている。
+トップとAboutの見出し・リード文には残っている。
 
 - **「3つの技術を持っている」という見せ方は禁止**。並列に見えた瞬間に主題が壊れる
 - 技術ノードの中身は入れ替わる前提で設計する。現在のスタックは「いまの手段」として従属させ、
@@ -254,8 +211,8 @@ AI/Software/CAD等で支援・再現する → 実際の現場で検証する、
 ## 保留事項（次にやること）
 
 ### 優先度：高
-1. **図解計画の High を順に実装**（→ 冒頭の「★ 次にやること」参照）。
-2. **push していない**。22コミットが手元に残っている。push すると Vercel で本番公開されるため、
+1. → 冒頭の「★ 次にやること」を見ること。この節より新しい。
+2. **push していない**。41コミットが手元に残っている。push すると Vercel で本番公開されるため、
    ユーザーの明示的な指示を待つこと。
 
 ### 優先度：中
@@ -285,24 +242,26 @@ AI/Software/CAD等で支援・再現する → 実際の現場で検証する、
 （古いプロセスが残っていて、変更が反映されていないように見える事故が実際に起きた）。
 
 ### スクリーンショットでの表示確認
-`google-chrome --headless=new` が使える。ただし**落とし穴が2つある**：
 
-1. **headless Chrome の最小ウィンドウ幅は 500px**。`--window-size=400,900` と指定しても
-   viewport は 500px で描画され、スクショだけ400pxで切られる。
-   これを「モバイルで横にはみ出している」と誤診しかけた。**400px以下の検証はできない**。
-2. **CSS アニメーションが完了しない状態で撮影される**ことがある。
-   `--force-prefers-reduced-motion` を付けると最終状態で撮れる。
-3. **ダークモードの確認は `--blink-settings=preferredColorScheme=0`**（0=ダーク / 1=ライト）。
-   `--force-prefers-color-scheme` も `--force-dark-mode` も効かない。
-   確認できたかどうかは、左上の背景ピクセルを読めば分かる（ライト 252,252,252 / ダーク 20,20,20）。
+**`--window-size` だけのヘッドレス撮影は使わない。** レイアウト幅が反映されず、
+「モバイルで横にはみ出している」という**偽陽性**が出る。実際にこれで一度誤診した
+（390px指定で撮った画像は本文が右で切れて見えたが、実測の `scrollWidth` は390で問題なし）。
 
-```bash
-google-chrome --headless=new --disable-gpu --no-sandbox --hide-scrollbars \
-  --force-prefers-reduced-motion --virtual-time-budget=6000 \
-  --window-size=1280,1400 --screenshot=out.png http://localhost:3000/
+**CDPのデバイスエミュレーションを使うこと。** Node 22 の素の WebSocket で叩ける
+（追加パッケージ不要）。手順は次の3つ。
+
+```
+Emulation.setDeviceMetricsOverride { width, height, deviceScaleFactor: 2, mobile: width < 700 }
+Emulation.setEmulatedMedia        { features: [{name:'prefers-color-scheme', value:'dark'}] }   ← ダーク確認
+Page.captureScreenshot            { clip, captureBeyondViewport: true }                          ← 折り返し下も撮れる
 ```
 
-高解像度で細部を見たいときは `--force-device-scale-factor=2`（viewport は変わらず画像だけ2倍）。
+`Runtime.evaluate` で要素の `getBoundingClientRect()` を取れば、**特定の図だけを切り出して**
+撮れる。ページ全体を撮ってから目視で探す必要がない。
+横はみ出しの実測も `Runtime.evaluate` で `documentElement.scrollWidth` を読むのが確実。
+
+確認するのは **1440px（PC）と 390px（スマホ）、ライトとダークの両方**。
+**塗り（`fill` + `opacity`）はダークで想定より強く出る**ので、範囲を示すときは塗りより線を使う。
 
 ### 横方向のはみ出し検査
 `components/overflow-debug.tsx` という一時的なデバッグコンポーネントを作って使い、**撤去済み**。
@@ -327,10 +286,10 @@ google-chrome --headless=new --disable-gpu --no-sandbox --hide-scrollbars \
 | リニューアルの全経緯・伏字ルール | `claudedocs/RENEWAL_PLAN_2026.md` |
 | プロジェクト規約・レイアウト規約 | `CLAUDE.md` |
 | 製図モチーフ | `app/components/die-section.tsx` |
-| **図解の全体計画・DDS仕様** | `claudedocs/DIAGRAM_PLAN_2026.md` |
-| **図の基準実装（まずこれを読む）** | `app/components/diagrams/work-cycle.tsx` |
-| 模式図の共通枠 / 図の定義 | `app/components/schematic.tsx` / `article-diagrams.tsx` |
-| 図の実体 | `app/components/diagrams/`（work-cycle / system-map / mail-compare） |
+| **図をやめた経緯・受け入れ基準** | `claudedocs/DIAGRAM_REVIEW_RESPONSE_2026-08.md` |
+| 図解の候補一覧（未着手に戻った） | `claudedocs/DIAGRAM_PLAN_2026.md` |
+| 模式図の共通枠 / 登録表（中身は空） | `app/components/schematic.tsx` / `article-diagrams.tsx` |
+| 作図の規約・受け入れ基準 | `CLAUDE.md`「記事本文への模式図の差し込み」 |
 | OGP画像の生成 | `scripts/build-ogp.py` |
 | トップページ | `app/page.tsx` |
 | 記事の元ネタ（実プロジェクト） | `~/work/iidzka-inspection/`, `~/work/pj-claude-fusion/`, `~/work/project-hub/`, `~/work/hana/` |

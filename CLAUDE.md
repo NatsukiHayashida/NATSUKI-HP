@@ -141,28 +141,54 @@ export function getAllConnectionTags(): string[]
 - `figure`: `data-diagram`属性を持つものを模式図に差し替え（下記）
 
 ### 記事本文への模式図の差し込み
-MDXに次のように書くと、対応する模式図が本文中に描画される。
+
+> **現在、図はサイトに1枚もない（2026-08-11に全撤去）。** 仕組みだけ残してある。
+> 撤去の経緯と、次に作るときの受け入れ基準は
+> `claudedocs/DIAGRAM_REVIEW_RESPONSE_2026-08.md` を読むこと。
+
+MDXに次のように書くと、`articleDiagrams` に登録された図が本文中に描画される。
 
 ```html
 <figure data-diagram="work-hub-collect"></figure>
 ```
 
-- 図の定義: `app/components/article-diagrams.tsx`（キー→コンポーネントの対応表）
-- 共通枠: `app/components/schematic.tsx`（`Schematic` / `Legend`）
-- 図の実体: `app/components/system-map.tsx`, `mail-compare.tsx` など1図1ファイル
+- 登録表: `app/components/article-diagrams.tsx`（キー→コンポーネント。**現在は空**）
+- 共通枠: `app/components/schematic.tsx`（`Schematic` / `Callouts` / `Overlay` / `Legend` / `Readout`）
+- 図の実体: 1図1ファイルで `app/components/diagrams/` に置く（**現在このディレクトリは無い**）
+- 差し替え処理: `app/projects/[slug]/page.tsx` の `figure` レンダラ。
+  未登録のキーは素の `<figure>` にフォールバックする
+
+**図を作る前に通す基準（これを満たせないなら図にしない）**
+
+**名称をすべて隠した状態で、次の4つが判別できること。** 文字を消すと意味がなくなる図は、
+模式図ではなくフローチャート。形・位置・範囲・重なり・欠損で結論を伝える。
+
+1. 何と何を比較しているか
+2. どこが問題か
+3. 何が変化したか
+4. 結論はどこか
 
 **図の作り方（守ること）**
+- **一つの図で伝える結論は一つだけ**。図の直前の見出しで結論を言い切り、直後は一文で止める
 - **矢印と文字を並べただけの図は作らない**。形のあるものを描く（スマホ・封筒・
   フォルダ・サーバーなど）。線画・単色で、`currentColor` と `hsl(var(--background))` を使う
 - **SVGの中に文字を入れない**。viewBoxの縮尺で潰れるため。
   ただし**番号だけ打って名称を凡例へ回すのは禁止**（図と凡例を往復させることになり、
   「図を読むのに一手間かかる」状態になる）。**名前はHTMLでSVGの上に重ねる**
   （`Callouts` / `Overlay`。位置は％指定、`bg-background` で線を切る）。
-  `Legend` は補足の説明に徹する
-- カード・背景色は使わず、罫線と細線で構成する。強調は朱1色（`text-primary`）
+  `Legend` は補足の説明に徹し、**図が語れないことだけ**を書く
+- **数値が結論なら `Readout` で図の直近に大きく出す**。凡例の中に埋めない
+- 朱（`text-primary`）は**1図につき1つの意味**に固定する。複数の意味に使わない
+- カード・背景色は使わず、罫線と細線で構成する
+- 塗り（`fill` + `opacity`）はダークテーマで想定より強く出る。範囲を示すときは塗りより線
 - 断面のハッチングなど、トップページの製図モチーフ（`die-section.tsx`）の作法に合わせる
+- **モバイル専用の縦組みを必ず別に作る**（`sm:` で出し分け）。横組みを縮めない
 - **図に書く内容は本文で述べた範囲に限る**。伏字ルール（社名・製品名・社内パス・
   金額など）は図の中でも同じく適用する
+
+**表示確認の作法**：実寸確認はCDPのデバイスエミュレーション
+（`Emulation.setDeviceMetricsOverride`）で行う。ヘッドレスChromeの `--window-size` だけでは
+レイアウト幅が反映されず、偽の横はみ出しが出る（一度これで誤診している）。
 
 ### OGP画像の作り直し
 `app/opengraph-image.png` / `app/twitter-image.png` は `scripts/build-ogp.py` で生成する。

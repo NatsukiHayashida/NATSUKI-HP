@@ -3,7 +3,7 @@
 
     python3 scripts/build-handoff.py
 
-`claudedocs/DIAGRAM_BRIEF_GPT_GEMINI.md` の「共通の前提」と各図（H-0x）の節を読み、
+`claudedocs/DIAGRAM_BRIEF_2026-08-11.md` の「共通の前提」と各図（H-0x）の節を読み、
 1図につき1枚のコピー用HTMLを `_handoff/` に書き出す（＋一覧ページ index.html）。
 
 出力先の `_handoff/` は git 管理外。report-hub（~/work を走査）が自動で拾うため、
@@ -18,7 +18,7 @@ import os
 import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BRIEF = os.path.join(ROOT, 'claudedocs', 'DIAGRAM_BRIEF_GPT_GEMINI.md')
+BRIEF = os.path.join(ROOT, 'claudedocs', 'DIAGRAM_BRIEF_2026-08-11.md')
 OUTDIR = os.path.join(ROOT, '_handoff')
 
 # md の装飾を、貼り付け先（ChatGPT / Gemini の入力欄）で読みやすい素のテキストへ均す
