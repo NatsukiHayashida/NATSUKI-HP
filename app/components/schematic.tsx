@@ -74,7 +74,7 @@ export function Readout({
   items: { value: string; label: string; accent?: boolean }[]
 }) {
   return (
-    <dl className="grid gap-x-8 gap-y-4 border-t pt-5 sm:grid-cols-3">
+    <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
       {items.map((item) => (
         <div key={item.label}>
           <dt
@@ -114,7 +114,7 @@ export function Overlay({
 /** 図中の番号バルーンに対応する凡例。製図の部品表にあたる */
 export function Legend({ items }: { items: LegendItem[] }) {
   return (
-    <ol className="grid gap-x-8 gap-y-3.5 border-t pt-5 sm:grid-cols-2 md:gap-y-4">
+    <ol className="grid gap-x-8 gap-y-3.5 sm:grid-cols-2 md:gap-y-4">
       {items.map((item) => (
         <li key={item.no} className="flex gap-3">
           <span className="mt-0.5 font-mono text-[11px] tracking-[0.15em] text-primary md:text-xs">
@@ -144,16 +144,16 @@ export function Schematic({
   children: React.ReactNode
 }) {
   return (
-    <figure className="not-prose my-8 border-y py-6 md:my-12 md:py-8">
-      <figcaption className="mb-5 md:mb-6">
+    <figure className="not-prose my-4 border-y py-4">
+      <figcaption className="mb-3.5 md:mb-4">
         <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary md:text-xs">
           {label}
         </span>
         <span className="mt-1 block text-[15px] font-medium md:text-[15px]">{title}</span>
       </figcaption>
-      <div className="space-y-6 md:space-y-8">{children}</div>
+      <div className="space-y-4 md:space-y-5">{children}</div>
       {note && (
-        <p className="mt-5 border-t pt-3 text-[13px] leading-relaxed text-muted-foreground md:mt-6 md:text-sm">
+        <p className="mt-4 border-t pt-3 text-[13px] leading-relaxed text-muted-foreground md:mt-5 md:text-sm">
           {note}
         </p>
       )}

@@ -159,6 +159,48 @@ const config = {
             },
           },
         },
+
+        /**
+         * 記事本文の縦の余白を3段階に整理する（2026-08-11）。
+         *
+         * 直す前は段落16〜20px・見出し前32〜48pxで、どの距離もほぼ同じだった。
+         * そのため「同じ論旨の段落のかたまり」と「話が変わる境目」が区別できず、
+         * 一続きの話まで分断して見えていた。次の3段階だけを使う。
+         *
+         *   まとまりの中（連続する段落・見出しと本文）  14〜16px
+         *   小ブロック（表・リスト・図の前後）          22〜28px
+         *   セクションの境目（H2の前）                 Mobile 52px / Desktop 72px
+         *
+         * 段落は em（1em = その prose の本文サイズ）。見出しは rem で指定する。
+         * 見出しの em は「見出し自身の文字サイズ」が基準になるため、
+         * h2（1.5rem=24px）に 4.5em と書くと 108px になってしまう（一度これで外した）。
+         */
+        sm: {
+          css: {
+            p: { marginTop: '1em', marginBottom: '1em' },                 // 14px
+            h2: { marginTop: '3.25rem', marginBottom: '0.75rem' },        // 52 / 12px
+            h3: { marginTop: '1.75rem', marginBottom: '0.625rem' },       // 28 / 10px
+            'ul, ol': { marginTop: '1.6em', marginBottom: '1.6em' },      // 22px
+            'li': { marginTop: '0.4em', marginBottom: '0.4em' },
+            table: { marginTop: '1.6em', marginBottom: '1.6em' },         // 22px
+            pre: { marginTop: '1.6em', marginBottom: '1.6em' },
+            blockquote: { marginTop: '1.6em', marginBottom: '1.6em' },
+            hr: { marginTop: '2.4em', marginBottom: '2.4em' },
+          },
+        },
+        base: {
+          css: {
+            p: { marginTop: '1em', marginBottom: '1em' },                 // 16px
+            h2: { marginTop: '4.5rem', marginBottom: '0.875rem' },        // 72 / 14px
+            h3: { marginTop: '2rem', marginBottom: '0.75rem' },           // 32 / 12px
+            'ul, ol': { marginTop: '1.75em', marginBottom: '1.75em' },    // 28px
+            'li': { marginTop: '0.4em', marginBottom: '0.4em' },
+            table: { marginTop: '1.75em', marginBottom: '1.75em' },       // 28px
+            pre: { marginTop: '1.75em', marginBottom: '1.75em' },
+            blockquote: { marginTop: '1.75em', marginBottom: '1.75em' },
+            hr: { marginTop: '2.75em', marginBottom: '2.75em' },
+          },
+        },
         //ダークモード
         invert: {
           css: {

@@ -76,7 +76,7 @@ export default async function ProjectPage({ params }: Props) {
         </nav>
 
         {/* Header */}
-        <header className="mb-8 md:mb-12">
+        <header className="mb-6 md:mb-7">
           <h1 className="text-2xl md:text-4xl font-bold mb-3 md:mb-4 leading-tight">
             {project.title.includes('―') ? (
               <>
@@ -91,7 +91,7 @@ export default async function ProjectPage({ params }: Props) {
             )}
           </h1>
 
-          <div className="flex flex-wrap items-center gap-2 md:gap-4 text-xs md:text-sm text-muted-foreground mb-4 md:mb-6">
+          <div className="flex flex-wrap items-center gap-2 md:gap-4 text-xs md:text-sm text-muted-foreground mb-3 md:mb-3.5">
             <span className="font-mono text-xs tracking-wider uppercase text-primary">
               {project.category}
             </span>
@@ -100,10 +100,10 @@ export default async function ProjectPage({ params }: Props) {
             <span className="text-xs md:text-sm">{project.date}</span>
           </div>
 
-          <p className="text-sm md:text-[15px] text-muted-foreground mb-4 md:mb-6 leading-relaxed">{project.excerpt}</p>
+          <p className="text-sm md:text-[15px] text-muted-foreground mb-4 md:mb-5 leading-relaxed">{project.excerpt}</p>
 
           {project.metric && (
-            <div className="border-y py-5 mb-6 md:mb-8">
+            <div className="border-y py-4">
               <p className="font-mono text-2xl md:text-3xl tabular-nums">
                 {project.metric.from && (
                   <>
@@ -152,8 +152,8 @@ export default async function ProjectPage({ params }: Props) {
 
         {/* Technologies */}
         {project.technologies.length > 0 && (
-          <section className="mb-8 md:mb-12 border-t pt-6 md:pt-8">
-            <h2 className="font-mono text-xs tracking-[0.2em] uppercase text-muted-foreground mb-3 md:mb-4">Technologies</h2>
+          <section className="mb-7 md:mb-8 border-t pt-4 md:pt-5">
+            <h2 className="font-mono text-xs tracking-[0.2em] uppercase text-muted-foreground mb-2.5 md:mb-3">Technologies</h2>
             <div className="flex flex-wrap gap-1.5 md:gap-2">
               {project.technologies.map((tech) => (
                 <span
@@ -168,7 +168,7 @@ export default async function ProjectPage({ params }: Props) {
         )}
 
         {/* Main Content */}
-        <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none mb-8 md:mb-12">
+        <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none mb-7 md:mb-8 [&>h2:first-of-type]:mt-0">
           <ReactMarkdown
             remarkPlugins={[remarkGfm, remarkMath]}
             rehypePlugins={[rehypeRaw, rehypeKatex, rehypeHighlight]}
@@ -246,7 +246,7 @@ export default async function ProjectPage({ params }: Props) {
 
         {/* Outcomes */}
         {project.outcomes && project.outcomes.length > 0 && (
-          <section className="mb-8 md:mb-12 border-t pt-6 md:pt-8">
+          <section className="mb-7 md:mb-8 border-t pt-4 md:pt-5">
             <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">Outcomes & Results</h2>
             <ul className="space-y-2 text-sm md:text-[15px]">
               {project.outcomes.map((outcome, index) => (
@@ -261,7 +261,7 @@ export default async function ProjectPage({ params }: Props) {
 
         {/* Challenges */}
         {project.challenges && project.challenges.length > 0 && (
-          <section className="mb-8 md:mb-12 border-t pt-6 md:pt-8">
+          <section className="mb-7 md:mb-8 border-t pt-4 md:pt-5">
             <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">Challenges Overcome</h2>
             <ul className="space-y-2 md:space-y-3 text-sm md:text-[15px]">
               {project.challenges.map((challenge, index) => (
@@ -275,7 +275,7 @@ export default async function ProjectPage({ params }: Props) {
 
         {/* Learnings */}
         {project.learnings && project.learnings.length > 0 && (
-          <section className="mb-8 md:mb-12 border-t pt-6 md:pt-8">
+          <section className="mb-7 md:mb-8 border-t pt-4 md:pt-5">
             <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">Key Learnings</h2>
             <ul className="space-y-2 md:space-y-3 text-sm md:text-[15px]">
               {project.learnings.map((learning, index) => (
