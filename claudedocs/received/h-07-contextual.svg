@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="t d">
+  <title id="t">同じマスクでも適用位置で結果が逆になる</title><desc id="d">入力画像へのマスクは端の欠陥を消し過検出を72.4%へ悪化させた。異常マップへのマスクは背景反応だけを除去し20.8%へ改善した。</desc>
+  <style>.tx{font-family:system-ui,"Yu Gothic",Meiryo,sans-serif;fill:currentColor}.line{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.thin{fill:none;stroke:currentColor;stroke-width:1}.accent{fill:hsl(var(--primary,8 64% 46%))}.accent-line{fill:none;stroke:hsl(var(--primary,8 64% 46%));stroke-width:3}.bg{fill:hsl(var(--background,0 0% 100%))}.head{font-size:29px;font-weight:700}.body{font-size:20px}.small{font-size:17px}.big{font-size:48px;font-weight:750}.muted{opacity:.5}</style>
+  <defs>
+    <pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="thin" d="M0 0v9"/></pattern>
+    <g id="part"><circle class="line" cx="100" cy="82" r="70"/><circle class="line" cx="100" cy="82" r="28"/><circle class="thin" cx="100" cy="35" r="6"/><circle class="thin" cx="147" cy="82" r="6"/><circle class="thin" cx="100" cy="129" r="6"/><circle class="thin" cx="53" cy="82" r="6"/></g>
+    <g id="defect"><path class="accent" d="M132 139c7-10 18-11 25-4-6 4-6 11-2 17-10-3-17 1-21 8-4-7-5-14-2-21z"/></g>
+    <g id="arrow"><path class="line" d="M0 0h52m-10-9 10 9-10 9"/></g>
+  </defs>
+  <text class="tx head" x="54" y="58">同じマスク処理でも、「どこにかけるか」で結果が逆になる</text><path class="thin muted" d="M54 80h1092"/>
+
+  <g transform="translate(54 116)">
+    <text class="tx body" x="0" y="0">失敗：入力画像を先に削る</text>
+    <g transform="translate(0 36)"><rect class="line" width="200" height="160"/><use href="#part"/><use href="#defect"/></g>
+    <use href="#arrow" transform="translate(218 116)"/>
+    <g transform="translate(288 36)"><rect class="line" width="200" height="160"/><use href="#part"/><use href="#defect"/><path class="bg" fill-rule="evenodd" d="M0 0h200v160H0zM14 14v132h172V14z"/><path fill="url(#hatch)" fill-rule="evenodd" d="M0 0h200v160H0zM14 14v132h172V14z"/><rect class="thin" x="14" y="14" width="172" height="132"/></g>
+    <use href="#arrow" transform="translate(506 116)"/>
+    <g transform="translate(576 36)"><rect class="line" width="200" height="160"/><use href="#part"/><path class="bg" fill-rule="evenodd" d="M0 0h200v160H0zM14 14v132h172V14z"/><path fill="url(#hatch)" fill-rule="evenodd" d="M0 0h200v160H0zM14 14v132h172V14z"/></g>
+    <path class="line" d="M798 116h54m-10-9 10 9-10 9"/>
+    <g transform="translate(876 38)"><path class="accent-line" d="M0 0v156"/><text class="tx small" x="24" y="33">欠陥スコアが下がる</text><text class="tx small" x="24" y="69">見逃しゼロのため閾値を下げる</text><text class="tx small" x="24" y="105">良品まで不良側へ落ちる</text><text class="tx big accent" x="24" y="153">72.4%</text><text class="tx small" x="184" y="151">過検出</text></g>
+  </g>
+
+  <path class="thin muted" d="M54 386h1092"/>
+  <g transform="translate(54 430)">
+    <text class="tx body" x="0" y="0">改善：推論結果から背景反応だけを削る</text>
+    <g transform="translate(0 36)"><rect class="line" width="200" height="160"/><use href="#part"/><use href="#defect"/></g>
+    <use href="#arrow" transform="translate(218 116)"/>
+    <g transform="translate(288 36)"><rect class="line" width="200" height="160"/><use href="#part"/><g fill="currentColor"><circle cx="10" cy="10" r="5"/><circle cx="190" cy="10" r="5"/><circle cx="10" cy="150" r="5"/><circle cx="190" cy="150" r="5"/></g><use href="#defect"/></g>
+    <use href="#arrow" transform="translate(506 116)"/>
+    <g transform="translate(576 36)"><rect class="line" width="200" height="160"/><use href="#part"/><path fill="url(#hatch)" fill-rule="evenodd" d="M0 0h200v160H0zM100 82m-77 0a77 77 0 1 0 154 0a77 77 0 1 0-154 0"/><circle class="thin" cx="100" cy="82" r="77"/><use href="#defect"/></g>
+    <path class="line" d="M798 116h54m-10-9 10 9-10 9"/>
+    <g transform="translate(876 38)"><path class="accent-line" d="M0 0v156"/><text class="tx small" x="24" y="33">元画像と欠陥はそのまま</text><text class="tx small" x="24" y="69">四隅の背景反応だけ除去</text><text class="tx small" x="24" y="105">判定に必要な信号が残る</text><text class="tx big accent" x="24" y="153">20.8%</text><text class="tx small" x="184" y="151">過検出</text></g>
+  </g>
+  <text class="tx body" x="600" y="790" text-anchor="middle">入力を削ると欠陥まで失う。出力を削れば、不要な背景反応だけを捨てられる。</text>
+</svg>

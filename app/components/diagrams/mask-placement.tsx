@@ -1,217 +1,174 @@
-import { Callouts, Legend, Overlay, Readout, Schematic } from '@/app/components/schematic'
+import { Plate, Schematic } from '@/app/components/schematic'
 
 /**
- * H-07R マスクの適用位置 — 入力側に置くと欠陥まで消える／出力側なら消えない。
+ * FIG.02 — 同じマスクでも、入力画像にかけると悪化し（72.4%）、推論後の異常マップにかけると改善する（20.8%）。
  *
- * 幾何は「関係」を記録どおりに守る。ただし模式図なので比率は誇張する。
+ * 原案はGPT（`claudedocs/received/h-07-contextual.svg`）。実装上直したのはクラス名とidの
+ * 前置き（`mk-`）だけ。詳細は `metric-blindspot.tsx` の先頭コメントと同じ理由。
  *
- * 守るもの（記録から。崩すと事実と食い違う）
- *   部品の下端だけが帯に食い込む（上下左右で対称に浮かせない）
- *   欠陥は部品の下の縁にあり、帯の境界をまたぐ。マスク後は消える
- *   背景の反応が出るのは四隅で、欠陥の反応とは離れている
- *   帯は黒ではなく背景色で塗る（黒領域を新たな異常として学習させないため意図的に避けた手法）
- *
- * 誇張してよいもの（読みやすさを優先する）
- *   帯の太さと欠陥の大きさ。実測の帯は短辺の6.7%しかなく、そのまま描くと
- *   「帯が欠陥を食べる」というこの図の全部が小さすぎて見えない。
- *   最初に実測どおりに描いて、4倍に拡大しないと差が分からない図になった（2026-08-11）。
- *
- * 朱は「欠陥および同じ欠陥に由来する異常信号」の一つの意味に固定する。
- * 数値は Readout に出し、SVGの中には文字を一切入れない。
+ * クラス指定は `<use>` で複製した中身にも効くので、部品側は素のクラス名のままでよい。
+ * 数値は `claudedocs/DIAGRAM_BRIEF_2026-08-11.md`（過検出 72.4% / 20.8%、反応は画像の四隅）。
  */
-
-const PC = { w: 1000, h: 560, fw: 200, fh: 150, band: 18, cx: 96, cy: 80, r: 68, hole: 26, bore: 20, pin: 5, contour: 76 }
-const SM = { w: 320, h: 1720, fw: 280, fh: 210, band: 25, cx: 134, cy: 112, r: 95, hole: 36, bore: 28, pin: 7, contour: 106 }
-
-type Geo = typeof PC
-
-/** 枠1枚ぶんの共通部品。id は変種ごとに前置きして重複を避ける */
-function Defs({ p, g, defect }: { p: string; g: Geo; defect: string }) {
-  const fine = { fill: 'none', stroke: 'currentColor', strokeWidth: 0.9, strokeLinecap: 'round', strokeLinejoin: 'round' } as const
-  const corner = (
-    <g fill="currentColor">
-      <circle cx={g.band * 1.2} cy={g.band * 1.2} r={g.band * 0.32} />
-      <circle cx={g.band * 2.2} cy={g.band} r={g.band * 0.2} />
-      <circle cx={g.band} cy={g.band * 2.3} r={g.band * 0.22} />
-      <circle cx={g.band * 2.8} cy={g.band * 2.5} r={g.band * 0.17} />
-    </g>
-  )
-  // 額縁：外周の帯（evenodd で内側を抜く）
-  const ring = `M0 0h${g.fw}v${g.fh}H0zM${g.band} ${g.band}v${g.fh - g.band * 2}h${g.fw - g.band * 2}V${g.band}z`
-  // 輪郭沿い：枠から部品の輪郭を抜く
-  const outside = `M0 0h${g.fw}v${g.fh}H0zM${g.cx} ${g.cy}m-${g.contour} 0a${g.contour} ${g.contour} 0 1 0 ${g.contour * 2} 0a${g.contour} ${g.contour} 0 1 0-${g.contour * 2} 0`
-
-  return (
-    <defs>
-      <pattern id={`${p}-hatch`} width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-        <path d="M0 0v8" {...fine} />
-      </pattern>
-      {/* 枠の外へ線がはみ出さないように、中身は必ずこれで切る */}
-      <clipPath id={`${p}-clip`}>
-        <rect width={g.fw} height={g.fh} />
-      </clipPath>
-      <g id={`${p}-part`}>
-        <circle cx={g.cx} cy={g.cy} r={g.r} fill="none" stroke="currentColor" strokeWidth={1.5} />
-        <circle cx={g.cx} cy={g.cy} r={g.hole} fill="none" stroke="currentColor" strokeWidth={1.5} />
-        <circle cx={g.cx} cy={g.cy} r={g.bore} {...fine} />
-        <circle cx={g.cx} cy={g.cy - g.r * 0.65} r={g.pin} {...fine} />
-        <circle cx={g.cx + g.r * 0.65} cy={g.cy} r={g.pin} {...fine} />
-        <circle cx={g.cx} cy={g.cy + g.r * 0.65} r={g.pin} {...fine} />
-        <circle cx={g.cx - g.r * 0.65} cy={g.cy} r={g.pin} {...fine} />
-      </g>
-      <g id={`${p}-defect`}>
-        <path d={defect} fill="hsl(var(--primary))" />
-      </g>
-      <g id={`${p}-band`}>
-        {/* 黒で塗らない。背景の平均色で塗りつぶす手法なので、背景色で消してハッチングで範囲を示す */}
-        <path d={ring} fillRule="evenodd" fill="hsl(var(--background))" />
-        <path d={ring} fillRule="evenodd" fill={`url(#${p}-hatch)`} />
-        <rect x={g.band} y={g.band} width={g.fw - g.band * 2} height={g.fh - g.band * 2} {...fine} />
-      </g>
-      <g id={`${p}-corners`}>
-        {corner}
-        <g transform={`translate(${g.fw} 0) scale(-1 1)`}>{corner}</g>
-        <g transform={`translate(0 ${g.fh}) scale(1 -1)`}>{corner}</g>
-        <g transform={`translate(${g.fw} ${g.fh}) scale(-1 -1)`}>{corner}</g>
-      </g>
-      <g id={`${p}-contour`}>
-        <path d={outside} fillRule="evenodd" fill={`url(#${p}-hatch)`} />
-        <circle cx={g.cx} cy={g.cy} r={g.contour} {...fine} />
-      </g>
-    </defs>
-  )
-}
-
-/** 観察枠1枚。中身はクリップし、枠線はその外に引く（線が半分に痩せないように） */
-function Panel({ p, g, x, y, children }: { p: string; g: Geo; x: number; y: number; children: React.ReactNode }) {
-  return (
-    <g transform={`translate(${x} ${y})`}>
-      <g clipPath={`url(#${p}-clip)`}>{children}</g>
-      <rect width={g.fw} height={g.fh} fill="none" stroke="currentColor" strokeWidth={1.5} />
-    </g>
-  )
-}
-
-const PC_DEFECT = 'M126 120c7-11 18-14 29-8-7 7-7 12-2 19-11-3-19 2-24 9-5-7-7-13-3-20z'
-const SM_DEFECT = 'M176 170c9-15 25-19 40-11-9 9-9 16-3 26-15-4-27 3-34 12-6-9-9-18-3-27z'
-
-function DiagramPc() {
-  const g = PC
-  const p = 'mp-pc'
-  const part = <use href={`#${p}-part`} />
-  const defect = <use href={`#${p}-defect`} />
-  const arrow = (x: number, y: number) => (
-    <path d="M0 0h42m-7-6 7 6-7 6" transform={`translate(${x} ${y})`} fill="none" stroke="currentColor" strokeWidth={0.9} strokeLinecap="round" strokeLinejoin="round" />
-  )
-  return (
-    <svg viewBox={`0 46 ${g.w} 496`} className="w-full" role="img" aria-label="入力画像にマスクをかけると端の欠陥まで消えるが、推論後の異常マップにかけると背景の反応だけが消えて欠陥は残る">
-      <Defs p={p} g={g} defect={PC_DEFECT} />
-      <path d="M24 300h952" fill="none" stroke="currentColor" strokeWidth={0.9} opacity={0.5} />
-
-      {/* 経路1：入力画像に帯をかける → 端の欠陥まで消える */}
-      <Panel p={p} g={g} x={170} y={82}>{part}{defect}</Panel>
-      {arrow(382, 157)}
-      <Panel p={p} g={g} x={436} y={82}>{part}{defect}<use href={`#${p}-band`} /></Panel>
-      {arrow(648, 157)}
-      <Panel p={p} g={g} x={702} y={82}>{part}<use href={`#${p}-band`} /></Panel>
-
-      {/* 経路2：推論後の異常マップを輪郭で削る → 四隅だけ消えて欠陥は残る */}
-      <Panel p={p} g={g} x={170} y={317}>{part}{defect}</Panel>
-      {arrow(382, 392)}
-      <Panel p={p} g={g} x={436} y={317}>{part}<use href={`#${p}-corners`} />{defect}</Panel>
-      {arrow(648, 392)}
-      <Panel p={p} g={g} x={702} y={317}>{part}<use href={`#${p}-contour`} />{defect}</Panel>
-    </svg>
-  )
-}
-
-function DiagramSm() {
-  const g = SM
-  const p = 'mp-sm'
-  const part = <use href={`#${p}-part`} />
-  const defect = <use href={`#${p}-defect`} />
-  const arrow = (y: number) => (
-    <path d="M0 0v24m-6-7 6 7 6-7" transform={`translate(160 ${y})`} fill="none" stroke="currentColor" strokeWidth={0.9} strokeLinecap="round" strokeLinejoin="round" />
-  )
-  return (
-    <svg viewBox={`0 50 ${g.w} 1730`} className="w-full" role="img" aria-label="入力画像にマスクをかけると端の欠陥まで消えるが、推論後の異常マップにかけると背景の反応だけが消えて欠陥は残る">
-      <Defs p={p} g={g} defect={SM_DEFECT} />
-
-      <Panel p={p} g={g} x={20} y={118}>{part}{defect}</Panel>
-      {arrow(338)}
-      <Panel p={p} g={g} x={20} y={372}>{part}{defect}<use href={`#${p}-band`} /></Panel>
-      {arrow(592)}
-      <Panel p={p} g={g} x={20} y={626}>{part}<use href={`#${p}-band`} /></Panel>
-
-      <path d="M20 906h280" fill="none" stroke="currentColor" strokeWidth={0.9} opacity={0.5} />
-
-      <Panel p={p} g={g} x={20} y={976}>{part}{defect}</Panel>
-      {arrow(1196)}
-      <Panel p={p} g={g} x={20} y={1230}>{part}<use href={`#${p}-corners`} />{defect}</Panel>
-      {arrow(1450)}
-      <Panel p={p} g={g} x={20} y={1484}>{part}<use href={`#${p}-contour`} />{defect}</Panel>
-    </svg>
-  )
-}
-
 export function MaskPlacement() {
   return (
-    <Schematic
-      label="Fig. 02"
-      title="マスクを入力画像に置くか、推論後の異常マップに置くか"
-    >
-      {/* PC：上下2段 × 左から右に3枚 */}
-      <div className="hidden sm:block">
-        <Overlay ratio="1000 / 496">
-          <DiagramPc />
-          <Callouts
-            items={[
-              { no: '01', label: '入力画像にマスク', x: 0.5, y: 13.3, align: 'left', w: 16 },
-              { label: '欠陥が消えた', x: 77.4, y: 44.8, align: 'left' },
-              { no: '02', label: '異常マップにマスク', x: 0.5, y: 60.7, align: 'left', w: 16 },
-              { label: '欠陥は残った', x: 77.4, y: 92.1, align: 'left' },
-            ]}
-          />
-        </Overlay>
-      </div>
+    <Schematic label="Fig.02">
+      <Plate viewBox="0 0 1200 820" aria-labelledby="mk-t mk-d">
+        <title id="mk-t">同じマスクでも適用位置で結果が逆になる</title>
+        <desc id="mk-d">
+          入力画像へのマスクは端の欠陥を消し過検出を72.4%へ悪化させた。異常マップへのマスクは背景反応だけを除去し20.8%へ改善した。
+        </desc>
+        <style>{`
+          .mk-tx{font-family:system-ui,"Yu Gothic",Meiryo,sans-serif;fill:currentColor}
+          .mk-line{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+          .mk-thin{fill:none;stroke:currentColor;stroke-width:1}
+          .mk-accent{fill:hsl(var(--primary))}
+          .mk-accent-line{fill:none;stroke:hsl(var(--primary));stroke-width:3}
+          .mk-bg{fill:hsl(var(--background))}
+          .mk-head{font-size:29px;font-weight:700}
+          .mk-body{font-size:20px}
+          .mk-small{font-size:17px}
+          .mk-big{font-size:48px;font-weight:750}
+          .mk-muted{opacity:.5}
+        `}</style>
+        <defs>
+          <pattern
+            id="mk-hatch"
+            width="9"
+            height="9"
+            patternUnits="userSpaceOnUse"
+            patternTransform="rotate(45)"
+          >
+            <path className="mk-thin" d="M0 0v9" />
+          </pattern>
+          <g id="mk-part">
+            <circle className="mk-line" cx="100" cy="82" r="70" />
+            <circle className="mk-line" cx="100" cy="82" r="28" />
+            <circle className="mk-thin" cx="100" cy="35" r="6" />
+            <circle className="mk-thin" cx="147" cy="82" r="6" />
+            <circle className="mk-thin" cx="100" cy="129" r="6" />
+            <circle className="mk-thin" cx="53" cy="82" r="6" />
+          </g>
+          <g id="mk-defect">
+            <path
+              className="mk-accent"
+              d="M132 139c7-10 18-11 25-4-6 4-6 11-2 17-10-3-17 1-21 8-4-7-5-14-2-21z"
+            />
+          </g>
+          <g id="mk-arrow">
+            <path className="mk-line" d="M0 0h52m-10-9 10 9-10 9" />
+          </g>
+        </defs>
 
-      {/* スマホ：1画面に1枚ずつ、上から下へ。結果の名前は枠の外に置く（絵に重ねない） */}
-      <div className="sm:hidden">
-        <Overlay ratio="320 / 1730">
-          <DiagramSm />
-          <Callouts
-            items={[
-              { no: '01', label: '入力画像にマスク', x: 6.25, y: 2.4, align: 'left' },
-              { label: '欠陥が消えた', x: 6.25, y: 47.2, align: 'left' },
-              { no: '02', label: '異常マップにマスク', x: 6.25, y: 51.8, align: 'left' },
-              { label: '欠陥は残った', x: 6.25, y: 97.1, align: 'left' },
-            ]}
-          />
-        </Overlay>
-      </div>
+        <text className="mk-tx mk-head" x="54" y="58">
+          同じマスク処理でも、「どこにかけるか」で結果が逆になる
+        </text>
+        <path className="mk-thin mk-muted" d="M54 80h1092" />
 
-      <Readout
-        items={[
-          { value: '44.2%', label: 'マスクなし（ベースライン）の過検出率' },
-          { value: '72.4%', label: '入力画像にマスクをかけたとき' },
-          { value: '20.8%', label: '推論後の異常マップにかけたとき' },
-        ]}
-      />
+        <g transform="translate(54 116)">
+          <text className="mk-tx mk-body" x="0" y="0">
+            失敗：入力画像を先に削る
+          </text>
+          <g transform="translate(0 36)">
+            <rect className="mk-line" width="200" height="160" />
+            <use href="#mk-part" />
+            <use href="#mk-defect" />
+          </g>
+          <use href="#mk-arrow" transform="translate(218 116)" />
+          <g transform="translate(288 36)">
+            <rect className="mk-line" width="200" height="160" />
+            <use href="#mk-part" />
+            <use href="#mk-defect" />
+            <path className="mk-bg" fillRule="evenodd" d="M0 0h200v160H0zM14 14v132h172V14z" />
+            <path fill="url(#mk-hatch)" fillRule="evenodd" d="M0 0h200v160H0zM14 14v132h172V14z" />
+            <rect className="mk-thin" x="14" y="14" width="172" height="132" />
+          </g>
+          <use href="#mk-arrow" transform="translate(506 116)" />
+          <g transform="translate(576 36)">
+            <rect className="mk-line" width="200" height="160" />
+            <use href="#mk-part" />
+            <path className="mk-bg" fillRule="evenodd" d="M0 0h200v160H0zM14 14v132h172V14z" />
+            <path fill="url(#mk-hatch)" fillRule="evenodd" d="M0 0h200v160H0zM14 14v132h172V14z" />
+          </g>
+          <path className="mk-line" d="M798 116h54m-10-9 10 9-10 9" />
+          <g transform="translate(876 38)">
+            <path className="mk-accent-line" d="M0 0v156" />
+            <text className="mk-tx mk-small" x="24" y="33">
+              欠陥スコアが下がる
+            </text>
+            <text className="mk-tx mk-small" x="24" y="69">
+              見逃しゼロのため閾値を下げる
+            </text>
+            <text className="mk-tx mk-small" x="24" y="105">
+              良品まで不良側へ落ちる
+            </text>
+            <text className="mk-tx mk-big mk-accent" x="24" y="153">
+              72.4%
+            </text>
+            <text className="mk-tx mk-small" x="184" y="151">
+              過検出
+            </text>
+          </g>
+        </g>
 
-      <Legend
-        items={[
-          {
-            no: '01',
-            title: '外周の帯',
-            body: '入力画像の四辺を、背景の平均色で塗りつぶす固定幅のマスク。黒で塗らないのは、黒い領域そのものを新しい異常パターンとして学習させないため。',
-          },
-          {
-            no: '02',
-            title: '輪郭に沿ったマスク',
-            body: '推論後の異常マップから、部品の外側に出た反応だけを判定の対象外にする。入力画像には手を触れないので、欠陥の情報は残る。',
-          },
-        ]}
-      />
+        <path className="mk-thin mk-muted" d="M54 386h1092" />
+        <g transform="translate(54 430)">
+          <text className="mk-tx mk-body" x="0" y="0">
+            改善：推論結果から背景反応だけを削る
+          </text>
+          <g transform="translate(0 36)">
+            <rect className="mk-line" width="200" height="160" />
+            <use href="#mk-part" />
+            <use href="#mk-defect" />
+          </g>
+          <use href="#mk-arrow" transform="translate(218 116)" />
+          <g transform="translate(288 36)">
+            <rect className="mk-line" width="200" height="160" />
+            <use href="#mk-part" />
+            <g fill="currentColor">
+              <circle cx="10" cy="10" r="5" />
+              <circle cx="190" cy="10" r="5" />
+              <circle cx="10" cy="150" r="5" />
+              <circle cx="190" cy="150" r="5" />
+            </g>
+            <use href="#mk-defect" />
+          </g>
+          <use href="#mk-arrow" transform="translate(506 116)" />
+          <g transform="translate(576 36)">
+            <rect className="mk-line" width="200" height="160" />
+            <use href="#mk-part" />
+            <path
+              fill="url(#mk-hatch)"
+              fillRule="evenodd"
+              d="M0 0h200v160H0zM100 82m-77 0a77 77 0 1 0 154 0a77 77 0 1 0-154 0"
+            />
+            <circle className="mk-thin" cx="100" cy="82" r="77" />
+            <use href="#mk-defect" />
+          </g>
+          <path className="mk-line" d="M798 116h54m-10-9 10 9-10 9" />
+          <g transform="translate(876 38)">
+            <path className="mk-accent-line" d="M0 0v156" />
+            <text className="mk-tx mk-small" x="24" y="33">
+              元画像と欠陥はそのまま
+            </text>
+            <text className="mk-tx mk-small" x="24" y="69">
+              四隅の背景反応だけ除去
+            </text>
+            <text className="mk-tx mk-small" x="24" y="105">
+              判定に必要な信号が残る
+            </text>
+            <text className="mk-tx mk-big mk-accent" x="24" y="153">
+              20.8%
+            </text>
+            <text className="mk-tx mk-small" x="184" y="151">
+              過検出
+            </text>
+          </g>
+        </g>
+
+        <text className="mk-tx mk-body" x="600" y="790" textAnchor="middle">
+          入力を削ると欠陥まで失う。出力を削れば、不要な背景反応だけを捨てられる。
+        </text>
+      </Plate>
     </Schematic>
   )
 }

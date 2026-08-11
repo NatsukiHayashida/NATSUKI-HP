@@ -142,9 +142,10 @@ export function getAllConnectionTags(): string[]
 
 ### 記事本文への模式図の差し込み
 
-> **現在、図はサイトに1枚もない（2026-08-11に全撤去）。** 仕組みだけ残してある。
-> 撤去の経緯と、次に作るときの受け入れ基準は
-> `claudedocs/DIAGRAM_REVIEW_RESPONSE_2026-08.md` を読むこと。
+> **2026-08-11 に全撤去したあと、GPTの作り直し3枚を外観検査AIの記事に入れた。**
+> いずれも横組み1本だけで、**縦組みのスマホ版はまだ無い**（枠内スクロールで逃がしている）。
+> 図が要る場所の一覧と、渡した依頼文は `claudedocs/DIAGRAM_BRIEF_2026-08-11.md`。
+> 撤去の経緯は `claudedocs/DIAGRAM_REVIEW_RESPONSE_2026-08.md`。
 
 MDXに次のように書くと、`articleDiagrams` に登録された図が本文中に描画される。
 
@@ -152,9 +153,9 @@ MDXに次のように書くと、`articleDiagrams` に登録された図が本�
 <figure data-diagram="work-hub-collect"></figure>
 ```
 
-- 登録表: `app/components/article-diagrams.tsx`（キー→コンポーネント。**現在は空**）
-- 共通枠: `app/components/schematic.tsx`（`Schematic` / `Callouts` / `Overlay` / `Legend` / `Readout`）
-- 図の実体: 1図1ファイルで `app/components/diagrams/` に置く（**現在このディレクトリは無い**）
+- 登録表: `app/components/article-diagrams.tsx`（キー→コンポーネント）
+- 共通枠: `app/components/schematic.tsx`（`Schematic` / `Plate` / `Callouts` / `Overlay` / `Legend` / `Readout`）
+- 図の実体: 1図1ファイルで `app/components/diagrams/` に置く
 - 差し替え処理: `app/projects/[slug]/page.tsx` の `figure` レンダラ。
   未登録のキーは素の `<figure>` にフォールバックする
 
@@ -176,6 +177,17 @@ MDXに次のように書くと、`articleDiagrams` に登録された図が本�
 
 技術的に必要な調整（テーマ両対応のための色の置き換え、id衝突の回避など）は、
 組み込むときに CC 側で行う。依頼の段階では求めない。
+
+**組み込むときに CC がやること（2026-08-11 の3枚で実際に必要だった）**
+
+- **クラス名とidに図ごとの前置きを付ける。** SVGの中の `<style>` は文書全体に効くため、
+  複数の図が同じ `.body` `.head` を別サイズで持つと後勝ちで壊れる（`mb-` / `mk-` / `sh-`）
+- **`<use>` で複製した中身にもクラス指定は効く。** ただし `#id .cls` のような子孫セレクタは
+  避け、クラス名側を分ける
+- **横幅。** 1200幅の横組みをそのままスマホに置くと文字が5px程度になる。
+  `Plate` が最低幅720pxを確保し、足りない分は枠内スクロールへ逃がす（ページ本体は流れない）
+- **文字のはみ出し。** 日本語は想定より横に伸びる。枠を突き抜けて隣に重なっていたら直す
+  （Fig.03 で42px→30px）。これは好き嫌いではなく描画の不具合
 
 **表示確認の作法**：実寸確認はCDPのデバイスエミュレーション
 （`Emulation.setDeviceMetricsOverride`）で行う。ヘッドレスChromeの `--window-size` だけでは

@@ -43,8 +43,9 @@ def parse_sections(md: str) -> tuple[str, list[dict]]:
     chunks = re.split(r'^## ', md, flags=re.M)[1:]
     for chunk in chunks:
         head, _, body = chunk.partition('\n')
-        body = '\n'.join(plain(l) for l in body.split('\n'))
-        body = body.replace('---', '').strip()
+        # 区切り線の行だけ落とす。表の罫線（|---|---|）は残す
+        # （`replace('---', '')` で一括に潰すと表が崩れる。2026-08-11 修正）
+        body = '\n'.join(plain(l) for l in body.split('\n') if l.strip() != '---').strip()
         if head.startswith('共通の前提'):
             common = body
             continue
@@ -120,7 +121,8 @@ ul.list .art {{ display: block; font-size: .8rem; color: #666; margin-top: .2rem
 {items}
 </ul>
 <p class="note">着手順は上から。記事1本ずつ仕上げる約束のため、
-同じ記事の図をまとめて依頼してよい<span class="pg">（H-01〜H-03は外観検査AI、H-04〜H-05はCAD自動化）</span>。</p>
+同じ記事の図をまとめて依頼してよい<span class="pg">（H-11〜H-14は外観検査AI、H-15〜H-16はCAD自動化）</span>。
+<br>H-11〜H-13 は、すでに受け取ったPC版のスマホ版<span class="pg">（縦組み）</span>を作ってもらう依頼。</p>
 </div>
 </body>
 </html>
@@ -185,9 +187,11 @@ function fallback(t) {
 }"""
 
 ARTICLE = {
-    'H-01': '外観検査AIの内製開発', 'H-01R': '外観検査AIの内製開発（修正依頼）',
-    'H-02': '外観検査AIの内製開発', 'H-03': '外観検査AIの内製開発',
-    'H-04': 'CAD操作のAI自動化', 'H-05': 'CAD操作のAI自動化',
+    # 旧番号（H-01〜H-10）は受信箱の既存ファイルで埋まっているため、H-11 から振り直した
+    'H-11': '外観検査AI｜スマホ版', 'H-12': '外観検査AI｜スマホ版',
+    'H-13': '外観検査AI｜スマホ版', 'H-14': '外観検査AI',
+    'H-15': 'CAD操作のAI自動化', 'H-16': 'CAD操作のAI自動化',
+    'H-17': '花製作所', 'H-18': 'work-hub',
 }
 
 

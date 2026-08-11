@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="t d">
+  <title id="t">検出率100%だけではモデルの良し悪しを区別できない</title><desc id="d">全品不良判定と実際のモデルを、良品283枚と不良品178枚の判定内訳で比較する。</desc>
+  <style>.tx{font-family:system-ui,"Yu Gothic",Meiryo,sans-serif;fill:currentColor}.line{fill:none;stroke:currentColor;stroke-width:2}.thin{fill:none;stroke:currentColor;stroke-width:1}.accent{fill:hsl(var(--primary,8 64% 46%))}.accent-line{fill:none;stroke:hsl(var(--primary,8 64% 46%));stroke-width:3}.muted{opacity:.52}.small{font-size:18px}.body{font-size:21px}.head{font-size:29px;font-weight:700}.big{font-size:52px;font-weight:750}.num{font-size:26px;font-weight:700}</style>
+  <defs><pattern id="hatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="thin" d="M0 0v10"/></pattern></defs>
+  <text class="tx head" x="54" y="62">同じ「検出率100%」でも、実態はまったく違う</text>
+  <path class="thin muted" d="M54 84h1092"/>
+
+  <g transform="translate(54 124)">
+    <text class="tx body" x="250" y="0" text-anchor="middle">全品を「不良」と判定するだけ</text>
+    <rect class="line" x="0" y="42" width="500" height="320"/>
+    <path class="line" d="M0 202h500"/>
+    <rect x="0" y="42" width="500" height="160" fill="url(#hatch)"/>
+    <rect x="0" y="202" width="500" height="160" fill="url(#hatch)"/>
+    <text class="tx small" x="18" y="76">実際は良品 283枚</text>
+    <text class="tx big" x="250" y="146" text-anchor="middle">283</text>
+    <text class="tx small" x="250" y="177" text-anchor="middle">全て不良判定 → 良品を全廃棄</text>
+    <text class="tx small" x="18" y="237">実際は不良 178枚</text>
+    <text class="tx big" x="250" y="307" text-anchor="middle">178</text>
+    <text class="tx small" x="250" y="338" text-anchor="middle">全て停止 → 見逃し 0</text>
+    <text class="tx big accent" x="250" y="436" text-anchor="middle">検出率 100%</text>
+  </g>
+
+  <g transform="translate(646 124)">
+    <text class="tx body" x="250" y="0" text-anchor="middle">実際に動かしたモデル</text>
+    <rect class="line" x="0" y="42" width="500" height="320"/>
+    <path class="line" d="M0 202h500M221 42v160"/>
+    <rect x="0" y="42" width="221" height="160" fill="url(#hatch)"/>
+    <rect x="0" y="202" width="500" height="160" fill="url(#hatch)"/>
+    <text class="tx small" x="18" y="76">実際は良品 283枚</text>
+    <text class="tx num" x="110" y="139" text-anchor="middle">125枚</text>
+    <text class="tx small" x="110" y="169" text-anchor="middle">誤って廃棄</text>
+    <text class="tx num" x="360" y="139" text-anchor="middle">158枚</text>
+    <text class="tx small" x="360" y="169" text-anchor="middle">正しく通過</text>
+    <text class="tx small" x="18" y="237">実際は不良 178枚</text>
+    <text class="tx big" x="250" y="307" text-anchor="middle">178</text>
+    <text class="tx small" x="250" y="338" text-anchor="middle">全て停止 → 見逃し 0</text>
+    <text class="tx big accent" x="250" y="436" text-anchor="middle">検出率 100%</text>
+  </g>
+  <path class="accent-line" d="M54 652h1092"/>
+  <text class="tx body" x="600" y="690" text-anchor="middle">不良品だけを見れば同点。違いは、評価していなかった「良品側」にある。</text>
+</svg>

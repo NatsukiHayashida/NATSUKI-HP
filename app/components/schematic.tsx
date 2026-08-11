@@ -132,6 +132,44 @@ export function Legend({ items }: { items: LegendItem[] }) {
   )
 }
 
+/**
+ * 1200px 幅の横組みSVGを記事の本文幅に収める枠。
+ *
+ * 縮小しきると文字が読めなくなるため、最低幅（既定720px）を確保して
+ * 足りない分は横スクロールへ逃がす。ページ本体は横に流れない（枠の中だけがスクロールする）。
+ * 縦組みのスマホ版が届いたら、この枠ごと `sm:` の出し分けに置き換える。
+ */
+export function Plate({
+  viewBox,
+  minWidth = 720,
+  children,
+  ...rest
+}: {
+  viewBox: string
+  minWidth?: number
+  children: React.ReactNode
+} & React.SVGProps<SVGSVGElement>) {
+  return (
+    <div>
+      <div className="overflow-x-auto">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox={viewBox}
+          role="img"
+          className="block h-auto w-full"
+          style={{ minWidth }}
+          {...rest}
+        >
+          {children}
+        </svg>
+      </div>
+      <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground lg:hidden">
+        → 横にスクロール
+      </p>
+    </div>
+  )
+}
+
 export function Schematic({
   label,
   title,
@@ -139,7 +177,8 @@ export function Schematic({
   children,
 }: {
   label: string
-  title: string
+  /** SVGの中に見出しを持つ図では省く（同じ言葉を二度出さない） */
+  title?: string
   note?: string
   children: React.ReactNode
 }) {
@@ -149,7 +188,9 @@ export function Schematic({
         <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary md:text-xs">
           {label}
         </span>
-        <span className="mt-1 block text-[15px] font-medium md:text-[15px]">{title}</span>
+        {title && (
+          <span className="mt-1 block text-[15px] font-medium md:text-[15px]">{title}</span>
+        )}
       </figcaption>
       <div className="space-y-4 md:space-y-5">{children}</div>
       {note && (

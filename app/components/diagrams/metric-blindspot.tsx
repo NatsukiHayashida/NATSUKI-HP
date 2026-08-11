@@ -1,152 +1,127 @@
-import { Callouts, Legend, Overlay, Readout, Schematic } from '@/app/components/schematic'
+import { Plate, Schematic } from '@/app/components/schematic'
 
 /**
- * H-09 評価指標の欠陥 — 見ていたのは4象限のうち下の行だけ。
+ * FIG.01 — 旧指標「検出率100%」では、全品を不良と判定するだけの機械と実際のモデルを区別できない。
  *
- * 判定は4通りに分かれる。行が「実際にどちらだったか」、列が「機械がどう判定したか」。
- * 旧指標（不良品の検出率）は下の行しか集計していないので、
- * 「全品を不良と判定するだけの装置」と「実際に動いたモデル」が同じ点数になる。
+ * 原案はGPT（`claudedocs/received/h-09-contextual.svg`）。こちらで直したのは実装上の3点だけ。
+ *   - `<style>` はSVGの中に書いても文書全体に効く。3枚とも `.body` `.head` を別サイズで持って
+ *     いるため、クラス名に図ごとの前置き（`mb-`）を付けた。付けないと後勝ちで壊れる
+ *   - id（title / desc / pattern）にも同じ前置きを付けた
+ *   - 文字が潰れない最低幅の確保は `Plate` 側
  *
- * 実数は results/eval/patchcore_baseline_v1/eval_summary.json より
- *   テスト461枚（良品283 / 不良178）、TP178 / FP125 / TN158 / FN0
- *   盤面A（全品を不良と判定）  上段 283:0   下段 178:0  → どちらも左100%
- *   盤面B（実際のモデル）      上段 125:158 下段 178:0  → 上段だけ 44.2%
- *
- * 下の行が2つとも同じ絵になることが結論。行ごとに合計100%として分割位置を決めている。
- * 朱は「旧指標が見ていた範囲」の一つの意味に固定する。良否や正誤には使わない。
+ * 数値は `claudedocs/DIAGRAM_BRIEF_2026-08-11.md`（良品283 / 不良178、FP125 / TN158 / 見逃し0）。
  */
-
-const SPLIT = 0.442 // 125 / 283。上段の分割位置
-
-function Boards({ p, bw, bh, tick }: { p: string; bw: number; bh: number; tick: number }) {
-  const mid = bh / 2
-  const x = +(bw * SPLIT).toFixed(3)
-  const line = { fill: 'none', stroke: 'currentColor', strokeWidth: bw > 300 ? 2 : 1.8 } as const
-  // 下の行だけを囲む。左に飛び出す短い爪がブラケットに見える
-  const seen = `M-${tick} ${mid}H0v${mid}h-${tick}M0 ${mid}h${bw}M0 ${bh}h${bw}M${bw} ${mid}v${mid}`
-  const accent = {
-    fill: 'none',
-    stroke: 'hsl(var(--primary))',
-    strokeWidth: bw > 300 ? 3 : 2.6,
-    strokeLinecap: 'square',
-  } as const
-  return (
-    <>
-      <g id={`${p}-a`}>
-        <rect width={bw} height={bh} {...line} />
-        <path d={`M0 0h${bw}v${mid}H0zM0 ${mid}h${bw}v${mid}H0z`} fill={`url(#${p}-hatch)`} />
-        <path d={`M0 ${mid}h${bw}`} {...line} />
-        <path d={seen} {...accent} />
-      </g>
-      <g id={`${p}-b`}>
-        <rect width={bw} height={bh} {...line} />
-        <path d={`M0 0h${x}v${mid}H0zM0 ${mid}h${bw}v${mid}H0z`} fill={`url(#${p}-hatch)`} />
-        <path d={`M${x} 0v${mid}M0 ${mid}h${bw}`} {...line} />
-        <path d={seen} {...accent} />
-      </g>
-    </>
-  )
-}
-
-function Hatch({ p, size }: { p: string; size: number }) {
-  return (
-    <pattern id={`${p}-hatch`} width={size} height={size} patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-      <path d={`M0 0v${size}`} fill="none" stroke="currentColor" strokeWidth={1.2} />
-    </pattern>
-  )
-}
-
-const LABEL =
-  '同じ検出率100%でも、全品を不良と判定するだけの装置と、実際に働くモデルは、良品側の内訳がまったく違う。旧指標はその違いを集計していなかった'
-
-function DiagramPc() {
-  const p = 'mb-pc'
-  return (
-    <svg viewBox="0 60 1000 350" className="w-full" role="img" aria-label={LABEL}>
-      <defs>
-        <Hatch p={p} size={10} />
-        <Boards p={p} bw={320} bh={220} tick={9} />
-      </defs>
-      <use href={`#${p}-a`} transform="translate(150 120)" />
-      <use href={`#${p}-b`} transform="translate(530 120)" />
-    </svg>
-  )
-}
-
-function DiagramSm() {
-  const p = 'mb-sm'
-  // 盤面を右へ寄せて、左に行の名前を置く余白（84）を作る。
-  // 幅いっぱいに描くと名前がハッチングの上に乗ってしまい、どちらの行か図から読めなくなる
-  return (
-    <svg viewBox="0 56 320 464" className="w-full" role="img" aria-label={LABEL}>
-      <defs>
-        <Hatch p={p} size={9} />
-        <Boards p={p} bw={216} bh={149} tick={7} />
-      </defs>
-      <use href={`#${p}-a`} transform="translate(84 100)" />
-      <use href={`#${p}-b`} transform="translate(84 320)" />
-    </svg>
-  )
-}
-
 export function MetricBlindspot() {
   return (
-    <Schematic
-      label="Fig. 01"
-      title="旧指標が集計していたのは、4象限のうち下の行だけだった"
-    >
-      <div className="hidden sm:block">
-        <Overlay ratio="1000 / 350">
-          <DiagramPc />
-          <Callouts
-            items={[
-              { label: '全品を不良と判定するだけの装置', x: 15, y: 4, align: 'left', w: 34 },
-              { label: '実際に動かしたモデル', x: 53, y: 4, align: 'left', w: 34 },
-              { no: '01', label: '実際は良品', x: 3, y: 26, align: 'left', w: 11 },
-              { no: '02', label: '実際は不良', x: 3, y: 60, align: 'left', w: 11 },
-              { label: '旧指標が見ていた範囲', x: 15, y: 92, align: 'left', accent: true },
-            ]}
-          />
-        </Overlay>
-      </div>
+    <Schematic label="Fig.01">
+      <Plate viewBox="0 0 1200 720" aria-labelledby="mb-t mb-d">
+        <title id="mb-t">検出率100%だけではモデルの良し悪しを区別できない</title>
+        <desc id="mb-d">
+          全品不良判定と実際のモデルを、良品283枚と不良品178枚の判定内訳で比較する。
+        </desc>
+        <style>{`
+          .mb-tx{font-family:system-ui,"Yu Gothic",Meiryo,sans-serif;fill:currentColor}
+          .mb-line{fill:none;stroke:currentColor;stroke-width:2}
+          .mb-thin{fill:none;stroke:currentColor;stroke-width:1}
+          .mb-accent{fill:hsl(var(--primary))}
+          .mb-accent-line{fill:none;stroke:hsl(var(--primary));stroke-width:3}
+          .mb-muted{opacity:.52}
+          .mb-small{font-size:18px}
+          .mb-body{font-size:21px}
+          .mb-head{font-size:29px;font-weight:700}
+          .mb-big{font-size:52px;font-weight:750}
+          .mb-num{font-size:26px;font-weight:700}
+        `}</style>
+        <defs>
+          <pattern
+            id="mb-hatch"
+            width="10"
+            height="10"
+            patternUnits="userSpaceOnUse"
+            patternTransform="rotate(45)"
+          >
+            <path className="mb-thin" d="M0 0v10" />
+          </pattern>
+        </defs>
 
-      <div className="sm:hidden">
-        <Overlay ratio="320 / 464">
-          <DiagramSm />
-          <Callouts
-            items={[
-              { label: '全品を不良と判定するだけの装置', x: 4, y: 6.9, align: 'left', w: 88 },
-              { no: '01', label: '実際は良品', x: 2, y: 17.5, align: 'left', w: 24 },
-              { no: '02', label: '実際は不良', x: 2, y: 33.6, align: 'left', w: 24 },
-              { label: '実際に動かしたモデル', x: 4, y: 54.3, align: 'left', w: 88 },
-              { label: '旧指標が見ていた範囲', x: 4, y: 95, align: 'left' },
-            ]}
-          />
-        </Overlay>
-      </div>
+        <text className="mb-tx mb-head" x="54" y="62">
+          同じ「検出率100%」でも、実態はまったく違う
+        </text>
+        <path className="mb-thin mb-muted" d="M54 84h1092" />
 
-      <Readout
-        items={[
-          { value: '100%', label: 'どちらの盤面も、旧指標では検出率100%・見逃し0枚' },
-          { value: '283枚', label: '左の装置が捨てた良品（良品の全数）' },
-          { value: '125枚', label: '右のモデルが捨てた良品（44.2%）' },
-        ]}
-      />
+        <g transform="translate(54 124)">
+          <text className="mb-tx mb-body" x="250" y="0" textAnchor="middle">
+            全品を「不良」と判定するだけ
+          </text>
+          <rect className="mb-line" x="0" y="42" width="500" height="320" />
+          <path className="mb-line" d="M0 202h500" />
+          <rect x="0" y="42" width="500" height="160" fill="url(#mb-hatch)" />
+          <rect x="0" y="202" width="500" height="160" fill="url(#mb-hatch)" />
+          <text className="mb-tx mb-small" x="18" y="76">
+            実際は良品 283枚
+          </text>
+          <text className="mb-tx mb-big" x="250" y="146" textAnchor="middle">
+            283
+          </text>
+          <text className="mb-tx mb-small" x="250" y="177" textAnchor="middle">
+            全て不良判定 → 良品を全廃棄
+          </text>
+          <text className="mb-tx mb-small" x="18" y="237">
+            実際は不良 178枚
+          </text>
+          <text className="mb-tx mb-big" x="250" y="307" textAnchor="middle">
+            178
+          </text>
+          <text className="mb-tx mb-small" x="250" y="338" textAnchor="middle">
+            全て停止 → 見逃し 0
+          </text>
+          <text className="mb-tx mb-big mb-accent" x="250" y="436" textAnchor="middle">
+            検出率 100%
+          </text>
+        </g>
 
-      <Legend
-        items={[
-          {
-            no: '01',
-            title: '実際は良品だった283枚',
-            body: 'ハッチングが「機械が不良と判定した範囲」。左は全数を捨てており、右は125枚にとどまる。ここが2つの盤面で唯一違う場所だが、旧指標はこの行を見ていない。',
-          },
-          {
-            no: '02',
-            title: '実際は不良だった178枚',
-            body: '両方とも全数を捕まえている（見逃しゼロ）。旧指標が集計していたのはこの行だけなので、どちらも満点になる。',
-          },
-        ]}
-      />
+        <g transform="translate(646 124)">
+          <text className="mb-tx mb-body" x="250" y="0" textAnchor="middle">
+            実際に動かしたモデル
+          </text>
+          <rect className="mb-line" x="0" y="42" width="500" height="320" />
+          <path className="mb-line" d="M0 202h500M221 42v160" />
+          <rect x="0" y="42" width="221" height="160" fill="url(#mb-hatch)" />
+          <rect x="0" y="202" width="500" height="160" fill="url(#mb-hatch)" />
+          <text className="mb-tx mb-small" x="18" y="76">
+            実際は良品 283枚
+          </text>
+          <text className="mb-tx mb-num" x="110" y="139" textAnchor="middle">
+            125枚
+          </text>
+          <text className="mb-tx mb-small" x="110" y="169" textAnchor="middle">
+            誤って廃棄
+          </text>
+          <text className="mb-tx mb-num" x="360" y="139" textAnchor="middle">
+            158枚
+          </text>
+          <text className="mb-tx mb-small" x="360" y="169" textAnchor="middle">
+            正しく通過
+          </text>
+          <text className="mb-tx mb-small" x="18" y="237">
+            実際は不良 178枚
+          </text>
+          <text className="mb-tx mb-big" x="250" y="307" textAnchor="middle">
+            178
+          </text>
+          <text className="mb-tx mb-small" x="250" y="338" textAnchor="middle">
+            全て停止 → 見逃し 0
+          </text>
+          <text className="mb-tx mb-big mb-accent" x="250" y="436" textAnchor="middle">
+            検出率 100%
+          </text>
+        </g>
+
+        <path className="mb-accent-line" d="M54 652h1092" />
+        <text className="mb-tx mb-body" x="600" y="690" textAnchor="middle">
+          不良品だけを見れば同点。違いは、評価していなかった「良品側」にある。
+        </text>
+      </Plate>
     </Schematic>
   )
 }
