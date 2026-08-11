@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // 開発サーバーへ別ホスト名で入るときの許可リスト（開発時のみ有効。本番には影響しない）。
+  // Next.js は既定で、起動したホスト名（localhost）以外からの dev アセット要求を 403 で弾く。
+  // スマホ確認は Tailscale の名前で入るため、ここを空にしておくと chunk が 403 になり、
+  // 画面は出るのに「テーマ切替も3点メニューも反応しない」状態になる（2026-08-11 に実際に発生）。
+  allowedDevOrigins: ['node.taile73628.ts.net', '*.taile73628.ts.net'],
+
   // 画像最適化設定
   images: {
     formats: ['image/avif', 'image/webp'],
