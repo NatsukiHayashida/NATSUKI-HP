@@ -157,7 +157,7 @@ function DiagramSm() {
 export function MaskPlacement() {
   return (
     <Schematic
-      label="Fig. 01"
+      label="Fig. 02"
       title="マスクを入力画像に置くか、推論後の異常マップに置くか"
     >
       {/* PC：上下2段 × 左から右に3枚 */}

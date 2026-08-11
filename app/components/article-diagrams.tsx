@@ -14,8 +14,12 @@
  * 共通枠は app/components/schematic.tsx（Schematic / Callouts / Overlay / Legend / Readout）。
  * 作図の規約は CLAUDE.md「記事本文への模式図の差し込み」を必ず読むこと。
  */
+import { DomainShift } from '@/app/components/diagrams/domain-shift'
 import { MaskPlacement } from '@/app/components/diagrams/mask-placement'
+import { MetricBlindspot } from '@/app/components/diagrams/metric-blindspot'
 
 export const articleDiagrams: Record<string, () => React.JSX.Element> = {
+  'metric-blindspot': MetricBlindspot,
   'mask-placement': MaskPlacement,
+  'domain-shift': DomainShift,
 }
