@@ -14,8 +14,9 @@ export default function MobileNav() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button size="icon" variant="outline">
-          <Menu size={20} />
+        {/* aria-expanded / aria-controls は Radix の Trigger が付ける。名前だけ足りていなかった */}
+        <Button size="icon" variant="outline" aria-label="メニューを開く">
+          <Menu size={20} aria-hidden="true" />
         </Button>
       </SheetTrigger>
       <SheetContent>

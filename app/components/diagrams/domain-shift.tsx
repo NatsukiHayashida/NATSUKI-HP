@@ -1,152 +1,209 @@
 import { Callouts, Overlay, type CalloutItem } from '../schematic'
 
 /**
- * ドメインシフト（H-03）。GPTから受け取った草案（claudedocs/received/）を元に実装した。
+ * ドメインシフト（H-03）。2026-08-11 に実データを見て描き直した。
  *
- * 受領版の座標はそのまま使っている。0起点で検算すると位置が値と合わないが、
- * 逆算するとレールは 0.18〜0.82 を映す窓であり、2点は一次スケール上で整合している
- * （レールに原点の表示はないので、0起点である必要はない）。
- * 一度0〜1へ置き直したが、01と03の間隔が詰まって閾値のゲートと帯が収まらなくなったため戻した。
+ * **描き直した理由**
+ * 旧版は「分布の形は記録に残っていない」という前提で、標本ラック・治具・計器を
+ * 並べた模式図にしていた。これは誤りで、当時の推論スコアは1枚1行で残っている
+ * （`~/work/iidzka-inspection/results/b7_cpu_rebuild/scores_all.csv`、519枚）。
+ * 実測を集計したところ、本文より強い事実が出た：
  *
- * 設計の要点：
- * - **分布の形は描かない**。記録にあるのは最小値・最大値・AUCだけで、
- *   山の形は分からない。標本ラックと積層で「群がそこにある」ことだけを示す
- * - 学習時の不良品ラック（右上）と別セッション良品の積層（右下）が
- *   横方向で重なる。この重なりが「閾値をどこに置いても両立しない」の実体
- * - モバイルはレールを縦に倒す。横組みのまま縮めると番号が読めない
+ * - 同じ日に撮った良品   n=241  0.2580 〜 0.3812（本文の「上端 0.38」）
+ * - 同じ日に撮った不良品  n=178  0.3413 〜 0.9054
+ * - 別の日に撮った良品   n=100  0.5385 〜 0.7899（本文の「下端 0.5385」）
+ * - 当時の閾値 0.3413
+ *
+ * 別の日の良品100枚は、閾値の右へ出ただけではなく、**不良品の分布の中に丸ごと入っている**。
+ * 不良品178枚のうち108枚（60.7%）は、別の日の良品の最小値より低いスコアだった。
+ * 「実験室では勝てるが現場では負ける」の実体はこれなので、その1点だけを図にする。
+ *
+ * **構図**：スコア軸を1本だけ引き、その上に3群をレーンで重ねずに並べる（リッジライン）。
+ * 閾値の破線が3レーンを縦に貫くので、どのレーンが線のどちら側にいるかだけを見ればよい。
+ * 高さは群ごとの相対度数（枚数が違うため、レーン内で正規化している）。
+ *
+ * 数値は SVG に入れず、HTML の Callouts と Readout 側で出す（規約どおり）。
  */
 
-/** レール（x 116〜884）は 0.18〜0.82 のスコア窓。両端に目盛の表示はない */
-const RAIL_FROM = 0.182
-const RAIL_SPAN = 0.634
-const railX = (score: number) => 116 + ((score - RAIL_FROM) / RAIL_SPAN) * 768
-const GOOD_MAX = Math.round(railX(0.38)) // 356
-const SHIFTED_MIN = Math.round(railX(0.5385)) // 548
+/** 0.25〜0.95 を 0.025 刻みで集計した実測のヒストグラム（28ビン） */
+const LO = 0.25
+const HI = 0.95
+const NBIN = 28
+const STEP = (HI - LO) / NBIN
 
-/** 横組み（デスクトップ）。スコアは左→右 */
-function Rail() {
+const GOOD = [28, 88, 64, 48, 11, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+const DEFECT = [0, 0, 0, 3, 2, 7, 14, 14, 15, 22, 20, 18, 6, 8, 8, 8, 10, 5, 5, 5, 0, 1, 1, 4, 1, 0, 1, 0]
+const HOLDOUT = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 5, 13, 23, 19, 19, 11, 2, 2, 2, 0, 0, 0, 0, 0, 0]
+
+const THRESHOLD = 0.3413
+const GOOD_TOP = 0.3812
+const SHIFT_LOW = 0.5385
+
+/** 階段状の輪郭。ゼロが続く両端は描かない（軸と二重になるため） */
+function stepPath(bins: number[], toX: (s: number) => number, base: number, height: number) {
+  const peak = Math.max(...bins)
+  const first = bins.findIndex((n) => n > 0)
+  let last = bins.length - 1
+  while (bins[last] === 0) last -= 1
+
+  const x = (i: number) => +toX(LO + i * STEP).toFixed(1)
+  const y = (n: number) => +(base - (n / peak) * height).toFixed(1)
+
+  let d = `M${x(first)} ${base}`
+  for (let i = first; i <= last; i += 1) d += `V${y(bins[i])}H${x(i + 1)}`
+  return `${d}V${base}Z`
+}
+
+/** 軸の目盛（0.3〜0.9 を 0.1 刻み）。数字は出さず、刻みだけ置く */
+const TICKS = [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+
+function Patterns({ id }: { id: string }) {
+  return (
+    <defs>
+      <pattern
+        id={`${id}-defect`}
+        width="7"
+        height="7"
+        patternUnits="userSpaceOnUse"
+        patternTransform="rotate(45)"
+      >
+        <line x1="0" y1="0" x2="0" y2="7" stroke="currentColor" strokeWidth="1" opacity=".26" />
+      </pattern>
+      <pattern
+        id={`${id}-shift`}
+        width="6"
+        height="6"
+        patternUnits="userSpaceOnUse"
+        patternTransform="rotate(45)"
+      >
+        <line
+          x1="0"
+          y1="0"
+          x2="0"
+          y2="6"
+          stroke="hsl(var(--primary))"
+          strokeWidth="1"
+          opacity=".5"
+        />
+      </pattern>
+      <marker
+        id={`${id}-arrow`}
+        viewBox="0 0 10 10"
+        refX="8"
+        refY="5"
+        markerWidth="6"
+        markerHeight="6"
+        orient="auto"
+      >
+        {/* marker は参照元の currentColor を継承しないので、色を直に書く */}
+        <path d="M0 1L9 5L0 9Z" fill="currentColor" />
+      </marker>
+    </defs>
+  )
+}
+
+/* ────────────────────────── 横組み（デスクトップ） ────────────────────────── */
+
+const W_X0 = 240
+const W_SPAN = 722
+const wideX = (s: number) => W_X0 + ((s - LO) / (HI - LO)) * W_SPAN
+const W_LANES = [140, 285, 430]
+const W_H = 96
+
+function Ridgeline() {
+  const thr = +wideX(THRESHOLD).toFixed(1)
+
   return (
     <svg
-      viewBox="0 0 1000 460"
+      viewBox="0 0 1000 470"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
       className="absolute inset-0 h-full w-full text-foreground"
     >
-      <defs>
-        <pattern
-          id="h03-shift"
-          width="9"
-          height="9"
-          patternUnits="userSpaceOnUse"
-          patternTransform="rotate(45)"
-        >
-          <line x1="0" y1="0" x2="0" y2="9" stroke="hsl(var(--primary))" strokeWidth="1" opacity=".46" />
-        </pattern>
-        <pattern
-          id="h03-band"
-          width="12"
-          height="12"
-          patternUnits="userSpaceOnUse"
-          patternTransform="rotate(45)"
-        >
-          <line x1="0" y1="0" x2="0" y2="12" stroke="currentColor" strokeWidth="1" opacity=".24" />
-        </pattern>
-        <marker
-          id="h03-arrow"
-          viewBox="0 0 10 10"
-          refX="8"
-          refY="5"
-          markerWidth="6"
-          markerHeight="6"
-          orient="auto"
-        >
-          <path d="M0 1L9 5L0 9Z" fill="hsl(var(--primary))" />
-        </marker>
-      </defs>
+      <Patterns id="h03w" />
 
+      {/* 製図の見当。左の余白と作図領域を分ける */}
       <g stroke="currentColor" strokeWidth="1" opacity=".22">
-        <path d="M54 54H946M54 400H946" />
-        <path d="M70 42V66M930 42V66M70 388V412M930 388V412" />
+        <path d="M16 20V450M984 20V450" />
+        <path d="M16 20H40M960 20H984M16 450H40M960 450H984" />
       </g>
 
-      {/* スコアのレール */}
-      <g stroke="currentColor" strokeWidth="1.5">
-        <path d="M92 218H908V258H92Z" />
-        <path d="M116 238H884" />
-        <path d="M116 228V248M884 228V248" />
-        <path
-          d="M180 232V244M244 232V244M308 232V244M372 228V248M436 232V244M500 232V244M564 228V248M628 232V244M692 232V244M756 232V244M820 232V244"
-          opacity=".42"
-        />
-        <circle cx="104" cy="230" r="3" />
-        <circle cx="896" cy="230" r="3" />
-        <circle cx="104" cy="246" r="3" />
-        <circle cx="896" cy="246" r="3" />
-      </g>
-
-      {/* 学習時の良品ラック。分布ではなく終端の標本だけを置く */}
-      <g stroke="currentColor" strokeWidth="1.5">
-        <path d="M104 116H330V184H104Z" />
-        <path d="M126 132H174V168H126ZM190 132H238V168H190ZM254 132H302V168H254Z" />
-        <circle cx="150" cy="150" r="11" />
-        <circle cx="214" cy="150" r="11" />
-        <circle cx="278" cy="150" r="11" />
-        <path d={`M330 150H${GOOD_MAX}`} />
-        <path d={`M${GOOD_MAX} 166V290`} />
-        <path d={`M${GOOD_MAX - 12} 178H${GOOD_MAX + 12}M${GOOD_MAX - 12} 278H${GOOD_MAX + 12}`} />
-      </g>
-
-      {/* 学習時の不良品ラック。位置分布は描かない */}
-      <g stroke="currentColor" strokeWidth="1.5">
-        <path d="M660 116H892V184H660Z" />
-        <path d="M684 132H732V168H684ZM748 132H796V168H748ZM812 132H860V168H812Z" fill="url(#h03-band)" />
-        <path d="M696 142L720 158M760 142L784 158M824 142L848 158" />
-      </g>
-
-      {/* 04 どこへ動かしても両立しない閾値の帯 */}
+      {/* 3本のレーンの基線 */}
       <g stroke="currentColor" strokeWidth="1.25">
-        <path d={`M${GOOD_MAX + 12} 198H${SHIFTED_MIN - 12}V278H${GOOD_MAX + 12}Z`} fill="url(#h03-band)" />
-        <path d="M400 206V270M452 206V270M506 206V270" strokeDasharray="4 5" />
-        <path d={`M${GOOD_MAX + 26} 190V180H${SHIFTED_MIN - 26}V190`} />
+        {W_LANES.map((base) => (
+          <path key={base} d={`M${W_X0} ${base}H962`} />
+        ))}
       </g>
 
-      {/* 02 学習時には成立していた閾値のゲート */}
+      {/* 目盛。数字は出さない */}
+      <g stroke="currentColor" strokeWidth="1" opacity=".45">
+        {TICKS.map((t) => (
+          <path
+            key={t}
+            d={`M${wideX(t).toFixed(1)} ${W_LANES[2]}V${W_LANES[2] + 9}`}
+          />
+        ))}
+        <path d={`M${W_X0} ${W_LANES[2] + 9}V${W_LANES[2]}`} />
+      </g>
+
+      {/* 01 当時の閾値。3レーンを貫く */}
+      <g stroke="currentColor">
+        <path d={`M${thr} 30V446`} strokeWidth="1.5" strokeDasharray="6 5" />
+        <path d={`M${thr} 40H${thr + 74}`} strokeWidth="1.25" markerEnd="url(#h03w-arrow)" />
+      </g>
+
+      {/* 学習と同じ日に撮った良品。閾値の左に収まっている（右へ出た分が当時の過検出） */}
       <g stroke="currentColor" strokeWidth="1.75">
-        <path d="M470 188H506V288H470Z" fill="hsl(var(--background))" />
-        <path d="M478 202V274M498 202V274" />
-        <circle cx="488" cy="238" r="8" />
-        <path d="M488 188V170" />
+        <path d={stepPath(GOOD, wideX, W_LANES[0], W_H)} />
       </g>
-
-      {/* 03 別セッションの良品100枚。最小値が01より右へ出た */}
-      <g stroke="hsl(var(--primary))" strokeWidth="2.25">
-        <path d={`M${SHIFTED_MIN} 166V290`} />
-        <path d={`M${SHIFTED_MIN - 12} 178H${SHIFTED_MIN + 12}M${SHIFTED_MIN - 12} 278H${SHIFTED_MIN + 12}`} />
-        <path d="M576 294H874V366H576Z" fill="url(#h03-shift)" />
-        <path d="M590 306H846V350H590Z" fill="hsl(var(--background))" />
-        <path d="M602 316H834M602 326H834M602 336H834M602 346H834" />
-        <path d={`M${SHIFTED_MIN} 330H576`} />
-        <path d={`M${GOOD_MAX} 318H${SHIFTED_MIN - 26}`} markerEnd="url(#h03-arrow)" />
-      </g>
-
-      {/* 05 撮像条件を固定する側へ舵を切る */}
       <g stroke="currentColor" strokeWidth="1.5">
-        <path d="M92 304H288V374H92Z" />
-        <path d="M112 320H162V358H112ZM218 320H268V358H218Z" />
-        <path d="M162 339H218" />
-        <circle cx="190" cy="339" r="13" />
-        <path d="M128 304V290M252 304V290M118 290H138M242 290H262" />
+        <path d={`M${wideX(GOOD_TOP).toFixed(1)} ${W_LANES[0]}V${W_LANES[0] + 16}`} />
+      </g>
+
+      {/* 学習と同じ日に撮った不良品。閾値の右へ広がる */}
+      <g stroke="currentColor" strokeWidth="1.5">
+        <path d={stepPath(DEFECT, wideX, W_LANES[1], W_H)} fill="url(#h03w-defect)" />
+      </g>
+
+      {/* 別の日に撮った良品100枚。良品なのに、上の不良品の分布の中へ丸ごと入っている */}
+      <g stroke="hsl(var(--primary))" strokeWidth="2">
+        <path d={stepPath(HOLDOUT, wideX, W_LANES[2], W_H)} fill="url(#h03w-shift)" />
+        <path d={`M${wideX(SHIFT_LOW).toFixed(1)} ${W_LANES[2]}V${W_LANES[2] + 16}`} />
+        {/* 別の日の良品が占めた範囲。不良品レーンの足元に寸法線として引き、
+            そのまま真下の朱の山とつながる。ここが「不良品の山の中」の実体 */}
+        <path
+          d={`M${wideX(SHIFT_LOW).toFixed(1)} ${W_LANES[1] + 18}H${wideX(0.7899).toFixed(1)}`}
+          strokeWidth="1.5"
+        />
+        <path
+          d={`M${wideX(SHIFT_LOW).toFixed(1)} ${W_LANES[1] + 10}V${W_LANES[1] + 26}M${wideX(0.7899).toFixed(1)} ${W_LANES[1] + 10}V${W_LANES[1] + 26}`}
+          strokeWidth="1.5"
+        />
       </g>
     </svg>
   )
 }
 
-/** 縦組み（モバイル）。スコアは上→下 */
-function Column() {
-  const y = (score: number) => 70 + score * 360
-  const good = y(0.38) // 207
-  const shifted = y(0.5385) // 264
+const WIDE: CalloutItem[] = [
+  { label: '学習と同じ日に撮った良品', x: 1.6, y: 18.1, align: 'left', w: 21 },
+  { label: '学習と同じ日に撮った不良品', x: 1.6, y: 48.9, align: 'left', w: 21 },
+  { label: '別の日に撮った良品 100枚', x: 1.6, y: 79.8, align: 'left', w: 21, accent: true },
+  { no: '01', label: '当時の閾値 ― この右は不良と判定', x: 33.4, y: 4.5, align: 'left' },
+  { no: '02', label: '良品の上端 0.38', x: 37.8, y: 33.4, align: 'left' },
+  { no: '03', label: '別の日の良品の下端 0.5385', x: 53.8, y: 86.2, align: 'right', accent: true },
+]
+
+/* ────────────────────────── 縦組み（モバイル） ────────────────────────── */
+
+const N_X0 = 34
+const N_SPAN = 272
+const narrowX = (s: number) => N_X0 + ((s - LO) / (HI - LO)) * N_SPAN
+const N_LANES = [165, 300, 435]
+const N_H = 62
+
+function RidgelineNarrow() {
+  const thr = +narrowX(THRESHOLD).toFixed(1)
 
   return (
     <svg
@@ -156,126 +213,69 @@ function Column() {
       aria-hidden="true"
       className="absolute inset-0 h-full w-full text-foreground"
     >
-      <defs>
-        <pattern
-          id="h03m-shift"
-          width="8"
-          height="8"
-          patternUnits="userSpaceOnUse"
-          patternTransform="rotate(45)"
-        >
-          <line x1="0" y1="0" x2="0" y2="8" stroke="hsl(var(--primary))" strokeWidth="1" opacity=".46" />
-        </pattern>
-        <pattern
-          id="h03m-band"
-          width="9"
-          height="9"
-          patternUnits="userSpaceOnUse"
-          patternTransform="rotate(45)"
-        >
-          <line x1="0" y1="0" x2="0" y2="9" stroke="currentColor" strokeWidth="1" opacity=".24" />
-        </pattern>
-        <marker
-          id="h03m-arrow"
-          viewBox="0 0 10 10"
-          refX="8"
-          refY="5"
-          markerWidth="5"
-          markerHeight="5"
-          orient="auto"
-        >
-          <path d="M0 1L9 5L0 9Z" fill="hsl(var(--primary))" />
-        </marker>
-      </defs>
+      <Patterns id="h03n" />
 
-      {/* レール */}
       <g stroke="currentColor" strokeWidth="1.25">
-        <path d="M120 70H160V430H120Z" />
-        <path d="M140 84V416" />
-        <path d="M130 84H150M130 416H150" />
-        <path
-          d="M132 120H148M132 156H148M132 192H148M132 228H148M132 264H148M132 300H148M132 336H148M132 372H148"
-          opacity=".38"
-        />
+        {N_LANES.map((base) => (
+          <path key={base} d={`M${N_X0} ${base}H310`} />
+        ))}
       </g>
 
-      {/* 学習時の良品ラック */}
-      <g stroke="currentColor" strokeWidth="1.25">
-        <path d="M16 92H104V148H16Z" />
-        <path d="M26 102H50V138H26ZM56 102H80V138H56ZM86 102H104V138H86Z" />
-        <circle cx="38" cy="120" r="7" />
-        <circle cx="68" cy="120" r="7" />
-        <path d={`M60 148V${good}H83`} />
-        <path d={`M104 ${good}H176`} />
-        <path d={`M104 ${good - 9}V${good + 9}M176 ${good - 9}V${good + 9}`} />
+      <g stroke="currentColor" strokeWidth="1" opacity=".45">
+        {TICKS.map((t) => (
+          <path key={t} d={`M${narrowX(t).toFixed(1)} ${N_LANES[2]}V${N_LANES[2] + 7}`} />
+        ))}
       </g>
 
-      {/* 04 両立しない閾値の帯 */}
-      <g stroke="currentColor" strokeWidth="1.25">
-        <path d={`M112 ${good}H168V${shifted}H112Z`} fill="url(#h03m-band)" />
+      {/* 01 当時の閾値 */}
+      <g stroke="currentColor">
+        <path d={`M${thr} 44V452`} strokeWidth="1.25" strokeDasharray="5 4" />
+        <path d={`M${thr} 52H${thr + 44}`} strokeWidth="1" markerEnd="url(#h03n-arrow)" />
       </g>
 
-      {/* 02 学習時に成立していた閾値のゲート */}
       <g stroke="currentColor" strokeWidth="1.5">
-        <path d="M124 222H156V250H124Z" fill="hsl(var(--background))" />
-        <path d="M131 228V244M149 228V244" />
-        <circle cx="140" cy="236" r="5" />
-        <path d="M124 236H88" />
+        <path d={stepPath(GOOD, narrowX, N_LANES[0], N_H)} />
+        <path d={`M${narrowX(GOOD_TOP).toFixed(1)} ${N_LANES[0]}V${N_LANES[0] + 11}`} />
       </g>
 
-      {/* 学習時の不良品ラック。別セッション良品と縦方向で重なる */}
       <g stroke="currentColor" strokeWidth="1.25">
-        <path d="M16 330H104V386H16Z" />
-        <path d="M26 340H50V376H26ZM56 340H80V376H56ZM86 340H104V376H86Z" fill="url(#h03m-band)" />
-        <path d="M30 346L46 366M60 346L76 366" />
-        <path d="M104 358H120" opacity=".5" />
+        <path d={stepPath(DEFECT, narrowX, N_LANES[1], N_H)} fill="url(#h03n-defect)" />
       </g>
 
-      {/* 03 別セッションの良品100枚 */}
       <g stroke="hsl(var(--primary))" strokeWidth="1.75">
-        <path d={`M176 ${shifted}H304V420H176Z`} fill="url(#h03m-shift)" />
-        <path d={`M186 ${shifted + 10}H294V410H186Z`} fill="hsl(var(--background))" />
-        <path d="M194 288H286M194 302H286M194 316H286M194 330H286" />
-        <path d={`M160 ${shifted}H176`} />
-        <path d={`M140 ${good + 14}V${shifted - 6}`} markerEnd="url(#h03m-arrow)" />
-      </g>
-
-      {/* 05 撮像条件の固定 */}
-      <g stroke="currentColor" strokeWidth="1.25">
-        <path d="M16 408H108V462H16Z" />
-        <path d="M28 420H54V450H28ZM70 420H96V450H70Z" />
-        <path d="M54 435H70" />
-        <circle cx="62" cy="435" r="9" />
+        <path d={stepPath(HOLDOUT, narrowX, N_LANES[2], N_H)} fill="url(#h03n-shift)" />
+        <path d={`M${narrowX(SHIFT_LOW).toFixed(1)} ${N_LANES[2]}V${N_LANES[2] + 11}`} />
+        <path
+          d={`M${narrowX(SHIFT_LOW).toFixed(1)} ${N_LANES[1] + 13}H${narrowX(0.7899).toFixed(1)}`}
+          strokeWidth="1.25"
+        />
+        <path
+          d={`M${narrowX(SHIFT_LOW).toFixed(1)} ${N_LANES[1] + 7}V${N_LANES[1] + 19}M${narrowX(0.7899).toFixed(1)} ${N_LANES[1] + 7}V${N_LANES[1] + 19}`}
+          strokeWidth="1.25"
+        />
       </g>
     </svg>
   )
 }
 
-const WIDE: CalloutItem[] = [
-  { no: '01', label: '学習時の良品の上端 0.38', x: 21.7, y: 22 },
-  { no: '02', label: '当時の閾値', x: 48.8, y: 30 },
-  { no: '04', label: 'どこへ動かしても両立しない', x: 45.2, y: 39.5 },
-  { no: '03', label: '別セッション良品の下端 0.5385', x: 72.5, y: 60, accent: true },
-  { no: '05', label: '撮像条件を固定する', x: 9.2, y: 62 },
-]
-
 const NARROW: CalloutItem[] = [
-  { no: '01', label: '学習時の上端 0.38', x: 2, y: 39, align: 'left' },
-  { no: '02', label: '当時の閾値', x: 2, y: 49, align: 'left' },
-  { no: '04', label: '両立しない帯', x: 98, y: 44, align: 'right' },
-  { no: '03', label: '別日の下端 0.5385', x: 98, y: 55, align: 'right', accent: true },
-  { no: '05', label: '撮像条件を固定', x: 2, y: 94, align: 'left' },
+  { label: '学習と同じ日の良品', x: 1.5, y: 17.1, align: 'left' },
+  { label: '学習と同じ日の不良品', x: 1.5, y: 45.2, align: 'left' },
+  { label: '別の日に撮った良品 100枚', x: 1.5, y: 73.3, align: 'left', accent: true },
+  { no: '01', label: '当時の閾値', x: 21.7, y: 6.3, align: 'left' },
+  { no: '02', label: '上端 0.38', x: 26.6, y: 37.7, align: 'left' },
+  { no: '03', label: '下端 0.5385', x: 45.6, y: 86.5, align: 'right', accent: true },
 ]
 
 export function DomainShift() {
   return (
     <div className="not-prose">
-      <Overlay ratio="1000 / 460" className="hidden max-w-[900px] sm:block">
-        <Rail />
+      <Overlay ratio="1000 / 470" className="hidden max-w-[900px] sm:block">
+        <Ridgeline />
         <Callouts items={WIDE} />
       </Overlay>
       <Overlay ratio="320 / 480" className="max-w-[320px] sm:hidden">
-        <Column />
+        <RidgelineNarrow />
         <Callouts items={NARROW} />
       </Overlay>
     </div>

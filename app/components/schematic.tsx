@@ -16,7 +16,8 @@ import { cn } from '@/lib/utils'
 export type LegendItem = { no: string; title: string; body: string }
 
 export type CalloutItem = {
-  no: string
+  /** 凡例と対応させる番号。名前そのものを出すだけの引き出しでは省く */
+  no?: string
   /** 図の中に出す短い名前。長い説明は Legend 側へ */
   label: string
   /** SVG上の位置を％で。left は align の基準点になる */
@@ -24,6 +25,8 @@ export type CalloutItem = {
   y: number
   align?: 'left' | 'center' | 'right'
   accent?: boolean
+  /** ％指定の幅。与えると折り返しを許す（左余白に置く群の名前など） */
+  w?: number
 }
 
 /** SVGの上に重ねる名前つきの引き出し。図だけで意味が取れるようにするための部品 */
@@ -32,26 +35,59 @@ export function Callouts({ items }: { items: CalloutItem[] }) {
     <>
       {items.map((item) => (
         <span
-          key={item.no}
+          key={item.no ?? item.label}
           className={cn(
-            'absolute -translate-y-1/2 whitespace-nowrap bg-background px-1 text-[11px] leading-tight md:text-[13px]',
+            'absolute -translate-y-1/2 bg-background px-1 text-[11px] leading-tight md:text-[13px]',
+            item.w ? 'block' : 'whitespace-nowrap',
             item.align === 'right' && '-translate-x-full',
             (item.align === 'center' || !item.align) && '-translate-x-1/2'
           )}
-          style={{ left: `${item.x}%`, top: `${item.y}%` }}
+          style={{ left: `${item.x}%`, top: `${item.y}%`, width: item.w ? `${item.w}%` : undefined }}
         >
-          <span
-            className={cn(
-              'mr-1 font-mono text-[10px] md:text-[11px]',
-              item.accent ? 'text-primary' : 'text-muted-foreground'
-            )}
-          >
-            {item.no}
-          </span>
+          {item.no && (
+            <span
+              className={cn(
+                'mr-1 font-mono text-[10px] md:text-[11px]',
+                item.accent ? 'text-primary' : 'text-muted-foreground'
+              )}
+            >
+              {item.no}
+            </span>
+          )}
           {item.label}
         </span>
       ))}
     </>
+  )
+}
+
+/**
+ * 図の結論そのものが数値のときに、図の直近へ大きく置く。
+ * 凡例の中に数字を埋めると読み落とされるため、図とセットで先に目に入る位置に出す。
+ */
+export function Readout({
+  items,
+}: {
+  items: { value: string; label: string; accent?: boolean }[]
+}) {
+  return (
+    <dl className="grid gap-x-8 gap-y-4 border-t pt-5 sm:grid-cols-3">
+      {items.map((item) => (
+        <div key={item.label}>
+          <dt
+            className={cn(
+              'font-mono text-2xl leading-none tracking-tight md:text-[32px]',
+              item.accent && 'text-primary'
+            )}
+          >
+            {item.value}
+          </dt>
+          <dd className="mt-2 text-[13px] leading-relaxed text-muted-foreground md:text-sm">
+            {item.label}
+          </dd>
+        </div>
+      ))}
+    </dl>
   )
 }
 

@@ -294,27 +294,27 @@ function Columns() {
 }
 
 const WIDE: CalloutItem[] = [
-  { no: '01', label: '入力画像', x: 12.1, y: 12 },
-  { no: '02', label: '入力側マスク', x: 23.1, y: 5, accent: true },
-  { no: '03', label: '欠陥が消える', x: 34.1, y: 16 },
-  { no: '04', label: 'モデル', x: 47, y: 12 },
-  { no: '05', label: '山が立たない', x: 60, y: 15 },
-  { no: '06', label: '過検出 72.4%', x: 88.3, y: 15 },
-  { no: '07', label: '欠陥が残る', x: 27.4, y: 51 },
-  { no: '08', label: '推論後マスク', x: 64.3, y: 51, accent: true },
-  { no: '09', label: '過検出 20.8%', x: 88.3, y: 54 },
+  { label: '入力画像', x: 12.1, y: 12 },
+  { label: '入力側マスク', x: 23.1, y: 5, accent: true },
+  { label: '欠陥が消える', x: 34.1, y: 16 },
+  { label: 'モデル', x: 47, y: 12 },
+  { label: '山が立たない', x: 60, y: 15 },
+  { label: '過検出 72.4%', x: 88.3, y: 15 },
+  { label: '欠陥が残る', x: 27.4, y: 51 },
+  { label: '推論後マスク', x: 64.3, y: 51, accent: true },
+  { label: '過検出 20.8%', x: 88.3, y: 54 },
 ]
 
 const NARROW: CalloutItem[] = [
-  { no: '01', label: '入力画像', x: 50, y: 4 },
-  { no: '02', label: '入力側マスク', x: 2, y: 25, align: 'left', accent: true },
-  { no: '08', label: '推論後マスク', x: 98, y: 80.5, align: 'right', accent: true },
-  { no: '03', label: '欠陥が消える', x: 2, y: 39, align: 'left' },
-  { no: '07', label: '欠陥が残る', x: 98, y: 39, align: 'right' },
-  { no: '04', label: 'モデル', x: 2, y: 57, align: 'left' },
-  { no: '05', label: '山が立たない', x: 2, y: 71, align: 'left' },
-  { no: '06', label: '72.4%', x: 2, y: 92, align: 'left' },
-  { no: '09', label: '20.8%', x: 98, y: 92, align: 'right' },
+  { label: '入力画像', x: 50, y: 4 },
+  { label: '入力側マスク', x: 2, y: 25, align: 'left', accent: true },
+  { label: '推論後マスク', x: 98, y: 80.5, align: 'right', accent: true },
+  { label: '欠陥が消える', x: 2, y: 39, align: 'left' },
+  { label: '欠陥が残る', x: 98, y: 39, align: 'right' },
+  { label: 'モデル', x: 2, y: 57, align: 'left' },
+  { label: '山が立たない', x: 2, y: 71, align: 'left' },
+  { label: '72.4%', x: 2, y: 92, align: 'left' },
+  { label: '20.8%', x: 98, y: 92, align: 'right' },
 ]
 
 export function MaskPosition() {
