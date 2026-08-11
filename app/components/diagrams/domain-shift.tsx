@@ -1,16 +1,21 @@
 import { Plate, Schematic } from '@/app/components/schematic'
 
 /**
- * FIG.03 — 撮った日が変わっただけで、良品100枚が不良品の分布の中に入ってしまった。
+ * FIG.03 — 撮った日が変わっただけで、良品100枚が全数、閾値の右へ出てしまった。
  *
- * 原案はGPT（`claudedocs/received/h-10-contextual.svg`）。実装上直したのはクラス名とidの
- * 前置き（`sh-`）だけ。詳細は `metric-blindspot.tsx` の先頭コメントと同じ理由。
+ * 原案はGPT（`claudedocs/received/h-10-contextual.svg`。2026-08-11 15:48 の差し替え版）。
+ * 実装上直したのはクラス名とidの前置き（`sh-`）だけ。理由は `metric-blindspot.tsx` の
+ * 先頭コメントと同じ。**スタイル定義は受領物のまま**にしてある（`.sh-num` / `.sh-big` は
+ * いま未使用だが、received との差分を取りやすくするため残す）。
  *
  * 軸は 0.20〜0.95 を x=250〜1100 に写している。位置は実測値から計算されたもので、
  * デザインの都合ではない。数値を動かすなら `claudedocs/DIAGRAM_BRIEF_2026-08-11.md` と
  * `~/work/iidzka-inspection/` の記録に当たり直すこと。
  *   同じ日の良品241枚 0.243〜0.364 / 同じ日の不良品178枚 0.323〜0.865（中央値0.491）
- *   別の日の良品100枚 0.515〜0.736（中央値0.623） / 閾値0.323 / 別の日の良品より低い不良品107枚
+ *   別の日の良品100枚 0.515〜0.736（中央値0.623） / 閾値0.323
+ *
+ * 初版にあった「不良178枚中107枚より右側」の引き出しと朱の囲みは、差し替え版で無くなった。
+ * この事実は本文（「一番大きな壁」の節）に残っている。
  */
 export function DomainShift() {
   return (
@@ -32,8 +37,7 @@ export function DomainShift() {
           .sh-body{font-size:20px}
           .sh-small{font-size:17px}
           .sh-num{font-size:24px;font-weight:700}
-          /* 原案は42px。9文字が262pxの枠を突き抜けて隣の帯に重なったので下げた（実装上の不具合） */
-          .sh-big{font-size:30px;font-weight:750}
+          .sh-big{font-size:42px;font-weight:750}
           .sh-muted{opacity:.52}
         `}</style>
 
@@ -116,29 +120,9 @@ export function DomainShift() {
           0.736
         </text>
 
-        <path className="sh-thin" d="M606.7 401v46m0-23h-217.3" />
-        <text className="sh-tx sh-num" x="498" y="418" textAnchor="middle">
-          不良178枚中107枚より右側
-        </text>
-        <rect
-          x="884"
-          y="426"
-          width="262"
-          height="92"
-          rx="2"
-          fill="none"
-          stroke="hsl(var(--primary))"
-          strokeWidth="2"
-        />
-        <text className="sh-tx sh-small" x="1015" y="458" textAnchor="middle">
-          別の日の良品
-        </text>
-        <text className="sh-tx sh-big sh-accent" x="1015" y="500" textAnchor="middle">
-          100枚すべて誤検出
-        </text>
-
-        <text className="sh-tx sh-body" x="600" y="674" textAnchor="middle">
-          同じ良品でも撮像条件が変わると分布が完全に移動し、固定閾値では分離できない。
+        <path className="sh-thin sh-muted" d="M54 648h1092" />
+        <text className="sh-tx sh-body" x="600" y="682" textAnchor="middle">
+          別の日の良品100枚はすべて閾値を越えた。撮像条件が変わると、固定閾値では分離できない。
         </text>
       </Plate>
     </Schematic>

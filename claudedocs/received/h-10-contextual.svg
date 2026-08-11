@@ -23,10 +23,6 @@
   <path class="line" d="M728.6 473v36"/><text class="tx small" x="728.6" y="455" text-anchor="middle">中央値</text>
   <text class="tx small" x="606.7" y="528" text-anchor="middle">0.515</text><text class="tx small" x="857.2" y="528" text-anchor="middle">0.736</text>
 
-  <path class="thin" d="M606.7 401v46m0-23h-217.3"/><text class="tx num" x="498" y="418" text-anchor="middle">不良178枚中107枚より右側</text>
-  <rect x="884" y="414" width="262" height="116" rx="2" fill="none" stroke="hsl(var(--primary,8 64% 46%))" stroke-width="2"/>
-  <text class="tx small" x="1015" y="443" text-anchor="middle">別の日の良品</text>
-  <text class="tx big accent" x="1015" y="486" text-anchor="middle">100枚</text>
-  <text class="tx num accent" x="1015" y="516" text-anchor="middle">すべて誤検出</text>
-  <text class="tx body" x="600" y="674" text-anchor="middle">同じ良品でも撮像条件が変わると分布が完全に移動し、固定閾値では分離できない。</text>
+  <path class="thin muted" d="M54 648h1092"/>
+  <text class="tx body" x="600" y="682" text-anchor="middle">別の日の良品100枚はすべて閾値を越えた。撮像条件が変わると、固定閾値では分離できない。</text>
 </svg>
