@@ -133,36 +133,45 @@ export function Legend({ items }: { items: LegendItem[] }) {
 }
 
 /**
- * 1200px 幅の横組みSVGを記事の本文幅に収める枠。
+ * SVG1枚を記事の本文幅に収める枠。`className` は外側の箱に付く（出し分け用）。
  *
- * 縮小しきると文字が読めなくなるため、最低幅（既定720px）を確保して
- * 足りない分は横スクロールへ逃がす。ページ本体は横に流れない（枠の中だけがスクロールする）。
- * 縦組みのスマホ版が届いたら、この枠ごと `sm:` の出し分けに置き換える。
+ * **縦組みがある図**：`hidden lg:block` の横組みと `lg:hidden` の縦組みを2枚並べる。
+ * lg で切るのは、本文幅が864pxになるのが lg 以上だから。それ未満で1200幅の横組みを
+ * 出すと文字が12px を割って読めない。
+ *
+ * **縦組みがまだ無い図**：`minWidth` を渡すと、その幅を確保して足りない分を
+ * 枠内の横スクロールへ逃がす。ページ本体は横に流れない。あくまで繋ぎ。
  */
 export function Plate({
   viewBox,
-  minWidth = 720,
+  minWidth,
+  className,
   children,
   ...rest
 }: {
   viewBox: string
   minWidth?: number
+  className?: string
   children: React.ReactNode
-} & React.SVGProps<SVGSVGElement>) {
+} & Omit<React.SVGProps<SVGSVGElement>, 'className'>) {
+  const svg = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox={viewBox}
+      role="img"
+      className="block h-auto w-full"
+      style={minWidth ? { minWidth } : undefined}
+      {...rest}
+    >
+      {children}
+    </svg>
+  )
+
+  if (!minWidth) return <div className={className}>{svg}</div>
+
   return (
-    <div>
-      <div className="overflow-x-auto">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox={viewBox}
-          role="img"
-          className="block h-auto w-full"
-          style={{ minWidth }}
-          {...rest}
-        >
-          {children}
-        </svg>
-      </div>
+    <div className={className}>
+      <div className="overflow-x-auto">{svg}</div>
       <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground lg:hidden">
         → 横にスクロール
       </p>
