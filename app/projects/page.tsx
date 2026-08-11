@@ -19,8 +19,8 @@ export default function ProjectsPage() {
         <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-4">
           Works
         </p>
-        <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Projects</h1>
-        <p className="text-sm md:text-base text-muted-foreground max-w-xl leading-relaxed">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Projects</h1>
+        <p className="text-sm md:text-[15px] text-muted-foreground max-w-xl leading-relaxed">
           現場の課題から生まれたプロダクトの記録。課題、アプローチ、成果、学びを残しています。
         </p>
       </header>
@@ -44,11 +44,11 @@ export default function ProjectsPage() {
               className="group relative grid grid-cols-[auto_1fr] md:grid-cols-[auto_1fr_auto] items-start gap-x-5 md:gap-x-10 gap-y-3 py-6 md:py-8"
             >
               <span className="absolute left-0 top-0 bottom-0 w-px bg-primary scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-300" />
-              <span className="font-mono text-sm md:text-base text-primary tabular-nums pt-1">
+              <span className="font-mono text-sm md:text-[15px] text-primary tabular-nums pt-1">
                 {String(index + 1).padStart(2, '0')}
               </span>
               <div>
-                <h2 className="text-lg md:text-2xl font-semibold leading-snug group-hover:text-primary transition-colors">
+                <h2 className="text-lg md:text-xl font-semibold leading-snug group-hover:text-primary transition-colors">
                   {project.title.split('―')[0].trim()}
                 </h2>
                 {project.title.includes('―') && (
@@ -71,7 +71,7 @@ export default function ProjectsPage() {
               <div className="col-start-2 md:col-start-3 md:text-right md:pt-1">
                 {project.metric && (
                   <>
-                    <p className="font-mono text-lg md:text-2xl tabular-nums whitespace-nowrap">
+                    <p className="font-mono text-lg md:text-xl tabular-nums whitespace-nowrap">
                       {project.metric.from && (
                         <>
                           <span className="text-muted-foreground/60 line-through decoration-1">

@@ -58,7 +58,7 @@ export function ConnectionList({ notes, allTags }: ConnectionListProps) {
               href={`/connections/${note.slug}`}
               className="block py-5 group"
             >
-              <h3 className="text-base md:text-lg font-medium group-hover:text-primary transition-colors">
+              <h3 className="text-base md:text-base font-medium group-hover:text-primary transition-colors">
                 {note.title}
               </h3>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5">

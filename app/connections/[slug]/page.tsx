@@ -66,7 +66,7 @@ export default async function ConnectionPage({ params }: Props) {
         </nav>
 
         {/* ヘッダー */}
-        <h1 className="text-2xl md:text-3xl font-bold mb-3">{note.title}</h1>
+        <h1 className="text-2xl md:text-2xl font-bold mb-3">{note.title}</h1>
 
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4">
           {date && (

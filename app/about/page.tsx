@@ -61,10 +61,10 @@ export default function About() {
       {/* Header */}
       <header className="mb-14 md:mb-20">
         <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-4">About</p>
-        <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-6">
           Natsuki Hayashida
         </h1>
-        <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
+        <p className="text-sm md:text-[15px] text-muted-foreground leading-relaxed max-w-2xl">
           冷間鍛造の金型設計を本業に、AIとWebアプリケーションの開発に取り組んでいます。
           「もっと効率的なツールがあれば」という現場の実感から独学でプログラミングを始め、
           いまは実際に課題を解決するプロダクトをつくっています。
@@ -74,12 +74,12 @@ export default function About() {
       {/* Approach ― サイト全体の中心概念 */}
       <section className="mb-14 md:mb-20">
         <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-4">Approach</p>
-        <h2 className="text-xl md:text-3xl font-bold tracking-tight leading-snug mb-4">
+        <h2 className="text-xl md:text-2xl font-bold tracking-tight leading-snug mb-4">
           <span className="inline-block">現場で見つけて、</span>
           <span className="inline-block">技術で形にして、</span>
           <span className="inline-block">現場で確かめる</span>
         </h2>
-        <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
+        <p className="text-sm md:text-[15px] text-muted-foreground leading-relaxed max-w-2xl">
           冷間鍛造の金型設計から始めて、いまはAIとWebが加わりました。
           増えたのは手段のほうで、進め方はずっとこの形です。
           見つける・作る・確かめるを現場の中の一人で回すので、あいだに仕様書も翻訳も挟まりません。
@@ -91,7 +91,7 @@ export default function About() {
         <h2 className="font-mono text-xs tracking-[0.2em] uppercase text-muted-foreground mb-4">
           Current Means
         </h2>
-        <p className="mb-6 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
+        <p className="mb-6 text-sm md:text-[15px] text-muted-foreground leading-relaxed max-w-2xl">
           「技術で形にする」の中身です。ここは時期によって入れ替わります。
         </p>
         <div className="divide-y border-t border-b">
@@ -100,12 +100,12 @@ export default function About() {
               key={pillar.no}
               className="grid grid-cols-[auto_1fr] gap-x-5 md:gap-x-8 py-6 md:py-8"
             >
-              <span className="font-mono text-sm md:text-base text-primary tabular-nums">
+              <span className="font-mono text-sm md:text-[15px] text-primary tabular-nums">
                 {pillar.no}
               </span>
               <div>
-                <h2 className="text-lg md:text-xl font-semibold mb-2">{pillar.title}</h2>
-                <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
+                <h2 className="text-lg md:text-lg font-semibold mb-2">{pillar.title}</h2>
+                <p className="text-sm md:text-[15px] text-muted-foreground leading-relaxed max-w-2xl">
                   {pillar.body}
                 </p>
               </div>
@@ -119,7 +119,7 @@ export default function About() {
         <h2 className="font-mono text-xs tracking-[0.2em] uppercase text-muted-foreground mb-6">
           Why I Build
         </h2>
-        <div className="space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
+        <div className="space-y-4 text-sm md:text-[15px] text-muted-foreground leading-relaxed max-w-2xl">
           <p>
             製造業のエンジニアとして働く中で、「もっと効率的なツールがあれば」「こんな機能があったら便利なのに」と感じることが多くありました。
           </p>
@@ -173,7 +173,7 @@ export default function About() {
         <div className="divide-y border-t border-b">
           {services.map((service) => (
             <div key={service.title} className="py-6 md:py-8">
-              <h3 className="text-base md:text-lg font-semibold mb-2">{service.title}</h3>
+              <h3 className="text-base md:text-base font-semibold mb-2">{service.title}</h3>
               <p className="text-sm text-muted-foreground mb-3">{service.body}</p>
               <ul className="space-y-1.5 text-sm text-muted-foreground">
                 {service.points.map((point) => (
@@ -237,10 +237,10 @@ export default function About() {
       {/* CTA */}
       <section className="border-t pt-10 md:pt-14">
         <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-4">Contact</p>
-        <h2 className="text-xl md:text-2xl font-semibold tracking-tight mb-4">
+        <h2 className="text-xl md:text-xl font-semibold tracking-tight mb-4">
           一緒に何か作りませんか？
         </h2>
-        <p className="text-sm md:text-base text-muted-foreground max-w-2xl mb-6 leading-relaxed">
+        <p className="text-sm md:text-[15px] text-muted-foreground max-w-2xl mb-6 leading-relaxed">
           Web開発のご相談、技術的な質問、または単純に技術について話したい方、気軽にお問い合わせください。通常24時間以内にご返信します。
         </p>
         <div className="flex flex-col sm:flex-row gap-3">

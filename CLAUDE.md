@@ -224,10 +224,24 @@ MDXに次のように書くと、`articleDiagrams` に登録された図が本�
 - **モバイル左右余白**: `px-4`（必須）
 - **セマンティックHTML**: `<main>`要素必須
 
-### モバイル最適化ガイドライン
-- 見出し（H1）: `text-2xl md:text-4xl`または`text-2xl md:text-5xl`
-- 本文: `text-sm md:text-base`または`text-sm md:text-lg`
-- メタ情報: `text-xs md:text-sm`
+### タイプスケール（2026-08-11 に一段小さくした）
+
+PC表示の本文18px・H1 48pxが大きすぎたため、`md:` の指定を**全ページ一律で一段下げた**。
+狙いは project-hub と同程度（本文13〜15px）の密度。**新しく書くときもこの表に合わせること。**
+
+| 役割 | クラス | 実寸（モバイル / PC） |
+|---|---|---|
+| ヒーローH1（トップのみ） | `text-4xl md:text-6xl` | 36 / 60px |
+| ページH1（一覧・About） | `text-3xl md:text-4xl` | 30 / 36px |
+| 記事H1 | `text-2xl md:text-4xl` | 24 / 36px |
+| セクションH2 | `text-2xl md:text-xl`〜`text-xl md:text-2xl` | 20〜24px |
+| 本文・リード | `text-sm md:text-[15px]` | 14 / 15px |
+| **記事本文（MDX）** | `prose prose-sm md:prose-base` | 14 / 16px |
+| メタ情報・ラベル | `text-xs md:text-sm` | 12 / 14px |
+
+- **`md:text-lg` / `md:text-5xl` / `md:prose-lg` は使わない**（下げる前の名残）
+- 記事本文のサイズは Tailwind Typography が持っている。`prose-*` を直すこと。
+  個別の `text-*` を足して上書きしない
 - パディング: `p-4 md:p-6`
 - ギャップ: `gap-1.5 md:gap-2`（小）、`gap-4 md:gap-8`（大）
 - リストインデント: `pl-2 md:pl-4`（左余白を節約）

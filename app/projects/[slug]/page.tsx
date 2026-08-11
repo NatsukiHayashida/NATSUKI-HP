@@ -77,12 +77,12 @@ export default async function ProjectPage({ params }: Props) {
 
         {/* Header */}
         <header className="mb-8 md:mb-12">
-          <h1 className="text-2xl md:text-5xl font-bold mb-3 md:mb-4 leading-tight">
+          <h1 className="text-2xl md:text-4xl font-bold mb-3 md:mb-4 leading-tight">
             {project.title.includes('―') ? (
               <>
                 <span>{project.title.split('―')[0]}</span>
                 <br />
-                <span className="text-lg md:text-2xl font-normal text-muted-foreground">
+                <span className="text-lg md:text-xl font-normal text-muted-foreground">
                   {project.title.split('―')[1]}
                 </span>
               </>
@@ -100,11 +100,11 @@ export default async function ProjectPage({ params }: Props) {
             <span className="text-xs md:text-sm">{project.date}</span>
           </div>
 
-          <p className="text-sm md:text-lg text-muted-foreground mb-4 md:mb-6 leading-relaxed">{project.excerpt}</p>
+          <p className="text-sm md:text-[15px] text-muted-foreground mb-4 md:mb-6 leading-relaxed">{project.excerpt}</p>
 
           {project.metric && (
             <div className="border-y py-5 mb-6 md:mb-8">
-              <p className="font-mono text-2xl md:text-4xl tabular-nums">
+              <p className="font-mono text-2xl md:text-3xl tabular-nums">
                 {project.metric.from && (
                   <>
                     <span className="text-muted-foreground/60 line-through decoration-1">
@@ -168,7 +168,7 @@ export default async function ProjectPage({ params }: Props) {
         )}
 
         {/* Main Content */}
-        <div className="prose prose-sm md:prose-lg dark:prose-invert max-w-none mb-8 md:mb-12">
+        <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none mb-8 md:mb-12">
           <ReactMarkdown
             remarkPlugins={[remarkGfm, remarkMath]}
             rehypePlugins={[rehypeRaw, rehypeKatex, rehypeHighlight]}
@@ -181,7 +181,7 @@ export default async function ProjectPage({ params }: Props) {
                     <h2 {...props}>
                       <span>{main}</span>
                       <br />
-                      <span className="text-base md:text-lg font-normal text-muted-foreground">
+                      <span className="text-base font-normal text-muted-foreground">
                         {sub}
                       </span>
                     </h2>
@@ -247,8 +247,8 @@ export default async function ProjectPage({ params }: Props) {
         {/* Outcomes */}
         {project.outcomes && project.outcomes.length > 0 && (
           <section className="mb-8 md:mb-12 border-t pt-6 md:pt-8">
-            <h2 className="text-lg md:text-2xl font-semibold mb-3 md:mb-4">Outcomes & Results</h2>
-            <ul className="space-y-2 text-sm md:text-base">
+            <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">Outcomes & Results</h2>
+            <ul className="space-y-2 text-sm md:text-[15px]">
               {project.outcomes.map((outcome, index) => (
                 <li key={index} className="flex items-start gap-2">
                   <span className="text-primary mt-0.5 md:mt-1 shrink-0">✓</span>
@@ -262,8 +262,8 @@ export default async function ProjectPage({ params }: Props) {
         {/* Challenges */}
         {project.challenges && project.challenges.length > 0 && (
           <section className="mb-8 md:mb-12 border-t pt-6 md:pt-8">
-            <h2 className="text-lg md:text-2xl font-semibold mb-3 md:mb-4">Challenges Overcome</h2>
-            <ul className="space-y-2 md:space-y-3 text-sm md:text-base">
+            <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">Challenges Overcome</h2>
+            <ul className="space-y-2 md:space-y-3 text-sm md:text-[15px]">
               {project.challenges.map((challenge, index) => (
                 <li key={index} className="pl-2 md:pl-4 border-l-2 border-primary leading-relaxed">
                   {challenge}
@@ -276,8 +276,8 @@ export default async function ProjectPage({ params }: Props) {
         {/* Learnings */}
         {project.learnings && project.learnings.length > 0 && (
           <section className="mb-8 md:mb-12 border-t pt-6 md:pt-8">
-            <h2 className="text-lg md:text-2xl font-semibold mb-3 md:mb-4">Key Learnings</h2>
-            <ul className="space-y-2 md:space-y-3 text-sm md:text-base">
+            <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">Key Learnings</h2>
+            <ul className="space-y-2 md:space-y-3 text-sm md:text-[15px]">
               {project.learnings.map((learning, index) => (
                 <li key={index} className="pl-2 md:pl-4 border-l-2 border-accent leading-relaxed">
                   {learning}

@@ -16,10 +16,10 @@ export default function ConnectionsPage() {
     <main className="container py-14 md:py-20">
       <div className="max-w-4xl mx-auto">
         <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-4">Notes</p>
-        <h1 className="text-3xl md:text-5xl font-bold tracking-tight">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
           接続ノート
         </h1>
-        <p className="mt-4 text-sm md:text-base text-muted-foreground">
+        <p className="mt-4 text-sm md:text-[15px] text-muted-foreground">
           異なる領域の知識を意図的に接続する、日々の気づきのアーカイブ。
         </p>
       </div>

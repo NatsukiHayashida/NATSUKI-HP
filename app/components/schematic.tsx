@@ -79,7 +79,7 @@ export function Readout({
         <div key={item.label}>
           <dt
             className={cn(
-              'font-mono text-2xl leading-none tracking-tight md:text-[32px]',
+              'font-mono text-2xl leading-none tracking-tight md:text-[26px]',
               item.accent && 'text-primary'
             )}
           >
@@ -121,7 +121,7 @@ export function Legend({ items }: { items: LegendItem[] }) {
             {item.no}
           </span>
           <div className="min-w-0">
-            <p className="text-[15px] font-medium leading-snug md:text-base">{item.title}</p>
+            <p className="text-[15px] font-medium leading-snug md:text-[15px]">{item.title}</p>
             <p className="mt-0.5 text-[13px] leading-relaxed text-muted-foreground md:text-sm">
               {item.body}
             </p>
@@ -149,7 +149,7 @@ export function Schematic({
         <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary md:text-xs">
           {label}
         </span>
-        <span className="mt-1 block text-[15px] font-medium md:text-base">{title}</span>
+        <span className="mt-1 block text-[15px] font-medium md:text-[15px]">{title}</span>
       </figcaption>
       <div className="space-y-6 md:space-y-8">{children}</div>
       {note && (
