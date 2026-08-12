@@ -172,3 +172,37 @@
     opacity: 1;
   }
 }
+
+/*
+  スクロールで線が引かれる（画面に入ってから描き始める）。
+  Hero の .ds-draw は読み込み時に走る CSS アニメーションで、折り返しより下では
+  見る前に描き終わってしまう。こちらは交差監視で .in が付いてから動く。
+
+  stroke-dasharray / stroke-dashoffset の初期値は図形ごとに周長が違うため
+  JS 側で getTotalLength() を測って入れる（固定値だと、短い線は一瞬で描き終わり、
+  長い線は描き切らないうちにアニメーションが終わる）。ここでは動き方だけを持つ。
+*/
+.scroll-draw [data-draw] {
+  transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-draw [data-fade] {
+  opacity: 0;
+  transition: opacity 0.9s ease-out;
+}
+
+.scroll-draw.in [data-fade] {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-draw [data-draw] {
+    stroke-dashoffset: 0 !important;
+    transition: none;
+  }
+
+  .scroll-draw [data-fade] {
+    opacity: 1;
+    transition: none;
+  }
+}

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1320" viewBox="0 0 720 1320" role="img" aria-labelledby="title desc">
+  <title id="title">現場の不便を、自分で作った道具で解決する</title>
+  <desc id="desc">製造現場で見つけた不便を、独学のプログラミングで動く道具へ変え、現場へ戻す循環。</desc>
+  <style>
+    .line{fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+    .fine{fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+    .accent-line{fill:none;stroke:hsl(var(--primary));stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+    .accent-fill{fill:hsl(var(--primary))}.text{font-family:system-ui,"Yu Gothic",Meiryo,sans-serif;fill:currentColor}.label{font-size:28px;font-weight:700}.note{font-size:21px}
+  </style>
+  <g id="lines">
+    <path class="accent-line" d="M360 176C280 236 280 300 360 356C440 412 440 476 360 532C280 588 280 652 360 708C440 764 440 828 360 884"/>
+
+    <g transform="translate(360 210)">
+      <circle class="line" r="91"/><circle class="line" r="37"/>
+      <circle class="fine" cy="-61" r="8"/><circle class="fine" cx="61" r="8"/><circle class="fine" cy="61" r="8"/><circle class="fine" cx="-61" r="8"/>
+      <path class="line" d="M-128-116h-32v32M128-116h32v32M-128 116h-32V84M128 116h32V84"/>
+      <path class="fine" d="M82 63l50 50m-18-69 18 69-69-18"/>
+    </g>
+    <path class="line" d="M349 383l11 18 11-18"/>
+
+    <g transform="translate(360 554)">
+      <rect class="line" x="-135" y="-104" width="270" height="208" rx="4"/>
+      <path class="fine" d="M-108-70h62M-108-40h45M-108-10h70M-108 62h50"/>
+      <path class="line" d="M18-55l-30 30 30 30M62-55l30 30-30 30M48-70L31 22"/>
+      <path class="fine" d="M-135 43H135M-76 43v61M44 43v61"/>
+      <circle class="line" cx="-104" cy="73" r="11"/><path class="line" d="M-93 73h42l11-11 11 11 11-11"/>
+    </g>
+    <path class="line" d="M349 726l11 18 11-18"/>
+
+    <g transform="translate(360 900)">
+      <rect class="line" x="-135" y="-104" width="270" height="208" rx="5"/>
+      <path class="fine" d="M-135-55H135M-100-80h45"/>
+      <circle class="line" cx="-66" cy="24" r="47"/><circle class="line" cx="-66" cy="24" r="19"/>
+      <path class="line" d="M14-7h90M14 25h67M14 57h49"/>
+      <path class="accent-line" d="M72 62l14 14 29-36"/>
+      <path class="line" d="M-100 130v30h200v-30"/>
+    </g>
+  </g>
+
+  <g id="fills-and-text">
+    <circle class="accent-fill" cx="360" cy="210" r="7"/><circle class="accent-fill" cx="360" cy="554" r="7"/><circle class="accent-fill" cx="360" cy="900" r="7"/>
+    <text class="text label" x="360" y="342" text-anchor="middle">現場で見つける</text>
+    <text class="text note" x="360" y="374" text-anchor="middle">「もっと使いやすくできる」</text>
+    <text class="text label" x="360" y="690" text-anchor="middle">自分で学び、作る</text>
+    <text class="text note" x="360" y="722" text-anchor="middle">設計の視点をコードへ移す</text>
+    <text class="text label" x="360" y="1046" text-anchor="middle">動く道具にして戻す</text>
+    <text class="text note" x="360" y="1078" text-anchor="middle">現場で使い、また確かめる</text>
+    <text class="text label" x="360" y="1190" text-anchor="middle">仕事の枠を超えて、</text>
+    <text class="text label" x="360" y="1232" text-anchor="middle">自分の技術で解決する。</text>
+  </g>
+</svg>

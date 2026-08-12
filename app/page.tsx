@@ -3,6 +3,8 @@ import { getAllConnections } from '@/lib/connections'
 import { getAllProjects } from '@/lib/projects'
 import { ArrowRight } from 'lucide-react'
 import DieSection from './components/die-section'
+import ScrollDraw from './components/scroll-draw'
+import { ApproachSphere } from './components/diagrams/approach-sphere'
 
 export default function Home() {
   const recentNotes = getAllConnections().slice(0, 5)
@@ -53,18 +55,46 @@ export default function Home() {
       {/* Approach ― サイト全体の中心概念 */}
       <section className="border-t">
         <div className="container max-w-5xl py-10 md:py-14">
-          <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-4">Approach</p>
           {/*
-            Apple の製品ページの型に合わせた（本人が「昔から好み」と指定・2026-08-12）。
-            実測した型は「4〜13文字の体言止めを二文並べる」「補足文を置かないセクションが多い」。
-            以前ここにあった112文字のリード文と、中心概念「現場で見つけて、技術で形にして、
-            現場で確かめる」の一行は**トップからは外した**。説明が多いと方針の宣言に見える、
-            という本人の判断による。About 側の Approach は未着手なので、いま食い違っている。
+            2026-08-12、体言止め二文（「新しい技術を、はやく。」「挑む先は、日常の課題。」）を
+            やめ、本人の元の自己紹介文（現場で不便を感じた → 独学で覚えた → 作れるようになった）を
+            短く整えたリード文に置き換えた。二文は結果しか言っておらず、**なぜやっているか**が
+            落ちていたため。
+
+            **見出しは置かない。** いったん「欲しい道具は、自分で作る。」を上に立てたが、
+            標語めいて見えると本人の判断で外した。オーバーラインと本文だけで持たせる。
+
+            **段組みは Hero と同じ「文章が左・図が右」に揃えた。** 図を本文の下に敷いたときは
+            本文が max-w-2xl の左寄せ、球が max-w-5xl の中央で、両者が繋がって見えなかった。
+            オーバーラインは他セクションの見出しと左端を揃えるため、左の段に置いている。
+
+            2026-08 前半にリード文をいったん外した経緯があり（説明が多いと方針の宣言に
+            見えるという判断）、今回はそれを承知のうえで戻している。
+            About 側の Approach は未着手なので、いま食い違っている。
+
+            図は GPT に依頼した H-24（2026-08-12 受領）。依頼文は
+            claudedocs/DIAGRAM_BRIEF_2026-08-11.md、原案は claudedocs/received/。
+            画面に入ると線が引かれる（ScrollDraw + globals.css の .scroll-draw）。
           */}
-          <h2 className="text-2xl md:text-2xl font-bold tracking-tight leading-snug max-w-2xl">
-            <span className="block">新しい技術を、はやく。</span>
-            <span className="block">挑む先は、日常の課題。</span>
-          </h2>
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+            <div>
+              <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-4">
+                Approach
+              </p>
+              <p className="text-sm md:text-[15px] text-muted-foreground leading-relaxed max-w-lg">
+                「もっと効率的なツールがあれば」「こんな機能があったら」。製造業の現場で感じたその一言を、
+                独学で覚えたプログラミングで、動くものに変えてきました。
+              </p>
+              {/* 締めの一文だけ本文色＋中太にして、経緯（灰）と結び（濃）を分ける */}
+              <p className="mt-4 text-sm md:text-[15px] font-medium leading-relaxed max-w-lg">
+                仕事の枠を超えて、自分の技術で何かを作る。
+              </p>
+            </div>
+
+            <ScrollDraw className="w-full max-w-[300px] sm:max-w-[340px] md:max-w-[360px] mx-auto md:mx-0 md:justify-self-end text-foreground/85">
+              <ApproachSphere />
+            </ScrollDraw>
+          </div>
         </div>
       </section>
 
