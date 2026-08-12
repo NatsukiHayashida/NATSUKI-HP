@@ -97,7 +97,17 @@ export default function Home() {
                   <h3 className="text-lg md:text-xl font-semibold leading-snug group-hover:text-primary transition-colors">
                     {project.title.split('―')[0].trim()}
                   </h3>
-                  <p className="mt-1.5 text-xs md:text-sm text-muted-foreground line-clamp-2 max-w-xl leading-relaxed">
+                  {/*
+                    副題まで出す。主題だけだと目的語が落ちる記事がある
+                    （「作らないという判断」＝何を作らないのかが分からない）。
+                    Projects 一覧は前からこの形なので、そちらに揃えた。
+                  */}
+                  {project.title.includes('―') && (
+                    <p className="mt-1 text-xs md:text-sm text-muted-foreground">
+                      {project.title.split('―')[1].trim()}
+                    </p>
+                  )}
+                  <p className="mt-2 text-xs md:text-sm text-muted-foreground/70 line-clamp-2 max-w-xl leading-relaxed">
                     {project.excerpt}
                   </p>
                   <p className="mt-3 font-mono text-[11px] tracking-wider uppercase text-muted-foreground/70">
