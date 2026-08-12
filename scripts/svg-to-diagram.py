@@ -70,6 +70,10 @@ def split_svg(src: str) -> tuple[str, str, str]:
 def prefix_style(style: str, pfx: str) -> str:
     """`.cls{...}` のセレクタへ前置きを付け、1ルール1行に開く"""
     style = re.sub(r'\.([A-Za-z][\w-]*)', lambda m: f'.{pfx}-{m.group(1)}', style)
+    # `filter:url(#glow)` のような **style の中からの参照** にも前置きが要る。
+    # 本体側の id だけ書き換えると参照先が消え、SVGの仕様上その要素は
+    # **描画されなくなる**（H-24 の光が全部消えた・2026-08-12）
+    style = re.sub(r'url\(#([^)]+)\)', lambda m: f'url(#{pfx}-{m.group(1)})', style)
     style = re.sub(r'hsl\(var\((--[\w-]+),[^)]*\)\)', r'hsl(var(\1))', style)
     rules = [r.strip() for r in re.findall(r'[^}]+}', style) if r.strip()]
     return '\n'.join('          ' + r for r in rules)
