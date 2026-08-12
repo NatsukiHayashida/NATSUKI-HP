@@ -54,15 +54,17 @@ export default function Home() {
       <section className="border-t">
         <div className="container max-w-5xl py-10 md:py-14">
           <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-4">Approach</p>
+          {/*
+            Apple の製品ページの型に合わせた（本人が「昔から好み」と指定・2026-08-12）。
+            実測した型は「4〜13文字の体言止めを二文並べる」「補足文を置かないセクションが多い」。
+            以前ここにあった112文字のリード文と、中心概念「現場で見つけて、技術で形にして、
+            現場で確かめる」の一行は**トップからは外した**。説明が多いと方針の宣言に見える、
+            という本人の判断による。About 側の Approach は未着手なので、いま食い違っている。
+          */}
           <h2 className="text-2xl md:text-2xl font-bold tracking-tight leading-snug max-w-2xl">
-            <span className="inline-block">現場で見つけて、</span>
-            <span className="inline-block">技術で形にして、</span>
-            <span className="inline-block">現場で確かめる</span>
+            <span className="block">新しい技術を、はやく。</span>
+            <span className="block">挑む先は、日常の課題。</span>
           </h2>
-          <p className="mt-4 text-sm md:text-[15px] text-muted-foreground leading-relaxed max-w-2xl">
-            持っている技術の一覧ではなく、回し方の話です。課題は現場で見つかり、打ち手はAIを軸に
-            現場の外の最新まで取りに行き、確かめる場所もまた現場になります。
-          </p>
         </div>
       </section>
 

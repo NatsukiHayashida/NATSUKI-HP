@@ -83,12 +83,14 @@ page = """<meta charset="utf-8">
   }
   .rule { margin: 30px 0 24px; border-top: 1px solid #141414; width: 100%; }
   .lead { font-size: 22px; line-height: 1.7; color: #3d3d3d; }
-  .pillars {
-    margin-top: 26px; display: flex; gap: 26px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 15px; letter-spacing: 0.1em; color: #666;
+  /* かつては 01 金型設計 / 02 AI開発 / 03 Web開発 を並べていたが、
+     「3つの技術を持っているという見せ方は禁止」（本人決定・2026-08-11）と矛盾するため
+     トップの Approach と同じ二文に差し替えた（2026-08-12）。文言を変えるときは両方直す。 */
+  .stance {
+    margin-top: 26px; font-size: 24px; font-weight: 500;
+    line-height: 1.6; letter-spacing: -0.01em; color: #141414;
   }
-  .pillars b { color: #d14e1a; font-weight: 500; margin-right: 7px; }
+  .stance em { font-style: normal; color: #d14e1a; }
   .right { flex: 1; display: flex; justify-content: flex-end; color: #141414; opacity: 0.88; }
   .ds-draw, .ds-fade { animation: none !important; stroke-dashoffset: 0 !important; opacity: 1 !important; }
   .font-mono { font-family: 'IBM Plex Mono', monospace; }
@@ -101,11 +103,7 @@ page = """<meta charset="utf-8">
     <h1>Natsuki<br>Hayashida</h1>
     <div class="rule"></div>
     <div class="lead">冷間鍛造の金型設計を本業に、<br>AIとWebアプリケーションを開発しています。</div>
-    <div class="pillars">
-      <span><b>01</b>金型設計</span>
-      <span><b>02</b>AI開発</span>
-      <span><b>03</b>Web開発</span>
-    </div>
+    <div class="stance">新しい技術を、はやく。<br>挑む先は、日常の課題。</div>
   </div>
   <div class="right">__SVG__</div>
 </div>
