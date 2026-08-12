@@ -13,18 +13,18 @@ export default function Home() {
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 blueprint-grid pointer-events-none" aria-hidden="true" />
-        <div className="container max-w-5xl relative py-16 md:py-24">
+        <div className="container max-w-5xl relative py-10 md:py-16">
           <div className="grid md:grid-cols-2 gap-10 md:gap-12 items-center">
             <div>
-              <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-6">
+              <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-4">
                 Portfolio &amp; Notes
               </p>
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-[1.05] mb-8">
+              <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-[1.05] mb-5">
                 Natsuki
                 <br />
                 Hayashida
               </h1>
-              <p className="text-sm md:text-[15px] text-muted-foreground leading-relaxed max-w-lg mb-8">
+              <p className="text-sm md:text-[15px] text-muted-foreground leading-relaxed max-w-lg mb-6">
                 冷間鍛造の金型設計を本業に、AIとWebアプリケーションの開発に取り組んでいます。
                 現場で見つけた課題を、自分の手でプロダクトに変えていく過程を記録しているサイトです。
               </p>
@@ -45,14 +45,14 @@ export default function Home() {
               </div>
             </div>
 
-            <DieSection className="w-full max-w-[300px] sm:max-w-[340px] md:max-w-[420px] h-auto mx-auto md:mx-0 md:justify-self-end text-foreground/85" />
+            <DieSection className="w-full max-w-[300px] sm:max-w-[340px] md:max-w-[360px] h-auto mx-auto md:mx-0 md:justify-self-end text-foreground/85" />
           </div>
         </div>
       </section>
 
       {/* Approach ― サイト全体の中心概念 */}
       <section className="border-t">
-        <div className="container max-w-5xl py-14 md:py-20">
+        <div className="container max-w-5xl py-10 md:py-14">
           <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-4">Approach</p>
           <h2 className="text-2xl md:text-2xl font-bold tracking-tight leading-snug max-w-2xl">
             <span className="inline-block">現場で見つけて、</span>
@@ -68,7 +68,7 @@ export default function Home() {
 
       {/* Selected Projects */}
       <section className="border-t">
-        <div className="container max-w-5xl py-14 md:py-20">
+        <div className="container max-w-5xl py-10 md:py-14">
           <div className="flex items-baseline justify-between mb-3">
             <h2 className="text-2xl md:text-2xl font-bold tracking-tight">Projects</h2>
             <Link
@@ -140,7 +140,7 @@ export default function Home() {
 
       {/* Notes */}
       <section className="border-t">
-        <div className="container max-w-5xl py-14 md:py-20">
+        <div className="container max-w-5xl py-10 md:py-14">
           <div className="flex items-baseline justify-between mb-8 md:mb-12">
             <h2 className="text-2xl md:text-2xl font-bold tracking-tight">
               Notes
@@ -190,7 +190,7 @@ export default function Home() {
       {/* Contact CTA */}
       <section className="border-t relative overflow-hidden">
         <div className="absolute inset-0 blueprint-grid pointer-events-none" aria-hidden="true" />
-        <div className="container max-w-5xl relative py-16 md:py-24">
+        <div className="container max-w-5xl relative py-10 md:py-16">
           <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-4">Contact</p>
           <p className="text-xl md:text-2xl font-semibold tracking-tight mb-6 max-w-xl leading-snug">
             お仕事のご相談・技術の話、お気軽にどうぞ。
