@@ -120,9 +120,9 @@ ul.list .art {{ display: block; font-size: .8rem; color: #666; margin-top: .2rem
 <ul class="list">
 {items}
 </ul>
-<p class="note">着手順は上から。H-19 は重なりの作り直し<span class="pg">（優先）</span>、
-H-20〜H-23 はすでに受け取ったPC版のスマホ版<span class="pg">（縦組み）</span>を作ってもらう依頼。
-<br>まとめて依頼してよい。</p>
+<p class="note">着手順は上から。まとめて依頼してよい。
+<br>横組み<span class="pg">（PC）</span>と縦組み<span class="pg">（スマホ）</span>の
+2本もらえると、そのままサイトに入る。</p>
 </div>
 </body>
 </html>
@@ -186,20 +186,20 @@ function fallback(t) {
   else { done('下の欄を長押しでコピーしてください'); }
 }"""
 
-ARTICLE = {
-    # 旧番号（H-01〜H-10）は受信箱の既存ファイルで埋まっているため H-11 から振り直した。
-    # H-11〜H-18 は受領・組み込み済み。いま出ているのは作り直し1件とスマホ版4件
-    'H-19': '花製作所｜作り直し',
-    'H-20': '外観検査AI｜スマホ版', 'H-21': 'CAD操作のAI自動化｜スマホ版',
-    'H-22': 'CAD操作のAI自動化｜スマホ版', 'H-23': 'work-hub｜スマホ版',
-}
+# 一覧ページに出す「どの記事の図か」。載っていない番号は空欄になるだけで害はない。
+# H-01〜H-23 は全部受領・組み込み済み。次に依頼するときは H-24 から振ること
+ARTICLE: dict[str, str] = {}
 
 
 def main() -> None:
     with open(BRIEF, encoding='utf-8') as f:
         common, figures = parse_sections(f.read())
-    if not common or not figures:
-        raise SystemExit('指示書の解析に失敗した。見出し（## 共通の前提 / ## H-0x.）を確認すること')
+    if not common:
+        raise SystemExit('「## 共通の前提」が見つからない。指示書の見出しを確認すること')
+    if not figures:
+        # 依頼が全部片づくとこの状態になる。異常ではない
+        raise SystemExit('出ている依頼が無い（## H-nn. の節がゼロ）。'
+                         '新しく依頼するなら指示書に節を足すこと')
 
     os.makedirs(OUTDIR, exist_ok=True)
     for fig in figures:
