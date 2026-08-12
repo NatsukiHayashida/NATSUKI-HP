@@ -45,6 +45,10 @@ page = """<meta charset="utf-8">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* 断面図の中で hsl(var(--primary)) を使っているため、ここでも定義しておく。
+     無いと矢印・記号 A/B・詳細図の円が朱ではなく黒で焼かれる（2026-08-12 に一度これで焼いた）。
+     値は app/globals.css のライト側と同じ。 */
+  :root { --primary: 17 78% 46%; }
   html, body { width: 1200px; height: 630px; }
   body {
     background: #ffffff;

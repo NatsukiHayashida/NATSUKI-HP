@@ -33,6 +33,13 @@ export default function DieSection({ className }: { className?: string }) {
         <marker id="ds-a0" markerWidth="7" markerHeight="7" refX="1" refY="3.5" orient="auto">
           <path d="M7,0 L0,3.5 L7,7 z" fill="currentColor" />
         </marker>
+        {/* 注記系（寸法・切断線）の矢印は朱にする。部品そのものは currentColor のまま */}
+        <marker id="ds-ap" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L7,3.5 L0,7 z" fill="hsl(var(--primary))" />
+        </marker>
+        <marker id="ds-a0p" markerWidth="7" markerHeight="7" refX="1" refY="3.5" orient="auto">
+          <path d="M7,0 L0,3.5 L7,7 z" fill="hsl(var(--primary))" />
+        </marker>
         <clipPath id="ds-detail-clip">
           <circle cx="390" cy="390" r="55" />
         </clipPath>
@@ -58,7 +65,7 @@ export default function DieSection({ className }: { className?: string }) {
 
       {/* ── 中心線 ── */}
       <line
-        x1="170" y1="8" x2="170" y2="432"
+        x1="170" y1="8" x2="170" y2="388"
         stroke="currentColor" strokeWidth="0.8" strokeDasharray="18 4 3 4"
         opacity="0.55" className="ds-draw" style={{ animationDelay: '450ms' }}
       />
@@ -86,26 +93,30 @@ export default function DieSection({ className }: { className?: string }) {
         ))}
       </g>
 
-      {/* 切断線 A–A */}
+      {/*
+        切断線 A–A の指示記号。左から「｜←A」の並び（本人の指定・2026-08-12）。
+        太線は中心線の上（x=390）に置く。矢印はそこから右へ出して左向き、記号 A はその先。
+        最初は矢印と A を左に出していた（＝「A←｜」）ため直した。
+      */}
       <g stroke="currentColor" className="ds-fade" style={{ animationDelay: '1150ms' }}>
         <line x1="390" y1="90" x2="390" y2="106" strokeWidth="2.4" />
         <line x1="390" y1="234" x2="390" y2="250" strokeWidth="2.4" />
-        <line x1="390" y1="97" x2="366" y2="97" strokeWidth="0.9" markerEnd="url(#ds-a)" />
-        <line x1="390" y1="243" x2="366" y2="243" strokeWidth="0.9" markerEnd="url(#ds-a)" />
+        <line x1="416" y1="97" x2="392" y2="97" strokeWidth="0.9" markerEnd="url(#ds-ap)" />
+        <line x1="416" y1="243" x2="392" y2="243" strokeWidth="0.9" markerEnd="url(#ds-ap)" />
       </g>
 
       {/* ── 寸法線 ── */}
       <g stroke="currentColor" strokeWidth="0.8" opacity="0.7" className="ds-fade" style={{ animationDelay: '1250ms' }}>
         {/* 全高 */}
-        <line x1="107" y1="90" x2="54" y2="90" strokeDasharray="2 3" />
-        <line x1="80" y1="380" x2="54" y2="380" strokeDasharray="2 3" />
-        <line x1="62" y1="90" x2="62" y2="380" markerStart="url(#ds-a0)" markerEnd="url(#ds-a)" />
+        <line x1="107" y1="90" x2="40" y2="90" strokeDasharray="2 3" />
+        <line x1="80" y1="380" x2="40" y2="380" strokeDasharray="2 3" />
+        <line x1="48" y1="90" x2="48" y2="380" markerStart="url(#ds-a0p)" markerEnd="url(#ds-ap)" />
         {/* 面取りの引き出し */}
         <path d="M101,96 L74,62 L52,62" />
         {/* 逃がし径 */}
         <line x1="136" y1="380" x2="136" y2="414" strokeDasharray="2 3" />
         <line x1="204" y1="380" x2="204" y2="414" strokeDasharray="2 3" />
-        <line x1="136" y1="408" x2="204" y2="408" markerStart="url(#ds-a0)" markerEnd="url(#ds-a)" />
+        <line x1="136" y1="408" x2="204" y2="408" markerStart="url(#ds-a0p)" markerEnd="url(#ds-ap)" />
         {/* R の引き出し */}
         <path d="M196,157 L262,132 L288,132" />
         {/* 穴の引き出し */}
@@ -123,20 +134,20 @@ export default function DieSection({ className }: { className?: string }) {
         </g>
         <circle cx="390" cy="390" r="55" stroke="currentColor" strokeWidth="0.9" opacity="0.5" />
         {/* 断面図側の詳細範囲と引き出し */}
-        <circle cx="198" cy="268" r="26" stroke="currentColor" strokeWidth="0.8" opacity="0.5" />
-        <path d="M218,285 L330,350" stroke="currentColor" strokeWidth="0.8" opacity="0.5" />
+        <circle cx="198" cy="268" r="26" stroke="hsl(var(--primary))" strokeWidth="0.8" opacity="0.75" />
+        <path d="M218,285 L330,350" stroke="hsl(var(--primary))" strokeWidth="0.8" opacity="0.6" />
       </g>
 
       {/* ── 文字（製図風の注記） ── */}
       <g fill="currentColor" className="font-mono ds-fade" style={{ animationDelay: '1600ms' }}>
-        <text x="170" y="428" textAnchor="middle" fontSize="13" opacity="0.75">ø</text>
-        <text x="46" y="235" fontSize="13" opacity="0.75" transform="rotate(-90 46 235)" textAnchor="middle">H</text>
+        <text x="170" y="402" textAnchor="middle" fontSize="13" opacity="0.75">ø</text>
+        <text x="32" y="235" fontSize="13" opacity="0.75" transform="rotate(-90 32 235)" textAnchor="middle">H</text>
         <text x="48" y="58" fontSize="13" opacity="0.75">C</text>
         <text x="292" y="136" fontSize="13" opacity="0.75">R</text>
         <text x="296" y="112" fontSize="12" opacity="0.7" textAnchor="end">4×ø</text>
-        <text x="398" y="88" fontSize="13" opacity="0.7">A</text>
-        <text x="398" y="262" fontSize="13" opacity="0.7">A</text>
-        <text x="232" y="252" fontSize="12" opacity="0.6">B</text>
+        <text x="424" y="101" fontSize="13" fill="hsl(var(--primary))">A</text>
+        <text x="424" y="247" fontSize="13" fill="hsl(var(--primary))">A</text>
+        <text x="232" y="252" fontSize="12" fill="hsl(var(--primary))">B</text>
         <text x="390" y="464" textAnchor="middle" fontSize="11" opacity="0.55" letterSpacing="1">DETAIL B</text>
         <text x="390" y="480" textAnchor="middle" fontSize="10" opacity="0.4" letterSpacing="1">SCALE 2:1</text>
       </g>
