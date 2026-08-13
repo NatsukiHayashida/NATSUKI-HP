@@ -3,7 +3,7 @@ import { getAllConnections } from '@/lib/connections'
 import { getAllProjects } from '@/lib/projects'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://natsuki-portfolio.vercel.app' // 本番環境のURLに変更してください
+  const baseUrl = 'https://www.natsuki163.com'
 
   // 静的ページ
   const staticPages = [

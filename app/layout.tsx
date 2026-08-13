@@ -31,6 +31,7 @@ const bizUD = BIZ_UDPGothic({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.natsuki163.com'),
   title: {
     default: "Natsuki Hayashida | 金型設計 × AI × Web開発",
     template: "%s | Natsuki Hayashida",
