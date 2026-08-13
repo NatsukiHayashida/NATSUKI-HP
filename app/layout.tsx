@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Noto_Sans_JP, IBM_Plex_Mono } from "next/font/google";
+import { Noto_Sans_JP, IBM_Plex_Mono, BIZ_UDPGothic } from "next/font/google";
 import "./globals.css";
 import Header from "./components/header";
 import Footer from "./components/footer";
@@ -17,6 +17,17 @@ const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
   variable: "--font-plex-mono",
+});
+
+/*
+  試用（2026-08-13）：本文を読みやすさ特化の UD フォントに切り替えて比較中。
+  BIZ UDPGothic は 400/700 の2ウェイトしか無い（500は400へ、600は700へ寄る）。
+  戻すときは tailwind.config.ts の font-sans から --font-biz-ud を外すだけ。
+*/
+const bizUD = BIZ_UDPGothic({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-biz-ud",
 });
 
 export const metadata: Metadata = {
@@ -37,7 +48,7 @@ export default function RootLayout({
     <html lang="ja" suppressHydrationWarning>
       <head>
       </head>
-      <body className={cn(notoSansJP.variable, plexMono.variable, 'font-sans min-h-dvh')} suppressHydrationWarning>
+      <body className={cn(notoSansJP.variable, plexMono.variable, bizUD.variable, 'font-sans min-h-dvh')} suppressHydrationWarning>
         <ThemeProvider
             attribute="class"
             defaultTheme="system"

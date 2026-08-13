@@ -269,7 +269,8 @@ const config = {
       },
       // Design Tokens: Typography
       fontFamily: {
-        sans: ['var(--font-noto-sans-jp)', ...systemSans],
+        // 試用中（2026-08-13）：先頭が BIZ UDPGothic。やめるときは先頭の1つを外す
+        sans: ['var(--font-biz-ud)', 'var(--font-noto-sans-jp)', ...systemSans],
         mono: ['var(--font-plex-mono)', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       fontSize: {
