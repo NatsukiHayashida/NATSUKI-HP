@@ -1,4 +1,6 @@
+import { CadAiScene } from '@/app/components/diagrams/cad-ai-scene'
 import { DomainShift } from '@/app/components/diagrams/domain-shift'
+import { GaikanKensaScene } from '@/app/components/diagrams/gaikan-kensa-scene'
 import { MailSpeed } from '@/app/components/diagrams/mail-speed'
 import { MaskPlacement } from '@/app/components/diagrams/mask-placement'
 import { MetricBlindspot } from '@/app/components/diagrams/metric-blindspot'
@@ -30,11 +32,13 @@ import { TrafficFunnel } from '@/app/components/diagrams/traffic-funnel'
 
 export const articleDiagrams: Record<string, () => React.JSX.Element> = {
   // 外観検査AI
+  'gaikan-kensa-scene': GaikanKensaScene, // 冒頭のイメージ図（図番なし）
   'metric-blindspot': MetricBlindspot,
   'position-shift': PositionShift,
   'mask-placement': MaskPlacement,
   'domain-shift': DomainShift,
   // CAD自動化
+  'cad-ai-scene': CadAiScene, // 冒頭のイメージ図（図番なし）
   'rework-breakdown': ReworkBreakdown,
   'parity-gate': ParityGate,
   // 花製作所
