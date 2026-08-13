@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { ModeToggle } from '@/components/mode-toggle'
 import MobileNav from './mobile-nav'
 import Nav from './nav'
+import SoundFx from './sound-fx'
 
 export default function Header() {
     return (
@@ -18,6 +19,7 @@ export default function Header() {
                     <div className="hidden md:block">
                         <Nav />
                     </div>
+                    <SoundFx />
                     <ModeToggle />
                     <div className="block md:hidden">
                         <MobileNav />
