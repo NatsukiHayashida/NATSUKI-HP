@@ -22,10 +22,18 @@ export default function ScrollDraw({
   className,
   /** 何番目の図形から何ミリ秒ずつ遅らせるか。0 にすると一斉に描かれる */
   stagger = 45,
+  /**
+   * 発火に必要な交差率。既定 0.2。
+   * overflow-hidden で大部分を切り落として置く図は、交差率が「見えている割合」までしか
+   * 上がらない（4分の1見せなら最大0.25）ため、既定のままだと永久に発火しないことがある。
+   * そういう図はここを下げる。
+   */
+  threshold = 0.2,
 }: {
   children: ReactNode
   className?: string
   stagger?: number
+  threshold?: number
 }) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -92,11 +100,11 @@ export default function ScrollDraw({
         reveal()
         io.disconnect()
       },
-      { threshold: 0.2 }
+      { threshold }
     )
     io.observe(root)
     return () => io.disconnect()
-  }, [stagger])
+  }, [stagger, threshold])
 
   return (
     <div ref={ref} className={`scroll-draw ${className ?? ''}`}>

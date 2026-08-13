@@ -54,7 +54,7 @@ export default function Home() {
 
       {/* Approach ― サイト全体の中心概念 */}
       <section className="border-t">
-        <div className="container max-w-5xl py-10 md:py-14">
+        <div className="container max-w-5xl py-10 md:py-14 relative overflow-hidden">
           {/*
             2026-08-13、本人が書いた新しい文章（CC添削済み）に差し替えた。
             旧リード文（現場の一言 → 独学 → 動くもの）から、
@@ -73,8 +73,24 @@ export default function Home() {
             画面に入ると線が引かれる（ScrollDraw + globals.css の .scroll-draw）。
             About 側の Approach は未着手なので、いま食い違っている。
           */}
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-            <div>
+          {/*
+            部分見せ（2026-08-13・本人指定）：球の右下寄り配置で、上側の弧だけ覗かせる。
+            - 図は受領時そのまま（viewBox 0 0 1200 680）。球は cx600 cy375 r270
+            - はみ出しの切り取りは section ではなく、この container の overflow-hidden。
+              コンテンツ枠（max-w-5xl＝ヘッダーと同じ幅）で切れるため、
+              左の余白と同じだけ右にも余白が残る（本人指定）
+            - 配置の計算：球の中心を container の右端・下端に置く。
+              PC: 幅1140px → 中心は右から570px・下から290px（=680-375の比率×高さ646px）
+              SP: 幅650px → 中心は右から325px・下から165px
+            - 透明度の二重掛けはしない（細線がかすれて「崩れて」見えるため）。線色は85%一段だけ
+          */}
+          <ScrollDraw
+            threshold={0.05}
+            className="pointer-events-none absolute -bottom-[165px] -right-[325px] w-[650px] md:-bottom-[290px] md:-right-[570px] md:w-[1140px] text-foreground/85"
+          >
+            <ApproachSphere />
+          </ScrollDraw>
+          <div className="relative z-10">
               <p className="font-mono text-xs tracking-[0.2em] uppercase text-primary mb-4">
                 Approach
               </p>
@@ -90,11 +106,6 @@ export default function Home() {
                 AIが今より優秀になっても、何を課題として捉え、どう問い、どこで確かめるかで、得られる結果は変わると考えています。技術そのものを目的にせず、課題に合う方法を選び、動く形にして、実際に使いながら改善する。製造、設計、AI、ソフトウェア。異なる領域で得た知識を課題に応じてつなぎ直し、その接続から、新しい解き方や次の取り組みのきっかけを生み出していく。
               </p>
             </div>
-
-            <ScrollDraw className="w-full max-w-[300px] sm:max-w-[340px] md:max-w-[360px] mx-auto md:mx-0 md:justify-self-end text-foreground/85">
-              <ApproachSphere />
-            </ScrollDraw>
-          </div>
         </div>
       </section>
 
@@ -121,7 +132,8 @@ export default function Home() {
                 href={`/projects/${project.slug}`}
                 className="group relative grid grid-cols-[auto_1fr] md:grid-cols-[auto_1fr_auto] items-start gap-x-5 md:gap-x-10 gap-y-3 py-6 md:py-8"
               >
-                <span className="absolute left-0 top-0 bottom-0 w-px bg-primary scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-300" />
+                {/* 番号に触れて見えないよう、線は内容の左端から5px外に出す（1px線なので番号との空きは4px） */}
+                <span className="absolute -left-[5px] top-0 bottom-0 w-px bg-primary scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-300" />
                 <span className="font-mono text-sm md:text-[15px] text-primary tabular-nums pt-1">
                   {String(index + 1).padStart(2, '0')}
                 </span>

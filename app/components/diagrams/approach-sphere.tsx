@@ -11,10 +11,10 @@ import { Plate } from '@/app/components/schematic'
  * ScrollDraw は球面のワイヤー（gs-lines）だけに掛けている。
  * 視差効果を減らす設定のときは ApproachSphereFrame 側で pauseAnimations() する。
  *
- * viewBox は原案の 0 0 1200 680 から 306 81 588 588 へ切り詰めてある。
- * 球は cx600 cy375 r270 にしか無く、原案のままだと左右に27%ずつ余白が入って
- * 段組みに置いたとき球が小さくなりすぎるため。中身は一切動かしていない
- * （glow のぼかしが外へ18px程度出るので、余白は24残してある）。
+ * viewBox は原案のまま（0 0 1200 680）。一時 306 81 588 588 へ切り詰めていたが、
+ * 「GPTから送られてきた状態の図を使う」という本人指定で戻した（2026-08-13）。
+ * 球は cx600 cy375 r270。原寸から必要な表示幅を逆算して置くこと
+ * （球の直径540 = キャンバス幅1200の45%。画面上で球をDpxにしたければ幅は D×1200/540）。
  *
  * 記事用の Schematic 枠（罫線＋FIG番号）は使っていない。トップの Approach には
  * すでにオーバーラインがあり、罫線をもう一段重ねると別セクションに見えるため。
@@ -22,7 +22,7 @@ import { Plate } from '@/app/components/schematic'
 export function ApproachSphere() {
   return (
     <>
-      <Plate viewBox="306 81 588 588" aria-labelledby="gs-title gs-desc">
+      <Plate viewBox="0 0 1200 680" aria-labelledby="gs-title gs-desc">
         <style>{`
           .gs-wire,.gs-outline{fill:none;stroke:currentColor;stroke-width:1.7;opacity:.32;vector-effect:non-scaling-stroke}
           .gs-light{fill:none;stroke:hsl(var(--primary));stroke-width:3;stroke-linecap:round;stroke-dasharray:28 2000;vector-effect:non-scaling-stroke;filter:url(#gs-glow)}
