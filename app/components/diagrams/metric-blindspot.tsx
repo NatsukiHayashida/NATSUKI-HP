@@ -45,15 +45,17 @@ export function MetricBlindspot() {
         </g>
         <g transform="translate(646 124)">
         <text className="mb-tx mb-body" x="250" y="0" textAnchor="middle">実際に動かしたモデル</text>
+        {/* 125/158 の仕切りは比率どおりだと221（125寄り）。本人指定（2026-08-13）で
+            見た目は中央250に変更。数値はラベルが持つので事実は変わらない */}
         <rect className="mb-line" x="0" y="42" width="500" height="320"/>
-        <path className="mb-line" d="M0 202h500M221 42v160"/>
-        <rect x="0" y="42" width="221" height="160" fill="url(#mb-hatch)"/>
+        <path className="mb-line" d="M0 202h500M250 42v160"/>
+        <rect x="0" y="42" width="250" height="160" fill="url(#mb-hatch)"/>
         <rect x="0" y="202" width="500" height="160" fill="url(#mb-hatch)"/>
         <text className="mb-tx mb-small" x="18" y="76">実際は良品 283枚</text>
-        <text className="mb-tx mb-num" x="110" y="139" textAnchor="middle">125枚</text>
-        <text className="mb-tx mb-small" x="110" y="169" textAnchor="middle">誤って廃棄</text>
-        <text className="mb-tx mb-num" x="360" y="139" textAnchor="middle">158枚</text>
-        <text className="mb-tx mb-small" x="360" y="169" textAnchor="middle">正しく通過</text>
+        <text className="mb-tx mb-num" x="125" y="139" textAnchor="middle">125枚</text>
+        <text className="mb-tx mb-small" x="125" y="169" textAnchor="middle">誤って廃棄</text>
+        <text className="mb-tx mb-num" x="375" y="139" textAnchor="middle">158枚</text>
+        <text className="mb-tx mb-small" x="375" y="169" textAnchor="middle">正しく通過</text>
         <text className="mb-tx mb-small" x="18" y="237">実際は不良 178枚</text>
         <text className="mb-tx mb-big" x="250" y="307" textAnchor="middle">178</text>
         <text className="mb-tx mb-small" x="250" y="338" textAnchor="middle">全て停止 → 見逃し 0</text>
@@ -77,7 +79,7 @@ export function MetricBlindspot() {
         <text className="mbm-t mbm-h" x="36" y="54">検出率100%だけでは、モデルを評価できない</text><path className="mbm-l" d="M36 76h648" opacity=".4"/>
         <g transform="translate(60 128)"><text className="mbm-t mbm-b" x="300" textAnchor="middle">全品を「不良」と判定</text><rect className="mbm-l" y="34" width="600" height="360"/><path className="mbm-l" d="M0 214h600"/><rect y="34" width="600" height="180" fill="url(#mbm-p11)"/><rect y="214" width="600" height="180" fill="url(#mbm-p11)"/><text className="mbm-t mbm-s" x="22" y="72">実際は良品 283枚</text><text className="mbm-t mbm-n" x="300" y="146" textAnchor="middle">283枚を廃棄</text><text className="mbm-t mbm-s" x="22" y="252">実際は不良 178枚</text><text className="mbm-t mbm-n" x="300" y="328" textAnchor="middle">178枚を停止</text><text className="mbm-t mbm-n mbm-a" x="300" y="462" textAnchor="middle">検出率 100%</text></g>
         <path className="mbm-l" d="M36 638h648" opacity=".4"/>
-        <g transform="translate(60 694)"><text className="mbm-t mbm-b" x="300" textAnchor="middle">実際に動かしたモデル</text><rect className="mbm-l" y="34" width="600" height="360"/><path className="mbm-l" d="M0 214h600M265 34v180"/><rect y="34" width="265" height="180" fill="url(#mbm-p11)"/><rect y="214" width="600" height="180" fill="url(#mbm-p11)"/><text className="mbm-t mbm-s" x="22" y="72">実際は良品 283枚</text><text className="mbm-t mbm-b" x="132" y="142" textAnchor="middle">125枚を廃棄</text><text className="mbm-t mbm-b" x="432" y="142" textAnchor="middle">158枚を通過</text><text className="mbm-t mbm-s" x="22" y="252">実際は不良 178枚</text><text className="mbm-t mbm-n" x="300" y="328" textAnchor="middle">178枚を停止</text><text className="mbm-t mbm-n mbm-a" x="300" y="462" textAnchor="middle">検出率 100%</text></g>
+        <g transform="translate(60 694)"><text className="mbm-t mbm-b" x="300" textAnchor="middle">実際に動かしたモデル</text>{/* 縦組みも同様に、仕切りを比率の265から中央300へ（本人指定・2026-08-13） */}<rect className="mbm-l" y="34" width="600" height="360"/><path className="mbm-l" d="M0 214h600M300 34v180"/><rect y="34" width="300" height="180" fill="url(#mbm-p11)"/><rect y="214" width="600" height="180" fill="url(#mbm-p11)"/><text className="mbm-t mbm-s" x="22" y="72">実際は良品 283枚</text><text className="mbm-t mbm-b" x="150" y="142" textAnchor="middle">125枚を廃棄</text><text className="mbm-t mbm-b" x="450" y="142" textAnchor="middle">158枚を通過</text><text className="mbm-t mbm-s" x="22" y="252">実際は不良 178枚</text><text className="mbm-t mbm-n" x="300" y="328" textAnchor="middle">178枚を停止</text><text className="mbm-t mbm-n mbm-a" x="300" y="462" textAnchor="middle">検出率 100%</text></g>
         <path className="mbm-al" d="M36 1212h648"/><text className="mbm-t mbm-b" x="360" y="1252" textAnchor="middle">違いは、旧指標が見ていなかった「良品側」にある</text>
       </Plate>
     </Schematic>

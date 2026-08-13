@@ -43,7 +43,8 @@ export default function ProjectsPage() {
               href={`/projects/${project.slug}`}
               className="group relative grid grid-cols-[auto_1fr] md:grid-cols-[auto_1fr_auto] items-start gap-x-5 md:gap-x-10 gap-y-3 py-6 md:py-8"
             >
-              <span className="absolute left-0 top-0 bottom-0 w-px bg-primary scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-300" />
+              {/* 番号に触れて見えないよう、線は内容の左端から5px外に出す（1px線なので番号との空きは4px） */}
+              <span className="absolute -left-[5px] top-0 bottom-0 w-px bg-primary scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-300" />
               <span className="font-mono text-sm md:text-[15px] text-primary tabular-nums pt-1">
                 {String(index + 1).padStart(2, '0')}
               </span>
