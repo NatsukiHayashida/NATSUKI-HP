@@ -8,6 +8,7 @@ import { ParityGate } from '@/app/components/diagrams/parity-gate'
 import { PositionShift } from '@/app/components/diagrams/position-shift'
 import { ReworkBreakdown } from '@/app/components/diagrams/rework-breakdown'
 import { TrafficFunnel } from '@/app/components/diagrams/traffic-funnel'
+import { WorkHubScene } from '@/app/components/diagrams/work-hub-scene'
 
 /**
  * 記事本文に差し込む模式図の登録表。
@@ -44,5 +45,6 @@ export const articleDiagrams: Record<string, () => React.JSX.Element> = {
   // 花製作所
   'traffic-funnel': TrafficFunnel,
   // work-hub
+  'work-hub-scene': WorkHubScene, // 冒頭のイメージ図（図番なし）
   'mail-speed': MailSpeed,
 }
