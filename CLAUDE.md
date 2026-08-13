@@ -347,6 +347,7 @@ NEXT_PUBLIC_GA_ID=G-...
 - `NEXTJS14_DOWNGRADE_FIX.md` - Next.js 14ダウングレード修正記録
 - `security/` - セキュリティ関連ドキュメント（脆弱性分析・修正プラン）
 - `development-log.md` - 詳細な開発ログ（2025-10-11〜10-27の作業記録）
+- `archive/pre-renewal-2026-08/` - リニューアル前のトップページの見た目（全画面キャプチャ3枚＋撮り直し手順）
 
 <!-- BEGIN:nextjs-agent-rules -->
 
