@@ -339,99 +339,93 @@
 }
 
 /*
-  主要画面を順に見せる送り（work-hub-tour.tsx）。
-  6枚 × 4.5秒 ＝ 一巡27秒。3つの keyframes を同じ 27s に乗せ、
-  切り替えは animation-delay だけでずらす（枚数を変えたら 27s と割合も直す）。
+  主要画面をスクロールで送る（work-hub-tour.tsx）。
+  見本市v2（_motion-demo/index.html）の 05 PIN+SWAP / 06 SCRUB / 08 SCALE / 04 STAGGER。
 
-  1枚あたりの持ち時間は 4.5/27 = 16.6%。前後に短い重なりを作って繋ぐ。
+  **時間で自動送りにしない。** 16インチで見たとき端末が画面の高さを使い切り、
+  説明が折り返しの下に隠れた。スクロールに紐づければ、読む速さも人に任せられる。
 */
-@keyframes tour-screen {
-  0%,
-  1.5% {
-    opacity: 0;
-  }
-  3%,
-  15% {
-    opacity: 1;
-  }
-  16.6%,
-  100% {
-    opacity: 0;
-  }
+
+/* 端末は大きく出して下を切る。切り口は mask でぼかし、断ち落としに見せない */
+.tour-stage {
+  --tour-scale: 1;
+  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
 }
 
-@keyframes tour-caption {
-  0%,
-  1.5% {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  3%,
-  15% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  16.6%,
-  100% {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
+.tour-device {
+  transform: scale(var(--tour-scale));
+  transform-origin: 50% 0;
+  will-change: transform;
 }
 
-/* 済んだ区間は埋まったまま残す。読み手が今どこかを追えるようにするため */
-@keyframes tour-bar {
-  0% {
-    transform: scaleX(0);
-  }
-  16.6%,
-  100% {
-    transform: scaleX(1);
-  }
-}
-
-.tour-screen,
-.tour-caption {
-  opacity: 0;
-  animation-duration: 27s;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-  animation-play-state: paused;
-}
-
+/* 05 SWAP：貼りついたまま中身だけ入れ替わる */
 .tour-screen {
-  animation-name: tour-screen;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
-.tour-caption {
-  animation-name: tour-caption;
+.tour-screen.on {
+  opacity: 1;
 }
 
-.tour-bar {
-  transform: scaleX(0);
-  animation: tour-bar 27s linear infinite;
-  animation-play-state: paused;
+.tour-cap {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
 }
 
-.tour-in .tour-screen,
-.tour-in .tour-caption,
-.tour-in .tour-bar {
-  animation-play-state: running;
+.tour-cap.on {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 04 STAGGER：説明の3行を少しずつ遅らせて出す */
+.tour-cap-1,
+.tour-cap-2,
+.tour-cap-3 {
+  transform: translateY(10px);
+  opacity: 0;
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.tour-cap.on .tour-cap-1,
+.tour-cap.on .tour-cap-2,
+.tour-cap.on .tour-cap-3 {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.tour-cap.on .tour-cap-1 {
+  transition-delay: 0.02s;
+}
+.tour-cap.on .tour-cap-2 {
+  transition-delay: 0.09s;
+}
+.tour-cap.on .tour-cap-3 {
+  transition-delay: 0.16s;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* 動かせないので、1枚目だけを出したまま止める */
+  /* 貼りつき自体は人の操作なので残す。足すのをやめるのは動きのほう */
   .tour-screen,
-  .tour-caption,
-  .tour-bar {
-    animation: none;
+  .tour-cap,
+  .tour-cap-1,
+  .tour-cap-2,
+  .tour-cap-3 {
+    transition: none;
   }
 
-  .tour-screen:first-of-type,
-  .tour-caption:first-of-type {
+  .tour-cap-1,
+  .tour-cap-2,
+  .tour-cap-3 {
+    transform: none;
     opacity: 1;
   }
 
-  .tour-bar {
-    transform: scaleX(0);
+  .tour-device {
+    transform: none;
   }
 }
