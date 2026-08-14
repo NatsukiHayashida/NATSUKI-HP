@@ -39,7 +39,7 @@ const STEPS = [
     src: 'mail',
     label: 'メール',
     title: '会社のメールを読む',
-    body: '最新40件を取りに行く。開いても既読にはしない。差出人と件名は公開にあたって伏せた。',
+    body: '最新40件を取りに行く。一覧を開いても既読にはしない。',
   },
   {
     src: 'today',
@@ -229,7 +229,7 @@ export function WorkHubTour() {
       </div>
 
       <figcaption className="mx-auto mt-6 max-w-[26ch] text-center font-mono text-[11px] leading-relaxed tracking-[0.08em] text-muted-foreground md:max-w-[60ch] md:text-xs">
-        すべて実物の画面。会社メールの差出人と件名は伏せている。
+        すべて実物の画面。
       </figcaption>
     </figure>
   )
