@@ -44,3 +44,9 @@ scripts/ogp.html
 
 # スクロール演出の見本市（Downloads/motion-demo の複製・スマホ閲覧用）
 /_motion-demo/
+
+# 動画の見え方くらべ（2026-08-14・保留）。開発サーバーでだけ使う一時ページと素材。
+# http://localhost:3000/dev/arm-motion で7案を見比べられる。どれも採らなかったので
+# 手元にだけ残してある。要らなくなったら両方消して、この3行も消す。
+/app/dev/
+/public/video/arm-motion-alpha.webm
