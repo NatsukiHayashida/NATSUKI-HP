@@ -8,7 +8,9 @@ import { ParityGate } from '@/app/components/diagrams/parity-gate'
 import { PositionShift } from '@/app/components/diagrams/position-shift'
 import { ReworkBreakdown } from '@/app/components/diagrams/rework-breakdown'
 import { TrafficFunnel } from '@/app/components/diagrams/traffic-funnel'
+import { ToolsUsed } from '@/app/components/tools-used'
 import { WorkHubPhone } from '@/app/components/work-hub-phone'
+import { WorkHubTour } from '@/app/components/work-hub-tour'
 import { WorkHubScene } from '@/app/components/diagrams/work-hub-scene'
 
 /**
@@ -48,5 +50,7 @@ export const articleDiagrams: Record<string, () => React.JSX.Element> = {
   // work-hub
   'work-hub-scene': WorkHubScene, // 冒頭のイメージ図（図番なし）
   'work-hub-phone': WorkHubPhone, // 実機のスクショをiPhone枠でスクロールさせる
+  'work-hub-tour': WorkHubTour, // 主要画面6枚を順に見せる
+  'work-hub-tools': ToolsUsed, // 使っている道具（CC / Python / Tailscale）
   'mail-speed': MailSpeed,
 }

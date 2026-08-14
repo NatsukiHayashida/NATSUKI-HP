@@ -337,3 +337,101 @@
     transition: none;
   }
 }
+
+/*
+  主要画面を順に見せる送り（work-hub-tour.tsx）。
+  6枚 × 4.5秒 ＝ 一巡27秒。3つの keyframes を同じ 27s に乗せ、
+  切り替えは animation-delay だけでずらす（枚数を変えたら 27s と割合も直す）。
+
+  1枚あたりの持ち時間は 4.5/27 = 16.6%。前後に短い重なりを作って繋ぐ。
+*/
+@keyframes tour-screen {
+  0%,
+  1.5% {
+    opacity: 0;
+  }
+  3%,
+  15% {
+    opacity: 1;
+  }
+  16.6%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes tour-caption {
+  0%,
+  1.5% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  3%,
+  15% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  16.6%,
+  100% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+/* 済んだ区間は埋まったまま残す。読み手が今どこかを追えるようにするため */
+@keyframes tour-bar {
+  0% {
+    transform: scaleX(0);
+  }
+  16.6%,
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+.tour-screen,
+.tour-caption {
+  opacity: 0;
+  animation-duration: 27s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+.tour-screen {
+  animation-name: tour-screen;
+}
+
+.tour-caption {
+  animation-name: tour-caption;
+}
+
+.tour-bar {
+  transform: scaleX(0);
+  animation: tour-bar 27s linear infinite;
+  animation-play-state: paused;
+}
+
+.tour-in .tour-screen,
+.tour-in .tour-caption,
+.tour-in .tour-bar {
+  animation-play-state: running;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* 動かせないので、1枚目だけを出したまま止める */
+  .tour-screen,
+  .tour-caption,
+  .tour-bar {
+    animation: none;
+  }
+
+  .tour-screen:first-of-type,
+  .tour-caption:first-of-type {
+    opacity: 1;
+  }
+
+  .tour-bar {
+    transform: scaleX(0);
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "project": {
+    "width": 720,
+    "height": 1323,
+    "kb": 45
+  },
+  "mail": {
+    "width": 720,
+    "height": 1323,
+    "kb": 32
+  },
+  "today": {
+    "width": 720,
+    "height": 1323,
+    "kb": 52
+  },
+  "usage": {
+    "width": 720,
+    "height": 1323,
+    "kb": 35
+  },
+  "reporthub": {
+    "width": 720,
+    "height": 1323,
+    "kb": 61
+  },
+  "report": {
+    "width": 720,
+    "height": 1323,
+    "kb": 52
+  }
+}
