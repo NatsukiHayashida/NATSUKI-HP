@@ -97,11 +97,20 @@ export function WorkHubPhone() {
   */
   return (
     <figure className="not-prose my-12 md:my-20">
-      <div ref={ref} className="phone-stage relative mx-auto max-w-[248px] md:max-w-[820px]">
-        {/* 端末の後ろに敷く、ごく淡い面。Apple の製品写真の下地に当たる */}
+      <div
+        ref={ref}
+        className="phone-stage relative mx-auto max-w-[248px] overflow-x-clip md:max-w-[820px]"
+      >
+        {/*
+          端末の後ろに敷く、ごく淡い面。Apple の製品写真の下地に当たる。
+
+          **画面幅を超えさせない。** 以前 max-w-[130vw] にしていたため、390px幅で
+          横に59pxはみ出し、縦スクロール中にページが左右へ揺れていた（2026-08-14 実測）。
+          幅の指定と、親の overflow-x-clip の二重で押さえている。
+        */}
         <div
           aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[92%] w-[560px] max-w-[130vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground/[0.045] blur-3xl"
+          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[92%] w-[560px] max-w-[88vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground/[0.045] blur-3xl"
         />
 
         <div className="relative mx-auto w-[232px] md:w-[268px]">
