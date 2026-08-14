@@ -57,13 +57,13 @@ const STEPS = [
     src: 'reporthub',
     label: 'report-hub',
     title: 'レポート閲覧へ移る',
-    body: '進捗とは別系統のサーバー。~/work のHTMLレポートを集めて一覧にする。ここでは1プロジェクトで絞っている。',
+    body: '進捗とは別系統のサーバー。~/work を走査してHTMLレポートを集める。ここは1プロジェクトで絞った状態。',
   },
   {
     src: 'report',
     label: 'レポート',
     title: 'レポートを開く',
-    body: '1ファイル完結。外部への読み込みがゼロなので、そのまま人にも渡せる。',
+    body: 'グラフも本文も1ファイルに収める。外部への読み込みがゼロなので、そのままメールにも添付できる。',
   },
 ]
 
@@ -132,16 +132,21 @@ export function WorkHubTour() {
       */}
       <div ref={rootRef} className="relative" style={{ height: `${STEPS.length * 70 + 30}vh` }}>
         <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
-          <div className="grid w-full grid-cols-1 items-center gap-8 md:grid-cols-[300px_1fr] md:gap-12">
+          <div className="grid w-full grid-cols-1 items-center gap-8 md:grid-cols-[360px_1fr] md:gap-10">
             {/*
               端末。下を切って大きく見せる。
               切り口は mask で抜いて、断ち落としに見えないようにする。
             */}
+            {/*
+              端末の箱は、端末そのものより左右に広く取る。
+              マスクは箱にかかるため、ぴったりだと側面ボタン（-3px）と影が
+              帯状に切り落とされる（1512pxで実測して発覚）。
+            */}
             <div
               data-stage
-              className="tour-stage relative mx-auto h-[46svh] w-[224px] md:mx-0 md:h-[62svh] md:w-[300px]"
+              className="tour-stage relative mx-auto h-[46svh] w-[284px] pt-2 md:mx-0 md:h-[62svh] md:w-[360px]"
             >
-              <div className="tour-device absolute inset-x-0 top-0">
+              <div className="tour-device absolute left-1/2 top-2 w-[224px] -translate-x-1/2 md:w-[300px]">
                 <div className="relative">
                   <span className="absolute -left-[3px] top-[16%] h-[4%] w-[3px] rounded-l-sm bg-foreground/30" />
                   <span className="absolute -left-[3px] top-[24%] h-[7%] w-[3px] rounded-l-sm bg-foreground/30" />

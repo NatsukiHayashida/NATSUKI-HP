@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>サイト改修の1日 — 2026-08-14</title>
+<style>
+html, body { overflow-x: hidden; }
+body {
+  font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN",
+               "Yu Gothic", Meiryo, sans-serif;
+  font-size: 1rem; line-height: 1.7; margin: 0;
+  color: #16202b; background: #f6f8fb;
+}
+.wrap { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
+.pg { display: inline-block; max-width: 100%; }
+a, code { overflow-wrap: anywhere; }
+img, svg { max-width: 100%; height: auto; }
+.tablewrap { overflow-x: auto; overscroll-behavior-x: contain; }
+table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+th, td { padding: .55rem .6rem; border-bottom: 1px solid #e2e8f0; text-align: left; }
+th { background: #eef2f7; font-weight: 600; white-space: nowrap; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+header { background: linear-gradient(135deg, #0f2740 0%, #1d4e6e 55%, #2b7a78 100%); color: #fff; }
+header .wrap { padding-top: 2.4rem; padding-bottom: 2.4rem; }
+h1 { font-size: 1.7rem; line-height: 1.35; margin: 0 0 .5rem; letter-spacing: -.01em; }
+.sub { margin: 0; color: #b9d4e6; font-size: .9rem; }
+
+h2 {
+  font-size: 1.15rem; margin: 2.6rem 0 .9rem; padding-left: .6rem;
+  border-left: 4px solid #2b7a78; line-height: 1.4;
+}
+p { margin: .8rem 0; }
+.lead { background: #fff; border-left: 4px solid #1d4e6e; border-radius: 0 8px 8px 0;
+        padding: 1rem 1.1rem; box-shadow: 0 1px 2px rgba(16,32,48,.06); }
+.lead p { margin: .5rem 0; }
+
+.cards { display: flex; flex-wrap: wrap; gap: .8rem; margin: 1.2rem 0; }
+.card { flex: 1 1 190px; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+        padding: .9rem 1rem; box-shadow: 0 1px 2px rgba(16,32,48,.05); }
+.card .v { font-size: 1.7rem; font-weight: 700; line-height: 1.2; letter-spacing: -.02em; }
+.card .k { font-size: .8rem; color: #5b6b7c; }
+.c1 .v { color: #1d4e6e; } .c2 .v { color: #2b7a78; }
+.c3 .v { color: #b4552a; } .c4 .v { color: #6b4f9e; }
+
+.panel { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+         padding: 1rem; box-shadow: 0 1px 2px rgba(16,32,48,.05); margin: 1rem 0; }
+.cap { font-size: .82rem; color: #5b6b7c; margin: .5rem 0 0; }
+.legend { display: flex; flex-wrap: wrap; gap: .4rem 1rem; font-size: .82rem;
+          color: #3d4d5c; margin: .6rem 0 0; }
+.legend i { display: inline-block; width: .7rem; height: .7rem; border-radius: 2px;
+            margin-right: .35rem; vertical-align: -1px; }
+ul { padding-left: 1.15rem; }
+li { margin: .35rem 0; }
+footer { color: #5b6b7c; font-size: .82rem; border-top: 1px solid #e2e8f0; margin-top: 2.5rem; }
+@media (max-width: 768px) {
+  .wrap { padding: 1rem; }
+  body { font-size: .95rem; }
+  h1 { font-size: 1.35rem; }
+  .card { flex: 1 1 140px; }
+  .card .v { font-size: 1.45rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>サイト改修の1日</h1>
+    <p class="sub">NATSUKI-HP ／ 2026-08-14 ／ CC</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="lead">
+  <p><b>個人サイトに、開発基盤の実機画面を見せる仕掛けを入れた1日の記録。</b>
+  あわせて、放置されていた依存の脆弱性 <b>90件を0件</b> にし、雛形のままだった公開URLを直した。</p>
+  <p>コミット15件、50ファイル、2,148行の追加。追加した画像資産は10点で456KB。</p>
+</div>
+
+<div class="cards">
+  <div class="card c1"><div class="v">15</div><div class="k">コミット</div></div>
+  <div class="card c2"><div class="v">90 → 0</div><div class="k">依存の脆弱性</div></div>
+  <div class="card c3"><div class="v">456<span style="font-size:.6em"> KB</span></div><div class="k">追加した画像（10点）</div></div>
+  <div class="card c4"><div class="v">2,148</div><div class="k">追加行数</div></div>
+</div>
+
+<h2>1. コミットは2つの山に分かれた</h2>
+
+<p>深夜帯に前日の積み残しを片付け、朝から本題に入っている。
+朝の5件はすべて「実機の画面を記事に載せる」ための作業。</p>
+
+<div class="panel">
+<svg viewBox="0 0 720 260" role="img" aria-label="時刻ごとのコミット数の棒グラフ。0時台10件、8時台1件、9時台3件、10時台1件">
+  <line x1="52" y1="200" x2="700" y2="200" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="52" y1="150" x2="700" y2="150" stroke="#eef2f7" stroke-width="1"/>
+  <line x1="52" y1="100" x2="700" y2="100" stroke="#eef2f7" stroke-width="1"/>
+  <line x1="52" y1="50"  x2="700" y2="50"  stroke="#eef2f7" stroke-width="1"/>
+  <text x="44" y="204" font-size="12" fill="#5b6b7c" text-anchor="end">0</text>
+  <text x="44" y="154" font-size="12" fill="#5b6b7c" text-anchor="end">5</text>
+  <text x="44" y="104" font-size="12" fill="#5b6b7c" text-anchor="end">10</text>
+
+  <rect x="70"  y="100" width="70" height="100" rx="3" fill="#1d4e6e"/>
+  <text x="105" y="92" font-size="14" font-weight="700" fill="#1d4e6e" text-anchor="middle">10</text>
+  <rect x="430" y="190" width="70" height="10"  rx="3" fill="#2b7a78"/>
+  <text x="465" y="182" font-size="14" font-weight="700" fill="#2b7a78" text-anchor="middle">1</text>
+  <rect x="520" y="170" width="70" height="30"  rx="3" fill="#2b7a78"/>
+  <text x="555" y="162" font-size="14" font-weight="700" fill="#2b7a78" text-anchor="middle">3</text>
+  <rect x="610" y="190" width="70" height="10"  rx="3" fill="#2b7a78"/>
+  <text x="645" y="182" font-size="14" font-weight="700" fill="#2b7a78" text-anchor="middle">1</text>
+
+  <text x="105" y="220" font-size="12" fill="#3d4d5c" text-anchor="middle">0時台</text>
+  <text x="285" y="220" font-size="12" fill="#94a3b8" text-anchor="middle">1〜7時台</text>
+  <text x="465" y="220" font-size="12" fill="#3d4d5c" text-anchor="middle">8時台</text>
+  <text x="555" y="220" font-size="12" fill="#3d4d5c" text-anchor="middle">9時台</text>
+  <text x="645" y="220" font-size="12" fill="#3d4d5c" text-anchor="middle">10時台</text>
+  <text x="285" y="196" font-size="12" fill="#cbd5e1" text-anchor="middle">—</text>
+  <text x="52" y="248" font-size="12" fill="#5b6b7c">単位：コミット数</text>
+</svg>
+<p class="cap">深夜の10件は前日の残り <span class="pg">（図の差し替え・記録の保存・URL修正・依存整理）</span>。</p>
+</div>
+
+<h2>2. 脆弱性は「押していなかった」だけだった</h2>
+
+<p>GitHub が90件の警告を出していたが、これは<b>押す前の状態に対する数字</b>だった。
+Next.js を16へ上げた変更を9セッション分プッシュしていなかったため、
+古いロックファイルが評価され続けていた。</p>
+
+<p>反映後に実際に残っていたのは6件。うち4件は<b>どこからも読み込んでいない依存</b>が原因で、
+削除するだけで消えた。破壊的アップグレードは不要だった。</p>
+
+<div class="panel">
+<svg viewBox="0 0 720 210" role="img" aria-label="脆弱性の推移。押す前90件、反映後6件、対応後0件">
+  <text x="20" y="34" font-size="13" fill="#3d4d5c">押す前の集計</text>
+  <rect x="20" y="44" width="660" height="26" rx="4" fill="#e2e8f0"/>
+  <rect x="20" y="44" width="22"  height="26" rx="4" fill="#8c1d18"/>
+  <rect x="42" y="44" width="293" height="26" fill="#c2410c"/>
+  <rect x="335" y="44" width="279" height="26" fill="#d99a2b"/>
+  <rect x="614" y="44" width="66" height="26" rx="4" fill="#94a3b8"/>
+  <text x="690" y="63" font-size="13" font-weight="700" fill="#16202b" text-anchor="start" opacity="0">90</text>
+  <text x="20" y="92" font-size="12" fill="#5b6b7c">合計 90件</text>
+
+  <text x="20" y="126" font-size="13" fill="#3d4d5c">Next.js 16 を反映した直後</text>
+  <rect x="20" y="136" width="660" height="26" rx="4" fill="#e2e8f0"/>
+  <rect x="20" y="136" width="30" height="26" rx="4" fill="#c2410c"/>
+  <rect x="50" y="136" width="14" height="26" fill="#d99a2b"/>
+  <text x="76" y="155" font-size="13" font-weight="700" fill="#16202b">6件</text>
+  <text x="20" y="184" font-size="12" fill="#5b6b7c">未使用の依存2つを削除 → <tspan font-weight="700" fill="#15803d">0件</tspan></text>
+</svg>
+<div class="legend">
+  <span><i style="background:#8c1d18"></i>critical 3</span>
+  <span><i style="background:#c2410c"></i>high 40</span>
+  <span><i style="background:#d99a2b"></i>moderate 38</span>
+  <span><i style="background:#94a3b8"></i>low 9</span>
+</div>
+<p class="cap">帯の長さは件数の比率。反映後の6件は high 2 ／ moderate 4。</p>
+</div>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>パッケージ</th><th>実態</th><th>対応</th></tr></thead>
+<tbody>
+<tr><td>react-syntax-highlighter</td><td>import されていない</td><td>削除</td></tr>
+<tr><td>dompurify</td><td>import されていない</td><td>削除</td></tr>
+<tr><td>brace-expansion / js-yaml</td><td>間接依存</td><td>非破壊の更新</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>3. 追加した画像は456KB</h2>
+
+<p>実機のスクリーンショットを重なり分だけ畳んで1本にしたもの <span class="pg">（strip）</span> が最大。
+残りは主要画面6枚と、固定で出す上下のバー、メニュー。すべて WebP。</p>
+
+<div class="panel">
+<svg viewBox="0 0 720 330" role="img" aria-label="画像資産のサイズ内訳の横棒グラフ">
+  <g font-size="12" fill="#3d4d5c">
+    <text x="0" y="24">strip</text>
+    <text x="0" y="54">reporthub</text>
+    <text x="0" y="84">report</text>
+    <text x="0" y="114">today</text>
+    <text x="0" y="144">project</text>
+    <text x="0" y="174">usage</text>
+    <text x="0" y="204">mail</text>
+    <text x="0" y="234">drawer</text>
+    <text x="0" y="264">top</text>
+    <text x="0" y="294">bottom</text>
+  </g>
+  <g>
+    <rect x="86" y="12" width="560" height="16" rx="3" fill="#1d4e6e"/>
+    <rect x="86" y="42" width="231" height="16" rx="3" fill="#2b7a78"/>
+    <rect x="86" y="72" width="198" height="16" rx="3" fill="#2b7a78"/>
+    <rect x="86" y="102" width="196" height="16" rx="3" fill="#2b7a78"/>
+    <rect x="86" y="132" width="171" height="16" rx="3" fill="#2b7a78"/>
+    <rect x="86" y="162" width="135" height="16" rx="3" fill="#2b7a78"/>
+    <rect x="86" y="192" width="123" height="16" rx="3" fill="#2b7a78"/>
+    <rect x="86" y="222" width="92"  height="16" rx="3" fill="#6b4f9e"/>
+    <rect x="86" y="252" width="14"  height="16" rx="3" fill="#94a3b8"/>
+    <rect x="86" y="282" width="13"  height="16" rx="3" fill="#94a3b8"/>
+  </g>
+  <g font-size="12" fill="#16202b" font-weight="600">
+    <text x="654" y="25">148 KB</text>
+    <text x="325" y="55">61</text>
+    <text x="292" y="85">52</text>
+    <text x="290" y="115">52</text>
+    <text x="265" y="145">45</text>
+    <text x="229" y="175">36</text>
+    <text x="217" y="205">32</text>
+    <text x="186" y="235">24</text>
+    <text x="108" y="265">4</text>
+    <text x="107" y="295">3</text>
+  </g>
+  <text x="0" y="322" font-size="12" fill="#5b6b7c">合計 456 KB（10点・WebP 品質82）</text>
+</svg>
+<div class="legend">
+  <span><i style="background:#1d4e6e"></i>つないだ長い画面</span>
+  <span><i style="background:#2b7a78"></i>主要画面6枚</span>
+  <span><i style="background:#6b4f9e"></i>メニュー</span>
+  <span><i style="background:#94a3b8"></i>固定の上下バー</span>
+</div>
+</div>
+
+<h2>4. 確かめたこと</h2>
+
+<ul>
+  <li>ビルド36ページの生成、lint とも通過</li>
+  <li>1512×950 <span class="pg">（16インチ相当）</span>と 390×844 <span class="pg">（スマホ）</span>の実寸で表示を確認</li>
+  <li>ダークテーマで面と線が反転することを確認</li>
+  <li><code>npm audit</code> が 0 件になることを確認</li>
+  <li>本番の再デプロイ後、トップと記事ページが 200 を返すことを確認</li>
+</ul>
+
+<h2>5. 公開にあたって伏せたもの</h2>
+
+<p>実機の画面をそのまま載せるため、特定につながる箇所は<b>画像の側で</b>消している。
+件名などは書き換えるとその時点で嘘になるため、読めなくするだけにした。</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>対象</th><th>処理</th><th>理由</th></tr></thead>
+<tbody>
+<tr><td>接続先のホスト名</td><td>別名に置換</td><td>閉域網の名前</td></tr>
+<tr><td>社名由来のリポジトリ名</td><td>別名に置換</td><td>社名</td></tr>
+<tr><td>図番</td><td>伏字に置換</td><td>図番</td></tr>
+<tr><td>メールの差出人・件名</td><td>ぼかし</td><td>会社の情報。書き換えない</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>6. 残っていること</h2>
+
+<ul>
+  <li>Claude Code の公式マークが未入手。いまは文字組みで置いている</li>
+  <li>GitHub 側の警告表示は再スキャン待ち <span class="pg">（1件ずつ自動で閉じている）</span></li>
+  <li>画像は表示幅に対して余裕を持たせてあるため、拡大すると細かい文字が読める</li>
+</ul>
+
+<footer>
+  <div style="padding:1rem 0">
+    このレポートは1ファイル完結。外部への読み込みはゼロ。
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
