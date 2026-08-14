@@ -1,3 +1,4 @@
+import { ArmMotion } from '@/app/components/arm-motion'
 import { CadAiScene } from '@/app/components/diagrams/cad-ai-scene'
 import { DomainShift } from '@/app/components/diagrams/domain-shift'
 import { GaikanKensaScene } from '@/app/components/diagrams/gaikan-kensa-scene'
@@ -44,6 +45,7 @@ export const articleDiagrams: Record<string, () => React.JSX.Element> = {
   // CAD自動化
   'cad-ai-scene': CadAiScene, // 冒頭のイメージ図（図番なし）
   'rework-breakdown': ReworkBreakdown,
+  'arm-motion': ArmMotion, // 搬送アームの動作確認の動画（図番なし）
   'parity-gate': ParityGate,
   // 花製作所
   'traffic-funnel': TrafficFunnel,
