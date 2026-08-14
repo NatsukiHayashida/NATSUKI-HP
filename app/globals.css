@@ -52,22 +52,29 @@
   }
 
   .dark {
-    /* Base - Dark mode */
+    /*
+      Base - Dark mode
+
+      本文を 92%（#EBEBEB）から 84%（#D6D6D6）へ落とした（2026-08-14）。
+      92% は背景8%に対してコントラスト15.4:1あり、白が浮いて目に刺さっていた。
+      84% でも 12.4:1 で AAA（7:1）に十分収まる。**読みやすさのために下げている**ので、
+      これ以上明るく戻すときはコントラストではなくギラつきのほうを見ること。
+    */
     --background: 0 0% 8%;
-    --foreground: 0 0% 92%;
+    --foreground: 0 0% 84%;
 
     --card: 0 0% 10%;
-    --card-foreground: 0 0% 92%;
+    --card-foreground: 0 0% 84%;
 
     --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 92%;
+    --popover-foreground: 0 0% 84%;
 
     /* Brand - 朱（明度を上げてコントラスト確保） */
     --primary: 17 85% 58%;
     --primary-foreground: 0 0% 8%;
 
     --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 92%;
+    --secondary-foreground: 0 0% 84%;
 
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 62%;
@@ -76,7 +83,7 @@
     --accent-foreground: 0 0% 8%;
 
     --destructive: 0 62.8% 40%;
-    --destructive-foreground: 0 0% 92%;
+    --destructive-foreground: 0 0% 84%;
 
     --border: 0 0% 20%;
     --input: 0 0% 20%;

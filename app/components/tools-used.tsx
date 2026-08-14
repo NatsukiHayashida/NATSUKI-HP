@@ -2,12 +2,10 @@
  * この基盤を何で作って、何で外から届けているかを並べる。
  * 内容は ~/work/project-hub/README.md と記事本文から起こした（推測を入れない）。
  *
- * **アイコンについて**
- * 本人が用意した icons8 の「Clawd sparkles」を使っている
- * （原本は public/image/logos/claude-code.svg。SVGはここに直に写してある）。
- * Anthropic の公式マークではなく第三者の作ったアイコン。
- * **icons8 の無料ライセンスは icons8 への表示を求める**ため、下に出典を出している。
- * 公式マークが手に入ったら、このアイコンごと差し替えてよい。
+ * **マークについて**
+ * 本人が用意した Claude Code の公式マークを使っている。
+ * 原本は public/image/logos/claude-code.svg（Claude 単体のマークは claude.svg）。
+ * パスはここに直に写してある。差し替えるときは原本のほうも一緒に更新すること。
  *
  * 接続の話は「何を使っているか」までにとどめ、
  * ホスト名・ポート・認証の作りは書かない（記事本文も同じ方針）。
@@ -32,25 +30,17 @@ const TOOLS = [
   },
 ]
 
-/** icons8「Clawd sparkles」。色は原本のまま（朱 #d77757・青 #0091ff） */
-function ClaudeMark() {
+/** Claude Code の公式マーク（原本 public/image/logos/claude-code.svg） */
+function ClaudeCodeMark() {
   return (
-    <svg viewBox="0 0 48 48" width="28" height="28" aria-hidden className="shrink-0">
-      <rect width="36" height="24" x="6" y="18" fill="#d77757" />
-      <rect width="3" height="9" x="9" y="39" fill="#d77757" />
-      <rect width="3" height="9" x="15" y="39" fill="#d77757" />
-      <rect width="3" height="9" x="30" y="39" fill="#d77757" />
-      <rect width="3" height="9" x="36" y="39" fill="#d77757" />
-      <rect width="7.5" height="6" y="33" fill="#d77757" />
-      <rect width="7.5" height="6" x="40.5" y="33" fill="#d77757" />
-      <rect width="3" height="6" x="12" y="24" />
-      <rect width="3" height="6" x="33" y="24" />
-      <rect width="3" height="7" x="39" y="4" fill="#0091ff" />
-      <rect width="3" height="7" x="39" y="4" fill="#0091ff" transform="rotate(90 40.5 7.5)" />
-      <rect width="3" height="13" x="21" fill="#0091ff" />
-      <rect width="3" height="13" x="21" fill="#0091ff" transform="rotate(90 22.5 6.5)" />
-      <rect width="3" height="3" x="31" y="12" fill="#0091ff" />
-      <rect width="7" height="7" x="19" y="3" fill="#0091ff" />
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden className="shrink-0">
+      <title>Claude Code</title>
+      <path
+        clipRule="evenodd"
+        fillRule="evenodd"
+        fill="#D97757"
+        d="M20.998 10.949H24v3.102h-3v3.028h-1.487V20H18v-2.921h-1.487V20H15v-2.921H9V20H7.488v-2.921H6V20H4.487v-2.921H3V14.05H0V10.95h3V5h17.998v5.949zM6 10.949h1.488V8.102H6v2.847zm10.51 0H18V8.102h-1.49v2.847z"
+      />
     </svg>
   )
 }
@@ -58,7 +48,7 @@ function ClaudeMark() {
 function Wordmark() {
   return (
     <span className="inline-flex items-center gap-2.5">
-      <ClaudeMark />
+      <ClaudeCodeMark />
       <span className="font-mono text-[13px] font-semibold uppercase tracking-[0.22em] text-primary">
         Claude Code
       </span>
@@ -88,10 +78,6 @@ export function ToolsUsed() {
           </li>
         ))}
       </ul>
-      {/* icons8 の無料ライセンスは出典の表示を求める */}
-      <figcaption className="mx-auto mt-4 max-w-[640px] font-mono text-[10px] tracking-[0.08em] text-muted-foreground">
-        アイコン: Clawd sparkles by icons8
-      </figcaption>
     </figure>
   )
 }
