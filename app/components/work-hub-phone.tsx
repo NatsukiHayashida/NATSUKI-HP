@@ -218,11 +218,6 @@ export function WorkHubPhone() {
           </li>
         ))}
       </ul>
-
-      {/* max-w は文字数で切る。px だと行末で単語が割れた */}
-      <figcaption className="mx-auto mt-8 max-w-[26ch] text-center font-mono text-[11px] leading-relaxed tracking-[0.08em] text-muted-foreground md:mt-12 md:max-w-[60ch] md:text-xs">
-        実機の画面。接続先・リポジトリ名・図番は伏せている。
-      </figcaption>
     </figure>
   )
 }

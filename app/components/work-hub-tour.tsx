@@ -227,10 +227,6 @@ export function WorkHubTour() {
           </div>
         </div>
       </div>
-
-      <figcaption className="mx-auto mt-6 max-w-[26ch] text-center font-mono text-[11px] leading-relaxed tracking-[0.08em] text-muted-foreground md:max-w-[60ch] md:text-xs">
-        すべて実物の画面。
-      </figcaption>
     </figure>
   )
 }
