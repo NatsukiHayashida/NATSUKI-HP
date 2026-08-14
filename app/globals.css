@@ -206,3 +206,39 @@
     transition: none;
   }
 }
+
+/*
+  iPhone枠の中を流れるスクリーンショット（work-hub-phone.tsx）。
+
+  移動量は「帯の高さのうち、窓からはみ出している分」。
+  実測 strip 3854px / 窓 1227px なので (3854-1227)/3854 = 68.16%。
+  **画像を作り直したらこの数字も直すこと**（meta.json の scrollRange ÷ strip の高さ）。
+
+  上端と下端で少し止めるのは、実機で指を離したときの間を作るため。
+  alternate で戻るので、下まで行ったら同じ道を上がってくる。
+*/
+@keyframes phone-scroll {
+  0%,
+  7% {
+    transform: translateY(0);
+  }
+  93%,
+  100% {
+    transform: translateY(-68.16%);
+  }
+}
+
+.phone-strip {
+  animation: phone-scroll 26s ease-in-out infinite alternate;
+  animation-play-state: paused;
+}
+
+.phone-in .phone-strip {
+  animation-play-state: running;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phone-strip {
+    animation: none;
+  }
+}

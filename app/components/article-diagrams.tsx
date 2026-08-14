@@ -8,6 +8,7 @@ import { ParityGate } from '@/app/components/diagrams/parity-gate'
 import { PositionShift } from '@/app/components/diagrams/position-shift'
 import { ReworkBreakdown } from '@/app/components/diagrams/rework-breakdown'
 import { TrafficFunnel } from '@/app/components/diagrams/traffic-funnel'
+import { WorkHubPhone } from '@/app/components/work-hub-phone'
 import { WorkHubScene } from '@/app/components/diagrams/work-hub-scene'
 
 /**
@@ -46,5 +47,6 @@ export const articleDiagrams: Record<string, () => React.JSX.Element> = {
   'traffic-funnel': TrafficFunnel,
   // work-hub
   'work-hub-scene': WorkHubScene, // 冒頭のイメージ図（図番なし）
+  'work-hub-phone': WorkHubPhone, // 実機のスクショをiPhone枠でスクロールさせる
   'mail-speed': MailSpeed,
 }

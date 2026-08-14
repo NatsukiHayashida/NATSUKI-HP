@@ -1,0 +1,28 @@
+{
+  "screen": {
+    "width": 720,
+    "height": 1490
+  },
+  "viewport": {
+    "top": 167,
+    "height": 1227
+  },
+  "images": {
+    "strip": {
+      "width": 720,
+      "height": 3854,
+      "kb": 148
+    },
+    "top": {
+      "width": 720,
+      "height": 167,
+      "kb": 4
+    },
+    "bottom": {
+      "width": 720,
+      "height": 96,
+      "kb": 3
+    }
+  },
+  "scrollRange": 2627
+}
