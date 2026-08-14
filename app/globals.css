@@ -208,37 +208,132 @@
 }
 
 /*
-  iPhone枠の中を流れるスクリーンショット（work-hub-phone.tsx）。
+  iPhone枠の中の演出（work-hub-phone.tsx）。一巡で「流す → メニューを開く →
+  閉じる → 戻る」まで見せる。3つの keyframes は同じ 24s の上に乗っている。
 
   移動量は「帯の高さのうち、窓からはみ出している分」。
   実測 strip 3854px / 窓 1227px なので (3854-1227)/3854 = 68.16%。
   **画像を作り直したらこの数字も直すこと**（meta.json の scrollRange ÷ strip の高さ）。
-
-  上端と下端で少し止めるのは、実機で指を離したときの間を作るため。
-  alternate で戻るので、下まで行ったら同じ道を上がってくる。
 */
 @keyframes phone-scroll {
   0%,
-  7% {
+  4% {
     transform: translateY(0);
   }
-  93%,
-  100% {
+  30%,
+  70% {
     transform: translateY(-68.16%);
+  }
+  96%,
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* -102% は影の分だけ余計に逃がして、枠の左端に縁が残らないようにする */
+@keyframes phone-drawer {
+  0%,
+  38% {
+    transform: translateX(-102%);
+  }
+  44%,
+  62% {
+    transform: translateX(0);
+  }
+  68%,
+  100% {
+    transform: translateX(-102%);
+  }
+}
+
+@keyframes phone-scrim {
+  0%,
+  38% {
+    opacity: 0;
+  }
+  44%,
+  62% {
+    opacity: 1;
+  }
+  68%,
+  100% {
+    opacity: 0;
   }
 }
 
 .phone-strip {
-  animation: phone-scroll 26s ease-in-out infinite alternate;
+  animation: phone-scroll 24s ease-in-out infinite;
+}
+
+.phone-drawer {
+  animation: phone-drawer 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+}
+
+.phone-scrim {
+  animation: phone-scrim 24s ease-in-out infinite;
+}
+
+.phone-strip,
+.phone-drawer,
+.phone-scrim {
   animation-play-state: paused;
 }
 
-.phone-in .phone-strip {
+.phone-in .phone-strip,
+.phone-in .phone-drawer,
+.phone-in .phone-scrim {
   animation-play-state: running;
 }
 
+/* 引き出し線つきの注釈は、端末が見えてから順に出す（Apple の段送りに寄せる） */
+.phone-callout {
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.7s ease-out,
+    transform 0.7s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.phone-in .phone-callout {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.phone-callout:nth-of-type(1) {
+  transition-delay: 0.15s;
+}
+.phone-callout:nth-of-type(2) {
+  transition-delay: 0.3s;
+}
+.phone-callout:nth-of-type(3) {
+  transition-delay: 0.45s;
+}
+.phone-callout:nth-of-type(4) {
+  transition-delay: 0.6s;
+}
+.phone-callout:nth-of-type(5) {
+  transition-delay: 0.75s;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .phone-strip {
+  .phone-strip,
+  .phone-drawer,
+  .phone-scrim {
     animation: none;
+  }
+
+  /* 止めるだけだとメニューが出っぱなしになるので、閉じた側に寄せる */
+  .phone-drawer {
+    transform: translateX(-102%);
+  }
+
+  .phone-scrim {
+    opacity: 0;
+  }
+
+  .phone-callout {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

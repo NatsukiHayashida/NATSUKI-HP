@@ -22,6 +22,11 @@
       "width": 720,
       "height": 96,
       "kb": 3
+    },
+    "drawer": {
+      "width": 550,
+      "height": 1324,
+      "kb": 24
     }
   },
   "scrollRange": 2627

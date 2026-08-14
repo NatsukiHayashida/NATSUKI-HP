@@ -87,6 +87,12 @@ MASKS_TOP = [
          color=(235, 235, 240), bg=(52, 55, 57), center=True),
 ]
 
+# ドロワー（--drawer で渡す 900×2166 のPNG）。実測 bbox x250-568 y2103-2144
+MASKS_DRAWER = [
+    dict(box=(246, 2096, 700, 2152), text='inspection-ai', font=FONT_REG, size=42,
+         color=(233, 236, 242), bg=(20, 24, 33)),
+]
+
 
 def apply_masks(img, masks):
     d = ImageDraw.Draw(img)
@@ -105,6 +111,7 @@ def main():
     p.add_argument('--src', required=True, help='スクリーンショットの置き場')
     p.add_argument('--out', required=True, help='出力先ディレクトリ')
     p.add_argument('--width', type=int, default=720, help='書き出す横幅')
+    p.add_argument('--drawer', help='ドロワーを開いた状態のPNG（実物を開いて撮ったもの）')
     args = p.parse_args()
 
     os.makedirs(args.out, exist_ok=True)
@@ -132,9 +139,21 @@ def main():
     bottom_img = imgs[1].crop((0, TABBAR_TOP, W, BOTTOM_END))
 
     scale = args.width / W
+    layers = [('strip', strip), ('top', top_img), ('bottom', bottom_img)]
+
+    # ドロワーは実機のスクショではなく、動いている実物を Chrome の端末エミュレーションで
+    # 開いて撮る（#navtoggle を checked にすれば開く）。撮り方は claudedocs の手順に記載。
+    if args.drawer:
+        d = Image.open(args.drawer).convert('RGB')
+        apply_masks(d, MASKS_DRAWER)
+        # 枠の中では「上バーの下から、タブバーの下端まで」を覆う
+        layers.append(('drawer', d))
+
     out = {}
-    for name, im in [('strip', strip), ('top', top_img), ('bottom', bottom_img)]:
-        r = im.resize((args.width, round(im.height * scale)), Image.LANCZOS)
+    for name, im in layers:
+        # ドロワーは元の横幅が違う（900px）ので、自分の比率を保ったまま縮める
+        w = round(args.width * im.width / W) if name == 'drawer' else args.width
+        r = im.resize((w, round(im.height * w / im.width)), Image.LANCZOS)
         path = os.path.join(args.out, f'{name}.webp')
         r.save(path, 'WEBP', quality=80, method=6)
         out[name] = dict(width=r.width, height=r.height,
