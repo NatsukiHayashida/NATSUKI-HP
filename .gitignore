@@ -45,8 +45,20 @@ scripts/ogp.html
 # スクロール演出の見本市（Downloads/motion-demo の複製・スマホ閲覧用）
 /_motion-demo/
 
-# 動画の見え方くらべ（2026-08-14・保留）。開発サーバーでだけ使う一時ページと素材。
-# http://localhost:3000/dev/arm-motion で7案を見比べられる。どれも採らなかったので
-# 手元にだけ残してある。要らなくなったら両方消して、この3行も消す。
-/app/dev/
+# 開発サーバーでだけ使う一時素材（動画の見え方くらべ／シームレス試作）。
+# 採否が決まったら app/dev/ ごと消して、このブロックも消す。
+#
+# **app/dev/ は gitignore しないこと（未追跡のまま置く）。**
+# ignore すると Tailwind がそのディレクトリを走査対象から落とすことがあり、そこでしか
+# 使っていないクラス（h-screen / bottom-10 / w-[92vw] / max-w-[1100px] など）が
+# 生成されずレイアウトだけ崩れる。**再起動直後は通るのに編集すると落ちる**という
+# 出方をするので原因を取り違えやすい（2026-08-15 に2度踏んだ）。
+# 崩れたら生成CSSを直接 grep して、クラスが在るかを先に確かめること:
+#   CSS=$(curl -s localhost:3000/<path> | grep -oE 'href="[^"]*\.css[^"]*"' | head -1 | sed 's/href="//;s/"//')
+#   curl -s "localhost:3000$CSS" | grep -c 'h-screen'
 /public/video/arm-motion-alpha.webm
+# カメラワーク版・スクラブ用（2026-08-15 着・採否未定）。採るなら該当行を消す
+/public/video/arm-motion-camera.mp4
+/public/video/arm-motion-camera-hq.mp4
+/public/video/arm-motion-camera-poster.webp
+/public/video/arm-motion-scrub.mp4
