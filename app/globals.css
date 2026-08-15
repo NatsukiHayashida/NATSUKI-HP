@@ -346,12 +346,34 @@
 }
 
 /*
-  主要画面をスクロールで送る（work-hub-tour.tsx）。
-  見本市v2（_motion-demo/index.html）の 05 PIN+SWAP / 06 SCRUB / 08 SCALE / 04 STAGGER。
+  主要画面を順に送る（work-hub-tour.tsx）。
 
-  **時間で自動送りにしない。** 16インチで見たとき端末が画面の高さを使い切り、
-  説明が折り返しの下に隠れた。スクロールに紐づければ、読む速さも人に任せられる。
+  **2026-08-16 に時間送りへ変えた。** ここには長らく「時間で自動送りにしない」と
+  書いてあった。理由は、16インチで端末が画面の高さを使い切って説明が隠れたこと、
+  読む速さが人によって違うこと。**前者は貼りつけをやめたので起きない。**
+  後者は**点を押せばその枚へ飛べる**ようにして手当てした。
+
+  スクロール連動に戻さないこと。図を本文の中に置く限り、送りに使える距離は
+  「画面の高さ − 図の高さ」しかなく、PCで81px・スマホで56pxごとに1枚進んでしまう
+  （実測。「読むより先に画面下にいく」）。距離を稼ぐには図を高くするしかなく、
+  それは画面を図で占領することと同じ。
 */
+
+/* 送りの残り時間を線の伸びで見せる。長さは component 側が animationDuration で渡す */
+@keyframes tour-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.tour-fill {
+  animation-name: tour-fill;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
 
 /* 端末は大きく出して下を切る。切り口は mask でぼかし、断ち落としに見せない */
 .tour-stage {
@@ -416,13 +438,19 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* 貼りつき自体は人の操作なので残す。足すのをやめるのは動きのほう */
+  /* 自動送りは component 側で止めている。ここで消すのは見た目の動きのほう */
   .tour-screen,
   .tour-cap,
   .tour-cap-1,
   .tour-cap-2,
   .tour-cap-3 {
     transition: none;
+  }
+
+  /* 送りが止まっているので、残り時間の線も動かさない */
+  .tour-fill {
+    animation: none;
+    transform: scaleX(1);
   }
 
   .tour-cap-1,
