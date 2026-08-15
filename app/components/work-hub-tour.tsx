@@ -125,14 +125,14 @@ export function WorkHubTour() {
 
   /* not-prose は必須。prose が中の img に上下2emを付けて画面が割れる */
   return (
-    <figure className="not-prose my-16 md:my-24">
+    <figure className="not-prose my-10 md:my-14">
       {/*
         送りに使うスクロール量。1画面あたり約70vh。
         ここを変えると1画面の滞在時間が変わる（長くすると読む余裕が増える）。
       */}
       <div ref={rootRef} className="relative" style={{ height: `${STEPS.length * 70 + 30}vh` }}>
         <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
-          <div className="grid w-full grid-cols-1 items-center gap-8 md:grid-cols-[360px_1fr] md:gap-10">
+          <div className="grid w-full grid-cols-1 items-center gap-6 md:grid-cols-[400px_1fr] md:gap-10">
             {/*
               端末。下を切って大きく見せる。
               切り口は mask で抜いて、断ち落としに見えないようにする。
@@ -142,11 +142,20 @@ export function WorkHubTour() {
               マスクは箱にかかるため、ぴったりだと側面ボタン（-3px）と影が
               帯状に切り落とされる（1512pxで実測して発覚）。
             */}
+            {/*
+              **端末の大きさは、上下の空きの大きさでもある（2026-08-16）。**
+              画面に貼りついている間、端末が埋めていない高さがそのまま空きになる。
+              直す前は PC で342px・画面の38%、スマホで262px・31%が空いていた。
+              stage の高さ＝端末の見えている高さ、端末の幅＝端末の高さ（画像の比で決まる）。
+              **両方を上げないと詰まらない**（高さだけ上げると端末の下に空きが増えるだけ）。
+
+              スマホ側は `w-full max-w-[300px]`。固定pxだと幅360pxの機種で本文幅を超える。
+            */}
             <div
               data-stage
-              className="tour-stage relative mx-auto h-[46svh] w-[284px] pt-2 md:mx-0 md:h-[62svh] md:w-[360px]"
+              className="tour-stage relative mx-auto h-[56svh] w-full max-w-[300px] pt-2 md:mx-0 md:h-[76svh] md:w-[400px] md:max-w-none"
             >
-              <div className="tour-device absolute left-1/2 top-2 w-[224px] -translate-x-1/2 md:w-[300px]">
+              <div className="tour-device absolute left-1/2 top-2 w-[248px] -translate-x-1/2 md:w-[340px]">
                 <div className="relative">
                   <span className="absolute -left-[3px] top-[16%] h-[4%] w-[3px] rounded-l-sm bg-foreground/30" />
                   <span className="absolute -left-[3px] top-[24%] h-[7%] w-[3px] rounded-l-sm bg-foreground/30" />
