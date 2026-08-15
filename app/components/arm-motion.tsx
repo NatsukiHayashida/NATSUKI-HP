@@ -1,5 +1,6 @@
 'use client'
 
+import { useTheme } from 'next-themes'
 import { useEffect, useRef, useSyncExternalStore } from 'react'
 
 /**
@@ -71,9 +72,54 @@ import { useEffect, useRef, useSyncExternalStore } from 'react'
  * **足し直さないこと。** 動きの中身は目に見えない読者のために aria-label にだけ残してある。
  */
 
-const SRC = '/video/arm-motion-scrub-1080.mp4'
-const LOOP_SRC = '/video/arm-motion-camera-1080.mp4'
-const POSTER = '/video/arm-motion-camera-1080-poster.webp'
+/**
+ * **ダークは背景が黒い版に差し替える（2026-08-16）。**
+ * 素材の地はライトが 255、ダークが 0。ページの地はライト 252・ダーク 20 なので、
+ * どちらもほぼ同化する。直す前はダークで白い板が浮いていた（地 230 対 20）。
+ *
+ * **透過（アルファ付き）は使わない。** 2つ理由がある。
+ * ①届いた透過版は3本とも `yuv420p` でアルファが入っていなかった
+ *   （`-pix_fmt yuva420p -auto-alt-ref 0` が要る）
+ * ②**そもそも WebM のアルファは Safari が対応していない**。iPhone で何も見えなくなる。
+ *   2026-08-14 に案Gを却下したのもこれが理由
+ * **背景色の違う版を2本持つほうが確実で、どのブラウザでも破綻しない。**
+ */
+const VARIANTS = {
+  light: {
+    scrub: '/video/arm-motion-scrub-1080.mp4',
+    loop: '/video/arm-motion-camera-1080.mp4',
+    poster: '/video/arm-motion-camera-1080-poster.webp',
+  },
+  dark: {
+    scrub: '/video/arm-motion-scrub-1080-dark.mp4',
+    loop: '/video/arm-motion-camera-1080-dark.mp4',
+    poster: '/video/arm-motion-camera-1080-dark-poster.webp',
+  },
+} as const
+
+/**
+ * いま出すべき版。**組み上がるまでは null を返す。**
+ *
+ * サーバー側では `resolvedTheme` が未確定なのに、**クライアントの初回描画では
+ * すでに値が返る**。そのまま属性に流すとサーバーの出力と食い違い、
+ * 水和の不一致になる（実際に出した。Next の「1 Issue」バッジで気づいた）。
+ * **だから mount するまでは何も返さず、src と poster は effect で入れる。**
+ * どちらも元々あとから入れる作りなので、決まってからで間に合う。
+ */
+const noSubscribe = () => () => {}
+
+function useVariant() {
+  const { resolvedTheme } = useTheme()
+  // 組み上がったかどうか。effect で setState すると lint の
+  // react-hooks/set-state-in-effect に触れるので、こちらで取る
+  const mounted = useSyncExternalStore(
+    noSubscribe,
+    () => true,
+    () => false
+  )
+  if (!mounted || !resolvedTheme) return null
+  return resolvedTheme === 'dark' ? VARIANTS.dark : VARIANTS.light
+}
 
 const ALT =
   '搬送アームとダイセットが連動して動くところ。俯瞰から全景、反対側への回り込み、' +
@@ -118,6 +164,17 @@ export function ArmMotion() {
 /** 本文の中でそのまま流す。スマホ用 */
 function InlineLoop() {
   const ref = useRef<HTMLVideoElement>(null)
+  const variant = useVariant()
+  const src = variant?.loop
+  const poster = variant?.poster
+
+  // テーマが決まってから入れる。切り替えたらそのまま差し替わる
+  useEffect(() => {
+    const el = ref.current
+    if (!el || !src || !poster) return
+    el.poster = poster
+    if (el.getAttribute('src') !== src) el.src = src
+  }, [src, poster])
 
   useEffect(() => {
     const el = ref.current
@@ -145,10 +202,9 @@ function InlineLoop() {
 
   return (
     <figure className="not-prose my-10">
+      {/* 地の色が合っている版を出すので、明るさの補正（dark:brightness-90）は要らない */}
       <video
         ref={ref}
-        src={LOOP_SRC}
-        poster={POSTER}
         width={1920}
         height={1080}
         autoPlay
@@ -157,7 +213,7 @@ function InlineLoop() {
         playsInline
         preload="metadata"
         aria-label={ALT}
-        className="mx-auto block h-auto w-full dark:brightness-90"
+        className="mx-auto block h-auto w-full"
       />
     </figure>
   )
@@ -168,6 +224,45 @@ function ScrollScrub() {
   const wrapRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
+
+  const variant = useVariant()
+  const src = variant?.scrub
+  const poster = variant?.poster
+
+  /*
+    読み込みは「近づいたか」と「テーマが決まったか」の両方が揃ってから。
+    どちらが先に立つかは決まっていないので、両方を ref に持って、
+    後から立ったほうが読み込みを起こす。
+  */
+  const wantRef = useRef<string | undefined>(undefined)
+  const nearRef = useRef(false)
+
+  useEffect(() => {
+    // この effect は下の（監視を張る）effect より先に走るので、loader が読む時点で入っている
+    wantRef.current = src
+
+    const video = videoRef.current
+    if (!video || !src || !poster) return
+    video.poster = poster
+
+    const current = video.getAttribute('src')
+    if (current === src) return
+
+    // まだ何も入れていない：近くまで来ていれば入れる。まだなら loader に任せる
+    if (!current) {
+      if (nearRef.current) video.src = src
+      return
+    }
+
+    /*
+      **テーマを切り替えたときの差し替え。送り位置を保つ。**
+      入れ替えると currentTime が 0 に戻るため、そのままだと絵が頭へ飛ぶ。
+      読み直せた時点で書き戻す。
+    */
+    const t = video.currentTime
+    video.src = src
+    video.addEventListener('loadedmetadata', () => { video.currentTime = t }, { once: true })
+  }, [src, poster])
 
   useEffect(() => {
     const wrap = wrapRef.current
@@ -228,7 +323,10 @@ function ScrollScrub() {
     const loader = new IntersectionObserver(
       ([e]) => {
         if (!e.isIntersecting) return
-        if (!video.src) video.src = SRC
+        nearRef.current = true
+        const want = wantRef.current
+        if (!want) return // テーマがまだ決まっていない。決まったら上の effect が入れる
+        if (!video.getAttribute('src')) video.src = want
         loader.disconnect()
       },
       { rootMargin: '100% 0px' }
@@ -283,16 +381,16 @@ function ScrollScrub() {
         ref={stageRef}
         className="sticky top-0 flex h-screen items-center justify-center"
       >
+        {/* 地の色が合っている版を出すので、明るさの補正（dark:brightness-90）は要らない */}
         <video
           ref={videoRef}
-          poster={POSTER}
           width={1920}
           height={1080}
           muted
           playsInline
           preload="none"
           aria-label={ALT}
-          className="block h-auto max-h-screen w-full max-w-[1280px] object-contain dark:brightness-90"
+          className="block h-auto max-h-screen w-full max-w-[1280px] object-contain"
         />
       </div>
     </figure>
