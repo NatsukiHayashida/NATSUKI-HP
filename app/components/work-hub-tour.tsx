@@ -81,11 +81,31 @@ export function WorkHubTour() {
     let raf = 0
     let last = -1
 
-    // 見本市v2 と同じ式。要素の上端が画面上端を通り過ぎた割合を 0〜1 で返す
+    /*
+      **貼りついていないので、送りは「図が画面を通り過ぎた割合」で出す（2026-08-16）。**
+      画面に貼りつけていたときは「図の高さ − 画面の高さ」を分母にできたが、
+      いまは図が画面より小さいのでその式は使えない（分母が負になる）。
+
+      **通過区間をそのまま 0〜1 に割り当てない。** それだと1枚目は図が画面下から
+      入りかけたとき、6枚目は上へ抜けかけたときにしか出ず、**端の2枚が
+      図の半分が画面の外にある間にしか出ない**（実測して発覚。1枚目61%・6枚目78%）。
+
+      **図が画面に完全に収まっている区間だけを送りに使う。**
+      始まり＝図の下端が画面下端に届いたところ（上端が vh−h）、
+      終わり＝図の上端が画面上端に届いたところ（上端が 0）。
+      その手前と奥は 0 と 1 に張りつくので、入ってくる間は1枚目、
+      抜けていく間は6枚目が出たままになる。**端の2枚の滞在がむしろ長い。**
+
+      図が画面より高い場合（縦の短いウィンドウ）はこの区間が取れないので、
+      従来どおり通過区間全体を使う。
+    */
     const prog = () => {
       const r = root.getBoundingClientRect()
-      const t = root.offsetHeight - window.innerHeight
-      return t > 0 ? Math.min(Math.max(-r.top / t, 0), 1) : 0
+      const vh = window.innerHeight
+      const fit = vh - r.height
+      if (fit > 0) return Math.min(Math.max((fit - r.top) / fit, 0), 1)
+      const span = vh + r.height
+      return span > 0 ? Math.min(Math.max((vh - r.top) / span, 0), 1) : 0
     }
 
     const tick = () => {
@@ -127,12 +147,18 @@ export function WorkHubTour() {
   return (
     <figure className="not-prose my-10 md:my-14">
       {/*
-        送りに使うスクロール量。1画面あたり約70vh。
-        ここを変えると1画面の滞在時間が変わる（長くすると読む余裕が増える）。
+        **画面に貼りつけない（2026-08-16・本人の指摘）。**
+        以前は 450vh の助走を取って画面へ貼りつけていたが、貼りついている間は
+        画面に端末しか出ず「さみしい」。**上下に本文が見えている状態を保つ**ため、
+        助走ごとやめて本文の流れの中に置いた。画面の入れ替わりは
+        スクロール連動のまま（図が画面を通り過ぎる間に6枚を送る）。
+
+        **端末は前より小さくしてある。** 図の高さがそのまま「本文が隠れる量」になるので、
+        大きくすると貼りつけていたときと同じ見え方に戻ってしまう。
       */}
-      <div ref={rootRef} className="relative" style={{ height: `${STEPS.length * 70 + 30}vh` }}>
-        <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
-          <div className="grid w-full grid-cols-1 items-center gap-6 md:grid-cols-[400px_1fr] md:gap-10">
+      <div ref={rootRef} className="relative">
+        <div className="overflow-hidden">
+          <div className="grid w-full grid-cols-1 items-center gap-6 md:grid-cols-[340px_1fr] md:gap-10">
             {/*
               端末。下を切って大きく見せる。
               切り口は mask で抜いて、断ち落としに見えないようにする。
@@ -153,9 +179,9 @@ export function WorkHubTour() {
             */}
             <div
               data-stage
-              className="tour-stage relative mx-auto h-[56svh] w-full max-w-[300px] pt-2 md:mx-0 md:h-[76svh] md:w-[400px] md:max-w-none"
+              className="tour-stage relative mx-auto h-[38svh] w-full max-w-[280px] pt-2 md:mx-0 md:h-[46svh] md:w-[340px] md:max-w-none"
             >
-              <div className="tour-device absolute left-1/2 top-2 w-[248px] -translate-x-1/2 md:w-[340px]">
+              <div className="tour-device absolute left-1/2 top-2 w-[208px] -translate-x-1/2 md:w-[280px]">
                 <div className="relative">
                   <span className="absolute -left-[3px] top-[16%] h-[4%] w-[3px] rounded-l-sm bg-foreground/30" />
                   <span className="absolute -left-[3px] top-[24%] h-[7%] w-[3px] rounded-l-sm bg-foreground/30" />

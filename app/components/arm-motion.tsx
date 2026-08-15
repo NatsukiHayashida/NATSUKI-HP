@@ -39,8 +39,22 @@ import { useEffect, useRef, useSyncExternalStore } from 'react'
  * ```
  *
  * 1920×1080・162コマ・3.6MB。crf26 なら 5.8MB だが SSIM 0.988 の差しかない。
- * **1080p にしたので、1280素材のときのような引き伸ばしはもう無い**（本文幅864pxに対し
- * 2倍ディスプレイで必要なのは1728px。素材が1920px あるので足りている）。
+ *
+ * **表示幅は 1280px で頭打ちにしてある（2026-08-16）。理由は引き伸ばし。**
+ * 上下の空きを詰めるために画面幅いっぱいまで広げたところ、2倍ディスプレイでは
+ * 表示1440pxに2880px、16インチの1728pxには3456px要ることになり、
+ * 素材1920pxに対して**1.50〜1.80倍の引き伸ばし**になっていた（実測）。
+ * 1280で止めれば1.33倍に収まり、上下の空きもほとんど変わらない。
+ *
+ * | 表示幅 | 2倍ディスプレイで必要 | 素材1920pxでは |
+ * |---|---|---|
+ * | 1728px | 3456 | 1.80倍 |
+ * | 1440px | 2880 | 1.50倍 |
+ * | **1280px** | 2560 | **1.33倍** |
+ * | 960px | 1920 | 等倍 |
+ *
+ * **等倍にしたいなら960pxまで狭めるか、素材を4Kで撮り直してもらうしかない。**
+ * コマ数と解像度は交換できるが、解像度と素材は交換できない。
  *
  * **state を持たない。** 毎フレーム setState すると再描画が追いつかない。
  * 送り位置は rAF の中で DOM（`video.currentTime`）へ直接書く。
@@ -278,7 +292,7 @@ function ScrollScrub() {
           playsInline
           preload="none"
           aria-label={ALT}
-          className="block h-auto max-h-screen w-full object-contain dark:brightness-90"
+          className="block h-auto max-h-screen w-full max-w-[1280px] object-contain dark:brightness-90"
         />
       </div>
     </figure>
