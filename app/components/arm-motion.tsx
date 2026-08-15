@@ -1,46 +1,108 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useSyncExternalStore } from 'react'
 
 /**
- * 搬送アームとダイセットが連動して動くところを見せる動画。
+ * 搬送アームとダイセットが連動して動くところを、**スクロールで送る**。
  * 記事「CAD操作をAIに任せる」の「動画を1コマンドで生成する仕組み」の段落の直後に置く。
  *
+ * **仕掛けの正体**（2026-08-12 に Apple の製品ページを実測して分かったこと）。
+ * 向こうの動画13本は全部 muted・controls なし・**autoplay が false**。
+ * 再生ボタンで流しているのではなく、**スクロール位置がそのまま再生位置**になっている。
+ * ここでも同じことをしている。試作は `app/dev/seamless`（採否が決まったので消してよい）。
+ *
+ * **素材が条件を満たしている。** 81フレーム＝プレス1サイクル。カメラのキーを6つ置いて
+ * 各キー間を81フレームにしてあるので、6×81＝486フレームで**機構もカメラも同時に一周**する。
+ * だから最後まで送っても先頭へ繋がる（末尾→先頭の差 2.131 は隣接フレーム差の範囲内）。
+ * カットは1つもない。**尺を変えるときは81の倍数にすること**（10秒＝5キー、14秒＝7キー）。
+ *
  * **出どころ**
- * ~/work/transfer-conveyance で生成した掲載用の別版。依頼文は同リポジトリの
- * `docs/依頼_Web掲載用動画_20260814.md`。実機の駆動仕様（MASTER_MOTION）は変えていない。
- * 掲載用として次の4点だけ変えてある：アングルは iso 1つ／第1ステージのフィンガーを表示／
- * 製品は非表示／HUD（SPM・クランク・動作リスト）なし。
+ * ~/work/transfer-conveyance で生成した掲載用の別版。掲載用として変えてあるのは
+ * 製品を非表示・HUDなしの2点と、透過（ダイセット30%／それ以外55%／稜線なし）。
+ * 原本は `images/20260816/TRF搬送アーム_カメラワーク_1080p_B反転_crf19_20260816.mp4`。
+ * 仕様は `docs/2026-08-15-web動画_カメラワーク版.md`。
  *
- * **いま出しているのは透過版**（2026-08-14・本人の追加依頼「すべての部品を透過させてほしい」）。
- * 原本は `images/20260814/TRF搬送アーム_連動動作_web_透過_ダイセット30_20260814.mp4`。
- * 全部品55%・稜線なし・ダイセットのみ30%。納品メモは `_handoff/2026-08-14-搬送アーム動画_透過版_納品.md`。
- * **戻すなら src と poster を `arm-motion.mp4` / `arm-motion-poster.webp` に書き換えるだけ**
- * （不透明版もそのまま置いてある）。
+ * **B反転** ＝ 金型5段の色の割り当てを上下逆にした版（2026-08-16・林田氏が4案から裁定）。
+ * 縦の円筒面は光を受けないため、下から順に暗くすると背の高い上型が黒に潰れていた。
+ * 色そのものは承認済みの5色のまま、向きだけ変えてある。
+ * 指示は `docs/2026-08-16-撮り直し指示-B反転.md`。
  *
- * **公開にあたって**
- * 製品を消してあるので画面に文字は一つも出ていない（伏字の処理は不要だった）。
- * 製品名がそのまま写るため消した、という経緯でもある。
+ * **スクラブ用に焼き直してある**（`arm-motion-scrub-1080.mp4`）。
+ * 通常のmp4は数フレームに1枚しかキーフレームが無く、途中へ飛ぶたびに前のキーフレームから
+ * 復号し直すのでスクロールに追従できない。**全フレームをキーフレームにする**（`-g 1`）。
+ * 重くなるぶんは**コマ数で相殺する。解像度で落とすと単に粗くなる**
+ * （2026-08-15 に 960×540 まで落として「ぼける」と言われた）。
  *
- * **こちらでやった加工**
- * 元は 1280×720 だが、中身は 677×524（面積の35%）しか使っておらず周りが白の余白だった。
- * 全243フレームの和集合で外形を測り、792×594（crop 206,48）に切り出して焼き直した。
- * **中身は拡大も縮小もしていない**。余白を戻すなら crop を外して流し直すだけ。
- * 透過版は輪郭が少ないぶん軽く、CRF22 でも 476KB（不透明版は CRF27 で 831KB）。
- * **切り出しは両版で同じ**なので、src を差し替えるだけで見比べられる。
+ * ```
+ * ffmpeg -i <原本> -vf "select='not(mod(n\,3))',setpts=N/13.5/TB" -r 13.5 \
+ *   -c:v libx264 -crf 31 -g 1 -preset slow -pix_fmt yuv420p -movflags +faststart -an out.mp4
+ * ```
  *
- * **文字は一切置かない（2026-08-14・本人判断）。** 最初は6つの動作名を並べた説明文と
- * 「生成した動作確認」というラベルを付けていたが、二段階で両方とも外した。
- * 前の段落が「動画を1コマンドで生成する」と言っているので、動くものが出れば用は足りる。
- * **足し直さないこと。** 罫線の囲みも、中に文字が無いと枠だけが残るのでやめた
- * （work-hub-phone と同じ、上下の余白だけの形）。
- * 動作の順番は目に見えない読者のために aria-label 側にだけ残してある。
+ * 1920×1080・162コマ・3.6MB。crf26 なら 5.8MB だが SSIM 0.988 の差しかない。
+ * **1080p にしたので、1280素材のときのような引き伸ばしはもう無い**（本文幅864pxに対し
+ * 2倍ディスプレイで必要なのは1728px。素材が1920px あるので足りている）。
  *
- * 3周（81フレーム×3・40.5fps・6.0秒）入っていて、末尾から先頭への繋ぎは
- * 通常の1コマ分と同じ差しかない（実測 3.01 に対し隣接コマが 2.4〜2.8）。継ぎ目は見えない。
+ * **state を持たない。** 毎フレーム setState すると再描画が追いつかない。
+ * 送り位置は rAF の中で DOM（`video.currentTime`）へ直接書く。
+ * lint の `react-hooks/set-state-in-effect` にも触れない。
+ *
+ * **iOS では最初に一度 play→pause して復号器を起こす。** これをしないと、
+ * 触るまで currentTime を動かしても絵が変わらないことがある。
+ *
+ * **3.6MB あるので、近づくまで読み込まない。** src は最初から張らず、
+ * 画面の1つ手前に来てから入れる（`rootMargin`）。
+ *
+ * **文字は一切置かない（2026-08-14・本人判断）。** 説明文もラベルも罫線の囲みも、
+ * 一度付けてから外した経緯がある。試作にあった進捗バーとラベルも本番には持ってきていない。
+ * **足し直さないこと。** 動きの中身は目に見えない読者のために aria-label にだけ残してある。
  */
 
+const SRC = '/video/arm-motion-scrub-1080.mp4'
+const LOOP_SRC = '/video/arm-motion-camera-1080.mp4'
+const POSTER = '/video/arm-motion-camera-1080-poster.webp'
+
+const ALT =
+  '搬送アームとダイセットが連動して動くところ。俯瞰から全景、反対側への回り込み、' +
+  'ツール部への寄り、1ステーションのアップを経て俯瞰へ戻る。機構はその間ずっと、' +
+  '持ち上げ、掴み、送り、下ろし、離し、戻るを繰り返している'
+
+/** 何画面ぶんスクロールさせるか。長いほどゆっくり送られる */
+const SCREENS = 3
+
+/** 貼りつけに切り替える幅。本文が864pxになるのと同じ境目 */
+const DESKTOP = '(min-width: 1024px)'
+
+function subscribe(cb: () => void) {
+  const mq = window.matchMedia(DESKTOP)
+  mq.addEventListener('change', cb)
+  return () => mq.removeEventListener('change', cb)
+}
+
+/**
+ * **スマホでは貼りつけない（2026-08-16・本人の指摘「余白でかすぎ」）。**
+ * 16:9 を縦長の画面に貼りつけると、画面844pxに対し動画が211pxしか埋まらず、
+ * 上下が大きく空く。**切らない限りこの空きは消せない**（390:844 に合わせて
+ * object-cover で埋めると横を7割以上落とすことになり、搬送レールが両端とも切れる）。
+ * なので幅1024px未満では貼りつけをやめ、本文の中でそのまま流す。
+ *
+ * この記事の模式図が「PC横組み／スマホ縦組み」を `lg:` で出し分けているのと同じ考え方。
+ * **縦位置で撮り直してもらえれば、スマホでも貼りつけに寄せられる**（それが本筋）。
+ *
+ * 描き分けは CSS ではなく matchMedia で行う。CSS の hidden で隠すと、
+ * **隠したほうの動画も読み込まれて 2.6MB か 3.6MB を無駄に落とす**。
+ */
 export function ArmMotion() {
+  const desktop = useSyncExternalStore(
+    subscribe,
+    () => window.matchMedia(DESKTOP).matches,
+    () => false // サーバー側はスマホ側を返す（モバイルファースト）
+  )
+
+  return desktop ? <ScrollScrub /> : <InlineLoop />
+}
+
+/** 本文の中でそのまま流す。スマホ用 */
+function InlineLoop() {
   const ref = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
@@ -67,26 +129,158 @@ export function ArmMotion() {
     return () => io.disconnect()
   }, [])
 
-  /*
-    not-prose は必須。記事本文の prose が中のメディアに上下2emを付けるため、
-    付けると枠と動画の間が32px空いて別ブロックに見える。
-  */
   return (
-    <figure className="not-prose my-12 md:my-16">
+    <figure className="not-prose my-10">
       <video
         ref={ref}
-        src="/video/arm-motion-transparent.mp4"
-        poster="/video/arm-motion-transparent-poster.webp"
-        width={792}
-        height={594}
+        src={LOOP_SRC}
+        poster={POSTER}
+        width={1920}
+        height={1080}
         autoPlay
         muted
         loop
         playsInline
         preload="metadata"
-        aria-label="搬送アームとダイセットが連動して動く1サイクル分の動き。アームが持ち上げ、掴み、送り、下ろし、離し、戻る"
-        className="mx-auto block h-auto w-full max-w-[640px] dark:brightness-90"
+        aria-label={ALT}
+        className="mx-auto block h-auto w-full dark:brightness-90"
       />
+    </figure>
+  )
+}
+
+/** スクロールで送る。PC用 */
+function ScrollScrub() {
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const stageRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    const wrap = wrapRef.current
+    const stage = stageRef.current
+    const video = videoRef.current
+    if (!wrap || !stage || !video) return
+
+    let raf = 0
+    let primed = false
+    let visible = false
+
+    // iOS 対策。一度だけ再生して止め、復号器を起こしておく
+    const prime = () => {
+      if (primed) return
+      primed = true
+      video.play().then(() => video.pause()).catch(() => {})
+    }
+
+    /*
+      本文の段組（864px）から出して画面いっぱいに広げる。**`w-screen` や `100vw` は使わない。**
+      100vw はスクロールバーの幅を含むため、縦スクロールバーが出ている環境では
+      その幅ぶん横にはみ出し、左右に揺れる（この記事で一度踏んでいる）。
+      `clientWidth` はスクロールバーを含まないので、実測して当てれば揺れない。
+    */
+    const fitWidth = () => {
+      const w = document.documentElement.clientWidth
+      stage.style.width = `${w}px`
+      stage.style.marginLeft = `${-wrap.getBoundingClientRect().left}px`
+    }
+
+    const tick = () => {
+      raf = 0
+      const rect = wrap.getBoundingClientRect()
+      const total = rect.height - window.innerHeight
+      const p = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0
+
+      const d = video.duration
+      if (d && Number.isFinite(d)) {
+        // 末尾ちょうどは黒コマになる実装があるので気持ち手前で止める
+        const t = p * (d - 0.001)
+        if (Math.abs(video.currentTime - t) > 0.008) video.currentTime = t
+      }
+    }
+
+    const onScroll = () => {
+      if (!visible || raf) return
+      raf = requestAnimationFrame(tick)
+    }
+
+    const onResize = () => {
+      fitWidth()
+      onScroll()
+    }
+
+    fitWidth()
+
+    // 1画面ぶん手前で読み込みを始める（3.6MBを最初から取りに行かせない）
+    const loader = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return
+        if (!video.src) video.src = SRC
+        loader.disconnect()
+      },
+      { rootMargin: '100% 0px' }
+    )
+    loader.observe(wrap)
+
+    const io = new IntersectionObserver(
+      ([e]) => {
+        visible = e.isIntersecting
+        if (visible) {
+          prime()
+          onScroll()
+        }
+      },
+      { threshold: 0 }
+    )
+    io.observe(wrap)
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onResize)
+    video.addEventListener('loadedmetadata', tick)
+
+    return () => {
+      loader.disconnect()
+      io.disconnect()
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onResize)
+      video.removeEventListener('loadedmetadata', tick)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
+  /*
+    not-prose は必須。記事本文の prose が中のメディアに上下2emを付けるため、
+    付けると枠と動画の間が32px空いて別ブロックに見える。
+
+    sticky の親に overflow を持たせないこと（持たせると貼りつかなくなる）。
+    max-h は、縦の短いウィンドウで動画が画面からはみ出さないようにするため。
+
+    **上下の余白は付けない（2026-08-16・本人の指示）。** 図の前後は本文が遠いので
+    `my-*` は効き目が無く、画面に見えている上下の空きは「動画が画面の高さを
+    使い切っていない」ぶん。そちらは横を画面幅まで広げて詰めた（`fitWidth`）。
+    16:9 なので、縦長のスマホでは上下の空きが残る。これは切らない限り消せない。
+  */
+  return (
+    <figure
+      ref={wrapRef}
+      className="not-prose relative"
+      style={{ height: `${SCREENS * 100}vh` }}
+    >
+      <div
+        ref={stageRef}
+        className="sticky top-0 flex h-screen items-center justify-center"
+      >
+        <video
+          ref={videoRef}
+          poster={POSTER}
+          width={1920}
+          height={1080}
+          muted
+          playsInline
+          preload="none"
+          aria-label={ALT}
+          className="block h-auto max-h-screen w-full object-contain dark:brightness-90"
+        />
+      </div>
     </figure>
   )
 }
